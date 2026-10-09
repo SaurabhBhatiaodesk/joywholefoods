@@ -362,25 +362,7 @@ if(session.customerId != null){
      {% comment %}
     <script defer src="//maps.googleapis.com/maps/api/js?key=AIzaSyBj-VkJNO4GASWntKpqhfppsTcyswln4MI&v=3.exp&libraries=places&callback=LOCATIONS_MAP.init"></script>
     {% endcomment %}
-       <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCdj92JVDyKda9MkRc6IiN8ZUrAdMBnF0k&v=3.exp&libraries=places"></script>
-    
-    <script src="{{ 'location-map.js' | asset_url }}" ></script>
-    <script>
-      if(window.LOCATIONS_MAP !== undefined){
-        window._locations = {{shop.metafields['sf-ba-integration']['pickup_locations'] | json}};
-        LOCATIONS_MAP.icons.frozen = '{{ 'mapMarker-frozen.png' | asset_img_url: '20px' }}';
-        LOCATIONS_MAP.icons.non_frozen = '{{ 'mapMarker.png' | asset_img_url: '20px' }}';
-        LOCATIONS_MAP.icons.disabled = '{{ 'mapMarker-disabled.png' | asset_img_url: '20px' }}';
-
-        if(window._locations) {
-          if(Array.isArray(window._locations)){
-            LOCATIONS_MAP.locations = window._locations;
-          } else{
-            LOCATIONS_MAP.locations = Object.values(window._locations);
-          }
-        }
-      }
-    </script>
+    {%- comment -%} Google Maps + location-map.js now load inside sections/map-section.liquid (the only place they are used) {%- endcomment -%}
     {%- comment -%} Slick is only used by the warranty / warranty_slider blocks in main-product {%- endcomment -%}
     {%- if template.name == 'product' -%}
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>

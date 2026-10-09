@@ -3,6 +3,26 @@
 {% assign locations_metafield_namespace = "sf-ba-integration" %}
 {% assign customer_meta_metafield_key = "ba-customer-meta" %}
 
+{%- comment -%} Moved from layout/theme.liquid so Google Maps only loads on pages that show the map {%- endcomment -%}
+<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCdj92JVDyKda9MkRc6IiN8ZUrAdMBnF0k&v=3.exp&libraries=places"></script>
+<script src="{{ 'location-map.js' | asset_url }}" ></script>
+<script>
+  if(window.LOCATIONS_MAP !== undefined){
+    window._locations = {{shop.metafields['sf-ba-integration']['pickup_locations'] | json}};
+    LOCATIONS_MAP.icons.frozen = '{{ 'mapMarker-frozen.png' | asset_img_url: '20px' }}';
+    LOCATIONS_MAP.icons.non_frozen = '{{ 'mapMarker.png' | asset_img_url: '20px' }}';
+    LOCATIONS_MAP.icons.disabled = '{{ 'mapMarker-disabled.png' | asset_img_url: '20px' }}';
+
+    if(window._locations) {
+      if(Array.isArray(window._locations)){
+        LOCATIONS_MAP.locations = window._locations;
+      } else{
+        LOCATIONS_MAP.locations = Object.values(window._locations);
+      }
+    }
+  }
+</script>
+
 <div class="about background" ppp>
     <div class="about__container">
         <div class="about__heading">
