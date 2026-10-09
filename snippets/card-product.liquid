@@ -1186,6 +1186,12 @@
 
 
 
+{%- comment -%}
+  The scripts below are page-wide (they bind to every card on the page), so they only need to be
+  output once. Collection grids pass skip_styles: true for every card after the first one.
+  Other callers don't pass it, so they still output the scripts exactly as before.
+{%- endcomment -%}
+{%- unless skip_styles -%}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".gift-purchase").forEach((button) => {
@@ -1947,3 +1953,4 @@
     }
   })();
 </script>
+{%- endunless -%}
