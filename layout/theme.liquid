@@ -915,6 +915,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
   {% comment %} {% render 'globo-custom' %} {% endcomment %}
 
-  {%- capture productTemplate -%}{% render 'globo.filter.product', themeTranslation: shop.metafields.globoFilter.themeTranslation.value[request.locale.iso_code] %}{%- endcapture -%}{%- unless productTemplate contains 'Liquid error' -%}<script id="gspfProduct" type="template/html">{{- productTemplate | replace: "script>", "scripttag>" -}}</script>{%- endunless -%}
+  {%- comment -%}
+    Removed: Globo filter product template (<script id="gspfProduct">). The Globo app no longer loads on the
+    live site (search/filter runs through XCloud) and nothing else reads #gspfProduct.
+    The snippet snippets/globo.filter.product.liquid is kept in case it is ever needed again.
+  {%- endcomment -%}
 </body>
 </html>
