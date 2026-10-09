@@ -383,7 +383,10 @@ if(session.customerId != null){
     }(document, 'script', 'ti-js'));
 </script>
             
+{%- comment -%} Veliora Re-Order UI only exists on customer account pages (main-account / main-order render its order JSON) {%- endcomment -%}
+{%- if template.directory == 'customers' -%}
 {% render 'veliora-reorder-css' %}
+{%- endif -%}
 </head>
 
   <body class="{{ collection.handle }} gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %} template-{{ template.name }}">
