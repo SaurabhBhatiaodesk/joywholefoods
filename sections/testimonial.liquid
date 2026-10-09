@@ -1,0 +1,616 @@
+{% liquid
+  assign ai_gen_id = section.id | replace: '_', '' | replace: '-', '' | downcase
+%}
+
+{% style %}
+  .ai-testimonial-carousel-{{ ai_gen_id }} {
+    display: block;
+    width: {{ section.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: 40px 20px;
+    background-color: {{ section.settings.background_color }};
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel__container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-testimonial-carousel__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .ai-testimonial-carousel__title-{{ ai_gen_id }} {
+    font-size: {{ section.settings.title_size }}px;
+    color: {{ section.settings.title_color }};
+    margin: 0;
+  }
+
+  .ai-testimonial-carousel__track-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+
+  .ai-testimonial-carousel__track-{{ ai_gen_id }} {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.5s ease;
+  }
+
+  .ai-testimonial-carousel__card-{{ ai_gen_id }} {
+    flex: 0 0 calc(33.333% - 14px);
+    min-width: calc(33.333% - 14px);
+    background-color: {{ section.settings.card_background_color }};
+    border-radius: {{ section.settings.card_border_radius }}px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel__stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .ai-testimonial-carousel__star-{{ ai_gen_id }} {
+    width: 20px;
+    height: 20px;
+    color: {{ section.settings.star_color }};
+  }
+
+  .ai-testimonial-carousel__star-empty-{{ ai_gen_id }} {
+    color: {{ section.settings.star_empty_color }};
+  }
+
+  .ai-testimonial-carousel__review-{{ ai_gen_id }} {
+    font-size: 14px;
+    line-height: 1.6;
+    color: {{ section.settings.review_text_color }};
+    margin-bottom: 16px;
+    flex-grow: 1;
+    position: relative;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel__review-text-{{ ai_gen_id }} {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel__review-text-{{ ai_gen_id }}.expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+  }
+
+  .ai-testimonial-carousel__read-more-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    color: {{ section.settings.read_more_color }};
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 8px;
+    text-decoration: underline;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel__read-more-{{ ai_gen_id }}:hover {
+    opacity: 0.8;
+  }
+
+  .ai-testimonial-carousel__name-{{ ai_gen_id }} {
+    font-weight: 600;
+    font-size: 14px;
+    color: {{ section.settings.name_color }};
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel__controls-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    max-width: 100%;
+  }
+
+  .ai-testimonial-carousel__button-{{ ai_gen_id }} {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 50%;
+    background-color: {{ section.settings.button_background_color }};
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ section.settings.button_icon_color }};
+    transition: background-color 0.3s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel__button-{{ ai_gen_id }}:hover {
+    background-color: {{ section.settings.button_hover_color }};
+  }
+
+  .ai-testimonial-carousel__button-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-testimonial-carousel__dots-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .ai-testimonial-carousel__dot-{{ ai_gen_id }} {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: {{ section.settings.dot_color }};
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.3s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel-{{ ai_gen_id }} :not(.ai-testimonial-carousel__title-{{ ai_gen_id }}) {
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ai-testimonial-carousel__dot-{{ ai_gen_id }}.active {
+    background-color: {{ section.settings.dot_active_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-testimonial-carousel__card-{{ ai_gen_id }} {
+      flex: 0 0 calc(50% - 10px);
+      min-width: calc(50% - 10px);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-testimonial-carousel__controls-{{ ai_gen_id }} {
+      gap: 10px;
+    }
+
+    .ai-testimonial-carousel__dots-{{ ai_gen_id }} {
+      max-width: calc(100vw - 132px);
+      overflow-x: auto;
+      padding: 6px 2px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .ai-testimonial-carousel__dots-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ai-testimonial-carousel__dot-{{ ai_gen_id }} {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 8px;
+    }
+
+    .ai-testimonial-carousel__card-{{ ai_gen_id }} {
+      flex: 0 0 100%;
+      min-width: 100%;
+    }
+
+    .ai-testimonial-carousel__title-{{ ai_gen_id }} {
+      font-size: calc({{ section.settings.title_size }}px * 0.8);
+    }
+  }
+{% endstyle %}
+
+<testimonial-carousel-section class="ai-testimonial-carousel-{{ ai_gen_id }}" {{ section.shopify_attributes }}>
+  <div class="ai-testimonial-carousel__container-{{ ai_gen_id }}">
+    {% if section.settings.section_title != blank %}
+      <div class="ai-testimonial-carousel__header-{{ ai_gen_id }}">
+        <h2 class="ai-testimonial-carousel__title-{{ ai_gen_id }}">{{ section.settings.section_title }}</h2>
+      </div>
+    {% endif %}
+
+    <div class="ai-testimonial-carousel__track-wrapper-{{ ai_gen_id }}">
+      <div class="ai-testimonial-carousel__track-{{ ai_gen_id }}" data-track>
+        {% for block in section.blocks %}
+          {% if block.settings.title != blank or block.settings.reviewer_name != blank %}
+            <div class="ai-testimonial-carousel__card-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+              <div class="ai-testimonial-carousel__stars-{{ ai_gen_id }}" aria-label="{{ block.settings.rating }} out of 5 stars">
+                {% for star in (1..5) %}
+                  {% if star <= block.settings.rating %}
+                    <svg class="ai-testimonial-carousel__star-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  {% else %}
+                    <svg class="ai-testimonial-carousel__star-{{ ai_gen_id }} ai-testimonial-carousel__star-empty-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              {% if block.settings.title != blank %}
+                <div class="ai-testimonial-carousel__review-{{ ai_gen_id }}">
+                  <div class="ai-testimonial-carousel__review-text-{{ ai_gen_id }}" data-review-text>
+                    {{ block.settings.title | newline_to_br }}
+                  </div>
+                  <button class="ai-testimonial-carousel__read-more-{{ ai_gen_id }}" data-read-more style="display: none;">
+                    Read more
+                  </button>
+                </div>
+              {% endif %}
+
+              {% if block.settings.reviewer_name != blank %}
+                <div class="ai-testimonial-carousel__name-{{ ai_gen_id }}">{{ block.settings.reviewer_name }}</div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="ai-testimonial-carousel__controls-{{ ai_gen_id }}">
+        <button class="ai-testimonial-carousel__button-{{ ai_gen_id }}" data-prev aria-label="Previous">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="ai-testimonial-carousel__dots-{{ ai_gen_id }}" data-dots></div>
+
+        <button class="ai-testimonial-carousel__button-{{ ai_gen_id }}" data-next aria-label="Next">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+  </div>
+</testimonial-carousel-section>
+
+<script>
+  (function() {
+    if (customElements.get('testimonial-carousel-section')) return;
+
+    class TestimonialCarouselSection extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.cardsPerView = 3;
+        this.handleResize = this.handleResize.bind(this);
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('[data-track]');
+        this.cards = Array.from(this.querySelectorAll('[class*="ai-testimonial-carousel__card-"]'));
+        this.prevButton = this.querySelector('[data-prev]');
+        this.nextButton = this.querySelector('[data-next]');
+        this.dotsContainer = this.querySelector('[data-dots]');
+
+        if (!this.track || this.cards.length === 0 || !this.prevButton || !this.nextButton || !this.dotsContainer) return;
+
+        this.updateCardsPerView();
+        this.setupReadMore();
+        this.setupDots();
+        this.setupEventListeners();
+        this.updateCarousel();
+
+        window.addEventListener('resize', this.handleResize);
+      }
+
+      disconnectedCallback() {
+        window.removeEventListener('resize', this.handleResize);
+      }
+
+      handleResize() {
+        this.updateCardsPerView();
+        this.setupDots();
+        this.updateCarousel();
+        this.setupReadMore();
+      }
+
+      updateCardsPerView() {
+        if (window.innerWidth <= 749) {
+          this.cardsPerView = 1;
+        } else if (window.innerWidth <= 989) {
+          this.cardsPerView = 2;
+        } else {
+          this.cardsPerView = 3;
+        }
+      }
+
+      setupReadMore() {
+        this.cards.forEach((card) => {
+          const reviewText = card.querySelector('[data-review-text]');
+          const readMoreBtn = card.querySelector('[data-read-more]');
+
+          if (!reviewText || !readMoreBtn) return;
+
+          readMoreBtn.style.display = 'none';
+
+          if (reviewText.scrollHeight > reviewText.clientHeight) {
+            readMoreBtn.style.display = 'block';
+
+            if (readMoreBtn.dataset.listenerAdded === 'true') return;
+
+            readMoreBtn.dataset.listenerAdded = 'true';
+            readMoreBtn.addEventListener('click', () => {
+              const isExpanded = reviewText.classList.contains('expanded');
+              reviewText.classList.toggle('expanded');
+              readMoreBtn.textContent = isExpanded ? 'Read more' : 'Read less';
+              this.updateCarousel();
+            });
+          }
+        });
+      }
+
+      setupDots() {
+        this.dotsContainer.innerHTML = '';
+        const totalPages = Math.ceil(this.cards.length / this.cardsPerView);
+
+        for (let i = 0; i < totalPages; i++) {
+          const dot = document.createElement('button');
+          const dotClass = this.dotsContainer.className.replace('__dots-', '__dot-');
+
+          dot.className = dotClass;
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          dot.addEventListener('click', () => {
+            this.currentIndex = i;
+            this.updateCarousel();
+          });
+          this.dotsContainer.appendChild(dot);
+        }
+      }
+
+      setupEventListeners() {
+        if (this.prevButton.dataset.listenerAdded !== 'true') {
+          this.prevButton.dataset.listenerAdded = 'true';
+          this.prevButton.addEventListener('click', () => {
+            if (this.currentIndex > 0) {
+              this.currentIndex--;
+              this.updateCarousel();
+            }
+          });
+        }
+
+        if (this.nextButton.dataset.listenerAdded !== 'true') {
+          this.nextButton.dataset.listenerAdded = 'true';
+          this.nextButton.addEventListener('click', () => {
+            const maxIndex = Math.ceil(this.cards.length / this.cardsPerView) - 1;
+            if (this.currentIndex < maxIndex) {
+              this.currentIndex++;
+              this.updateCarousel();
+            }
+          });
+        }
+      }
+
+      updateCarousel() {
+        const maxIndex = Math.max(Math.ceil(this.cards.length / this.cardsPerView) - 1, 0);
+        this.currentIndex = Math.min(this.currentIndex, maxIndex);
+
+        const cardWidth = this.cards[0].offsetWidth;
+        const gap = 20;
+        const offset = this.currentIndex * (cardWidth + gap) * this.cardsPerView;
+        this.track.style.transform = `translateX(-${offset}px)`;
+
+        this.prevButton.disabled = this.currentIndex === 0;
+        this.nextButton.disabled = this.currentIndex >= maxIndex;
+
+        const dots = this.dotsContainer.querySelectorAll('button');
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === this.currentIndex);
+        });
+      }
+    }
+
+    customElements.define('testimonial-carousel-section', TestimonialCarouselSection);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Testimonial carousel",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "What our customers say"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#086c3f"
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#fafafa"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#9bb83c"
+    },
+    {
+      "type": "color",
+      "id": "star_empty_color",
+      "label": "Empty star color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "review_text_color",
+      "label": "Review text color",
+      "default": "#043d22"
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Name color",
+      "default": "#086c3f"
+    },
+    {
+      "type": "color",
+      "id": "read_more_color",
+      "label": "Read more color",
+      "default": "#086c3f"
+    },
+    {
+      "type": "header",
+      "content": "Controls"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background",
+      "default": "#086c3f"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button hover",
+      "default": "#043d22"
+    },
+    {
+      "type": "color",
+      "id": "button_icon_color",
+      "label": "Button icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "default": "#086c3f"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "title",
+          "label": "Review text",
+          "default": "Amazing products! The quality is outstanding and the customer service is excellent. Highly recommend to anyone looking for organic produce."
+        },
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": "Name",
+          "default": "Sarah M."
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial carousel",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "title": "Amazing products! The quality is outstanding and the customer service is excellent. Highly recommend to anyone looking for organic produce.",
+            "reviewer_name": "Sarah M.",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "title": "Fresh, delicious, and delivered right to my door. The convenience and quality make this service worth every penny.",
+            "reviewer_name": "James T.",
+            "rating": 5
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "title": "Love supporting local farmers through this platform. Everything tastes so much better when it's fresh and sustainably grown.",
+            "reviewer_name": "Emma L.",
+            "rating": 5
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

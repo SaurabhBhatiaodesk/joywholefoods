@@ -1,0 +1,95 @@
+{% comment %}
+  Renders product variant options
+  Accepts:
+  - product: {Object} product object.
+  - option: {Object} current product_option object.
+  - block: {Object} block object.
+{% endcomment %}
+
+{%- liquid
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+{%- for value in option.values -%}
+  {%- liquid
+    assign option_disabled = true
+
+    for variant_item in product.variants
+      assign variant_matches = false
+
+      case option.position
+        when 1
+          if variant_item.option1 == value
+            assign variant_matches = true
+          endif
+        when 2
+          if variant_item.option1 == product.selected_or_first_available_variant.option1 and variant_item.option2 == value
+            assign variant_matches = true
+          endif
+        when 3
+          if variant_item.option1 == product.selected_or_first_available_variant.option1 and variant_item.option2 == product.selected_or_first_available_variant.option2 and variant_item.option3 == value
+            assign variant_matches = true
+          endif
+      endcase
+
+      if variant_matches and variant_item.available
+        assign option_disabled = false
+      endif
+    endfor
+  -%}
+
+  {% if block.settings.picker_type == 'button' %}
+    <input
+      type="radio"
+      id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+      name="{{ option.name }}"
+      value="{{ value | escape }}"
+      form="{{ product_form_id }}"
+      {% if option.selected_value == value %}
+        checked
+      {% endif %}
+      {% if option_disabled %}
+        disabled
+        class="disabled-link"
+      {% endif %}
+    >
+
+    <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+      {{ value }}
+      {% if option_disabled %}
+        (Sold Out)
+        <span class="visually-hidden">
+          {{ 'products.product.variant_sold_out_or_unavailable' | t }}
+        </span>
+      {% endif %}
+    </label>
+
+  {% elsif block.settings.picker_type == 'dropdown' %}
+    {%- if forloop.first -%}
+      {%- liquid
+        assign option_placeholder_label = option.name | downcase
+        if option_placeholder_label contains 'weight'
+          assign option_placeholder_text = 'Select weight'
+        elsif option_placeholder_label contains 'size'
+          assign option_placeholder_text = 'Select size'
+        elsif option_placeholder_label contains 'color' or option_placeholder_label contains 'colour'
+          assign option_placeholder_text = 'Select colour'
+        else
+          assign option_placeholder_text = 'Select ' | append: option_placeholder_label
+        endif
+      -%}
+
+      <option value="" selected disabled data-joy-placeholder-option="true">{{ option_placeholder_text }}</option>
+    {%- endif -%}
+
+    <option
+      value="{{ value | escape }}"
+      {% if option_disabled %}
+        disabled
+        class="disabled-link"
+      {% endif %}
+    >
+      {{ value }}{% if option_disabled %} (Sold Out){% endif %}
+    </option>
+  {% endif %}
+{%- endfor -%}

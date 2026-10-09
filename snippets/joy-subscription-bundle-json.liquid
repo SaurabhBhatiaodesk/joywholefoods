@@ -1,0 +1,49 @@
+{% doc %}
+  Emits one seasonal box as a JSON object for `window.AVADA_JW.bundles`.
+
+  Extracted so the section can build that list from either source without keeping two
+  copies of these fields in sync: the curated box collections (no lookup limit), or the
+  legacy `all_products[handle]` path kept for themes configured before the collection
+  picker existed.
+
+  Writes no separator — the caller decides where commas go.
+
+  @param {product} product - the box product, already resolved
+  @param {string} plan_group_id - app plan group id from the section settings; blank
+    sends every group the product carries
+  @example
+  {% render 'joy-subscription-bundle-json', product: p, plan_group_id: plan_group_id %}
+{% enddoc %}
+{
+  "productId": {{ product.id | json }},
+  "handle": {{ product.handle | json }},
+  "title": {{ product.title | json }},
+  {%- comment -%}
+    variantId is what /cart/add.js actually needs. Without it getBundleVariantId()
+    returns null, buildBundleSelections() drops EVERY box, and the cart silently gets no
+    subscription line at all (which also nulls pickStapleSellingPlanId, so staples lose
+    __staple).
+  {%- endcomment -%}
+  "variantId": {{ product.selected_or_first_available_variant.id | json }},
+  "vendor": {{ product.vendor | json }},
+  "image": {{ product.featured_image | json }},
+  "price": {{ product.price | json }},
+  "compare_at_price": {{ product.compare_at_price | json }},
+  "available": {{ product.available | json }},
+  "selling_plan_groups": {{ product.selling_plan_groups | json }},
+  {%- comment -%}
+    App-side plan data (discount + tier). AVADA_SUBSCRIPTION cannot supply this on a page
+    template — it reads `product.metafields` and a page has no product context, so its
+    `subscriptionPlans` is always []. Here we DO have a product per box.
+
+    `.value` is REQUIRED to index into a JSON metafield: `data` is a Metafield object, so
+    `data[id]` silently returns nil (printing it raw works, indexing it does not).
+  {%- endcomment -%}
+  {%- assign plan_all = product.metafields.avada_subscription_plan_v2.data.value -%}
+  {%- if plan_group_id != blank and plan_all != blank -%}
+    {%- assign plan_picked = plan_all[plan_group_id] -%}
+    "plan_v2": {%- if plan_picked -%}{ {{ plan_group_id | json }}: {{ plan_picked | json }} }{%- else -%}false{%- endif -%}
+  {%- else -%}
+    "plan_v2": {{ plan_all | default: false }}
+  {%- endif -%}
+}

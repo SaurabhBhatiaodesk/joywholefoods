@@ -1,0 +1,130 @@
+<div id="{{ section.id }}" class="page-width section-{{ section.id }}-padding">
+  
+  <h2>{{ section.settings.title }}</h2>
+
+  {% for step in section.blocks %}
+  
+  	<div class="benefit">
+        <h3 class="h6">{{ step.settings.title }}</h3>
+        <div class="description">{{ step.settings.description }}</div>
+  	</div>
+  {% endfor %}
+</div>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.mobile_padding_top }}px;
+    padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  
+  #{{ section.id }} h2 {
+    font-size: 32px;
+    text-align: center;
+    margin-top: 0;
+  }
+  .benefit h3,
+  .benefit .description {
+    text-align: center;
+  }
+  .benefit h3 {
+    color: #9BB83C !important;
+  }
+  .benefit .description {
+    font-size: 16px;
+  }
+  .benefit .benefit {
+    margin: 50px auto 0;
+    max-width: 800px;
+  }
+  .benefit a {
+    color: #043D22;
+    text-decoration: none;
+  }
+{%- endstyle -%}
+ 
+{% schema %}
+  {
+    "name": "Benefits",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "mobile_padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Mobile top padding",
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "mobile_padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Mobile bottom padding",
+        "default": 40
+      }
+	],
+	"blocks": [
+      {
+        "type": "benefit",
+        "name": "Benefit",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Benefits"
+      }
+    ]
+  }
+{% endschema %}

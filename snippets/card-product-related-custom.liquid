@@ -1,0 +1,99 @@
+{% assign current_variant = card_product.selected_or_first_available_variant %}
+{% assign featured_media = card_product.featured_media %}
+
+<div class="card-wrapper related-card-wrapper">
+  <div class="card related-card">
+    <div class="card__inner related-card__inner">
+      <a href="{{ card_product.url }}" class="related-card__media-link">
+        <div class="media media--transparent related-card__media">
+          {% if featured_media %}
+            {{
+              featured_media
+              | image_url: width: 900
+              | image_tag:
+                loading: 'lazy',
+                widths: '200, 300, 400, 533, 720, 900',
+                sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw',
+                class: 'related-card__image'
+            }}
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg related-card__image' }}
+          {% endif %}
+        </div>
+      </a>
+
+      <div class="related-product-zoom-icon">
+        <a href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M11.742 10.344l3.387 3.387-1.398 1.398-3.387-3.387a6 6 0 1 1 1.398-1.398zM6.5 11a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z"></path>
+            <path d="M6 4.75a.75.75 0 0 1 .75.75v.75h.75a.75.75 0 0 1 0 1.5h-.75v.75a.75.75 0 0 1-1.5 0v-.75H4.5a.75.75 0 0 1 0-1.5h.75V5.5A.75.75 0 0 1 6 4.75z"></path>
+          </svg>
+        </a>
+      </div>
+
+      <div class="card__badge">
+        {% if card_product.available == false %}
+          <span class="badge">
+            {{ 'products.product.sold_out' | t }}
+          </span>
+        {% elsif current_variant.compare_at_price > current_variant.price and card_product.available %}
+          <span class="badge">
+            {{ 'products.product.on_sale' | t }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card__content related-card__content">
+      <div class="card__information related-card__information">
+        {% if show_vendor and card_product.vendor != blank %}
+          <div class="caption-with-letter-spacing light">
+            {{ card_product.vendor }}
+          </div>
+        {% endif %}
+
+        <h3 class="card__heading related-card__heading">
+          <a href="{{ card_product.url }}" class="full-unstyled-link">
+            {{ card_product.title | escape }}
+          </a>
+        </h3>
+
+        <div class="related-card-price">
+          {% render 'price', product: card_product, use_variant: true, show_badges: false %}
+        </div>
+
+        {% if show_rating %}
+          <div class="related-card__rating">
+            {% if card_product.metafields.reviews.rating.value != blank %}
+              {% assign rating_value = card_product.metafields.reviews.rating.value.rating | default: 0 %}
+              {% assign rating_count = card_product.metafields.reviews.rating_count | default: 0 %}
+
+              <span class="related-stars">★★★★★</span>
+              <span class="rating-count">{{ rating_count }} reviews</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if current_variant %}
+        <div
+          class="custom-addToCart-os"
+          data-variant-id="{{ current_variant.id }}"
+          data-available="{{ current_variant.available }}"
+        >
+          <button
+            type="button"
+            class="custom-add-to-cart-btn-os"
+            {% unless current_variant.available %}disabled{% endunless %}
+          >
+            {% if current_variant.available %}
+              {{ 'products.product.add_to_cart' | t }}
+            {% else %}
+              {{ 'products.product.sold_out' | t }}
+            {% endif %}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+.facets__disclosure {
+    /* max-width: 175px; */
+    max-width: 100%;
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px
+}
+
+/* .facets__summary {
+    margin-bottom: 0;
+    color: #4a4a4a;
+    font-size: 18px;
+    letter-spacing: -0.36px;
+    background: #fff;
+    border: 1px solid #C4D1D0;
+    border-radius: 5px;
+    padding: 7px 14px;
+    width: 100%;
+    margin-right: 13px;
+} */
+
+.facets__summary {
+    margin-bottom: 0;
+    color: #4a4a4a;
+    font-size: 16px;
+    letter-spacing: -.36px;
+    background: #fff;
+    border-bottom: 1px solid #C4D1D0;
+    border-radius: 0;
+    padding: 0 0 8px;
+    width: 100%;
+    margin-right: 0;
+}
+
+.facets__disclosure[open] .icon-caret {
+    transform: rotate(180deg);
+}
+
+.facets__heading,
+.facet-filters__label{
+    font-family: 'DM Sans 9pt';
+    color: #043D22;
+    font-size: 17px;
+    letter-spacing: -.36px;
+    margin: 0 0 14px;
+}
+.facets-container {
+    padding: 0;
+}
+.facets__summary .icon-caret {
+    right: 4px;
+}
+.facet-filters__field .select__select {
+    border: 1px solid #C4D1D0;
+    color: #4a4a4a;
+    font-size: 15px;
+    letter-spacing: -0.36px;
+    background: #fff;
+    border-radius: 5px;
+    padding: 7px 14px;
+}
+
+.facet-filters__field .select {
+    max-width: 195px;
+    width: 100%;
+}
+
+.facet-filters {
+}
+
+.facet-filters__sort+.icon-caret {
+    right: 14px;
+}
+
+.facet-filters__label {
+    width: 77px;
+}
+
+.facets__form {
+    gap: 0px;
+}
+
+.active-facets__button--light .active-facets__button-inner {
+    letter-spacing: -0.36px;
+}
+
+a.active-facets__button-remove.underlined-link {
+    letter-spacing: -0.36px;
+}
+.facet-filters__sort:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+.facet-filters__field {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.facet-filters.sorting.caption {
+    width: 100%;
+}
+@media (max-width: 767px) {
+  .mobile-facets__wrapper {
+      justify-content: center;
+  }
+  
+  .mobile-facets__open>*+* {
+      letter-spacing: -0.36px;
+      font-size: 16px;
+  }
+  
+
+}

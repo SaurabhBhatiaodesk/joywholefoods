@@ -1,0 +1,82 @@
+<!-- popup start -->
+{{ 'custom-pop.css' | asset_url | stylesheet_tag }}
+<div id="sitewide-popup" class="sitewide-popup" style="display:none;">
+  
+  <div class="store-is-open" style="display: none;">
+    <div class="header"{%if settings.popup_image != blank %} style="background-image:url({{ settings.popup_image | img_url: 'original' }})"{% endif %}>
+    	<h2>{{settings.popup_open__header | replace_first: '<p>', '' | replace_first: '</p>'}}</h2>
+    </div>
+    <div class="countdown">
+      <div class="countdownText">
+        <span class="open">This Week's Orders Open in:</span>
+        <span class="close">This Week's Orders Close in:</span>
+      </div>
+      <div class="timer"></div>
+    </div>
+    <div class="popup-content">
+      {{settings.popup_open__body}}
+      {% unless settings.popup_button_text == blank %}
+      <a href="{{ settings.popup_button_link }}"><button type="button" class="button button--primary">{{ settings.popup_button_text }}</button></a>
+      {% endunless %}
+    </div>
+  </div>
+  
+  
+  <div class="store-is-close" style="display: none;">
+  
+    <div class="header"{%if settings.popup_image != blank %} style="background-image:url({{ settings.popup_image | img_url: 'original' }})"{% endif %}>
+    	<h2>{{settings.popup_closed__header | replace_first: '<p>', '' | replace_first: '</p>'}}</h2>
+    </div>
+    <div class="countdown">
+      <div class="countdownText">
+        <span class="open">This Week's Orders Open in:</span>
+        <span class="close">This Week's Orders Close in:</span>
+      </div>
+      <div class="timer"></div>
+    </div>
+ 
+    <div class="popup-content">
+      {{settings.popup_closed__body}}
+       <div class="klaviyo-form-Xx3cZd"></div>
+  	</div>
+
+  </div>
+  
+</div>
+
+<script>
+  $(function(){
+    
+    var open_popup = false;
+    switch('{{ settings.popup_mode }}') {
+
+      case 'always_homepage_only':
+
+        open_popup = location.pathname === '/' && COUNTER.is_closed;
+        break;
+
+      case 'once_per_user':
+
+        if(!localStorage.getItem('sitewide-popup-1') && COUNTER.is_closed) {
+          open_popup = true;
+          localStorage.setItem('sitewide-popup-1', true);
+        }
+        break;
+
+      case 'each_session':
+
+        if(!sessionStorage.getItem('sitewide-popup-1') && COUNTER.is_closed) {
+          open_popup = true;
+          sessionStorage.setItem('sitewide-popup-1', true);
+        }
+        break;
+
+    }
+
+    $('<a href="#sitewide-popup"></a>').modaal({ 
+      start_open: open_popup,
+    });
+
+  });
+</script>
+<!-- popup end -->

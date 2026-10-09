@@ -1,0 +1,1171 @@
+{% comment %} related product section {% endcomment %}
+
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'section-related-products.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.image_shape == 'blob' %}
+  {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+<style>
+.qty-atc-container {
+    z-index: 2;
+    background: #fff;
+    text-align:center;
+    width: 100%;
+    display:flex;
+    align-items:center;
+   justify-content:center;
+
+}
+.quick-add {
+    width: 100%;
+}
+button.custom-add-to-cart-btn-os {
+    background: #086C3F;
+}
+
+/* PDP Customers Also Bought: same collection-card variant dropdown styles */
+.related-products .card-wrapper-os .qty-atc-container {
+  flex-direction: column;
+  gap: 0;
+}
+
+.related-products .card-wrapper-os .custom-addToCart-os,
+.related-products .card-wrapper-os .quantity-selector-and-buyNow-wrapper-os,
+.related-products .card-wrapper-os .restocking-soon-product-os,
+.related-products .card-wrapper-os .view-product-os {
+  display: none;
+}
+
+.related-products .card-wrapper-os .custom-addToCart-os.active,
+.related-products .card-wrapper-os .quantity-selector-and-buyNow-wrapper-os.active,
+.related-products .card-wrapper-os .restocking-soon-product-os.active,
+.related-products .card-wrapper-os .view-product-os.active {
+  display: block;
+}
+
+.related-products .card-wrapper-os .custom-add-to-cart-btn-os.is-notify,
+.related-products .card-wrapper-os .custom-add-to-cart-btn-os[data-notify-label] {
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  border-radius: 6px;
+  background: #087840;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  transition: background .2s ease, opacity .2s ease;
+}
+
+.related-products .card-wrapper-os .custom-add-to-cart-btn-os:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+/* PDP Customers Also Bought: Seasonal box swap button should look like normal Add to cart button */
+.related-products .card-wrapper-os product-form,
+.related-products .card-wrapper-os product-form form {
+  display: block;
+  width: 100%;
+}
+
+.related-products .card-wrapper-os .swap-product-btn-os.quick-add__submit {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  min-height: 44px;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  border: 0;
+  border-radius: 6px;
+  background: #087840;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  box-shadow: none;
+}
+
+.related-products .card-wrapper-os .swap-product-btn-os.quick-add__submit::before,
+.related-products .card-wrapper-os .swap-product-btn-os.quick-add__submit::after {
+  display: none !important;
+}
+
+.related-products .card-wrapper-os .swap-product-btn-os.quick-add__submit[disabled] {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.related-products .joy-card-product-variant-picker {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-family: 'DM Sans', sans-serif;
+  text-align: left;
+  width: 100%;
+}
+
+.related-products .joy-card-product-variant-picker__label {
+  color: #00733f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.related-products .joy-card-product-variant-picker__select-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.related-products .joy-card-product-variant-picker__select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 42px 0 16px;
+  border: 1px solid #b8d8ca;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #00735a;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.related-products .joy-card-product-variant-picker__select-wrap::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid #00735a;
+  border-bottom: 2px solid #00735a;
+  transform: translateY(-65%) rotate(45deg);
+  pointer-events: none;
+}
+
+
+/* PDP Customers Also Bought: collection-style quantity box */
+.related-products .card-wrapper-os .quantity-selector-and-buyNow-wrapper-os {
+  width: 100%;
+}
+
+.related-products .card-wrapper-os .joy-card-quantity-control-os {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  border: 1px solid #8ecbb8;
+  border-radius: 7px;
+  background: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.related-products .card-wrapper-os .joy-card-quantity-button-os {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #3a9b79;
+  cursor: pointer;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.related-products .card-wrapper-os .joy-card-quantity-button-os svg {
+  display: none !important;
+}
+
+.related-products .card-wrapper-os .joy-card-quantity-minus-os::before {
+  content: "−";
+}
+
+.related-products .card-wrapper-os .joy-card-quantity-plus-os::before {
+  content: "+";
+}
+
+.related-products .card-wrapper-os .joy-card-quantity-button-os:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.related-products .card-wrapper-os .joy-card-quantity-value-os {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 4px;
+  color: #00733f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.related-products .card-wrapper-os .joy-card-quantity-input-os {
+  display: none !important;
+}
+</style>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient no-js-hidden">
+  <product-recommendations
+    class="related-products page-width section-{{ section.id }}-padding isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+    data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}"
+  >
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+
+      {% if section.settings.show_relevant_information %}
+        <div class="related-products-heading">
+          <h2 id="related-products-heading" class="related-products__heading inline-richtext {{ section.settings.heading_size }} active">
+            {{ section.settings.heading }}
+          </h2>
+          <h2 id="relevant-information-heading" class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
+            {{ section.settings.relevant_information_heading }}
+          </h2>
+          <h2 id="extra-section-heading" class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
+            {{ section.settings.extra_section_heading }}
+          </h2>
+        </div>
+      {% else %}
+        <h2 class="related-products__heading inline-richtext {{ section.settings.heading_size }}" style="{% unless section.settings.show_relevant_information %}opacity: 1{% endunless %}">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      <ul
+        class="related-products-grid grid product-grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
+        role="list"
+      >
+        {% for recommendation in recommendations.products %}
+          <li class="grid__item">
+            {% render 'card-product',
+              card_product: recommendation,
+              media_aspect_ratio: section.settings.image_ratio,
+              image_shape: section.settings.image_shape,
+              show_secondary_image: section.settings.show_secondary_image,
+              show_vendor: section.settings.show_vendor,
+              show_rating: section.settings.show_rating,
+              quick_add: section.settings.enable_quick_add,
+              section_id: section.id
+            %}
+
+            {%- unless recommendation.has_only_default_variant -%}
+              <script type="application/json" data-joy-card-variant-data>
+                {
+                  "productId": {{ recommendation.id | json }},
+                  "optionName": {{ recommendation.options_with_values.first.name | default: 'Variant' | json }},
+                  "fromPrice": {{ recommendation.price_min | money | json }},
+                  "selectedVariantId": {{ recommendation.selected_or_first_available_variant.id | json }},
+                  "variants": [
+                    {%- for variant in recommendation.variants -%}
+                      {
+                        "id": {{ variant.id | json }},
+                        "title": {{ variant.title | json }},
+                        "price": {{ variant.price | money | json }},
+                        "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
+                        "available": {{ variant.available | json }},
+                        "inventoryQuantity": {% if variant.inventory_quantity < 0 %}1000000{% else %}{{ variant.inventory_quantity | json }}{% endif %},
+                        "cartQuantity": {{ cart | item_count_for_variant: variant.id | json }},
+                        "min": {{ variant.quantity_rule.min | json }},
+                        "max": {% if variant.quantity_rule.max != null %}{{ variant.quantity_rule.max | json }}{% else %}null{% endif %},
+                        "step": {{ variant.quantity_rule.increment | json }}
+                      }{% unless forloop.last %},{% endunless %}
+                    {%- endfor -%}
+                  ]
+                }
+              </script>
+            {%- endunless -%}
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% if section.settings.show_relevant_information %}
+        <div class="relevant-information__content">
+          {{ section.settings.relevant_information_content }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_relevant_information %}
+        <div class="extra-section">
+          {{ section.settings.extra_section_content }}
+        </div>
+      {% endif %}
+
+    {% endif %}
+  </product-recommendations>
+
+  {% if section.settings.image_shape == 'arch' %}
+    {% render 'mask-arch' %}
+  {%- endif -%}
+</div>
+
+
+{% comment %}
+  ============================================================
+  PRODUCT PAGE — Related products cart initializer
+  Runs only on product pages because globoFilterRenderCompleted
+  (which handles collection pages) never fires here.
+  ============================================================
+{% endcomment %}
+{% if template.name == 'product' %}
+<script>
+(function () {
+  var sectionSelector = 'product-recommendations.section-{{ section.id }}-padding';
+  var recEl = document.querySelector(sectionSelector);
+  var cartCache = new Map();
+
+  function activate(el) {
+    if (!el) return;
+    el.classList.add('active');
+    el.setAttribute('aria-hidden', 'false');
+  }
+
+  function deactivate(el) {
+    if (!el) return;
+    el.classList.remove('active');
+    el.setAttribute('aria-hidden', 'true');
+  }
+
+  function updateHeaderCounter(count) {
+    var bubble = document.querySelector('.header-cart-counter-os');
+    if (bubble) bubble.textContent = count > 99 ? '99+' : String(count);
+
+    var shopifyBubble = document.querySelector('.cart-count-bubble span');
+    if (shopifyBubble) shopifyBubble.textContent = count;
+  }
+
+  function fetchCart() {
+    return fetch('/cart.js', { headers: { Accept: 'application/json' } })
+      .then(function (r) {
+        if (!r.ok) throw new Error('Failed to fetch cart');
+        return r.json();
+      })
+      .then(function (cart) {
+        cartCache = new Map(
+          (cart.items || []).map(function (item) {
+            return [Number(item.variant_id), { key: item.key, qty: Number(item.quantity) }];
+          })
+        );
+        updateHeaderCounter(cart.item_count || 0);
+        return cart;
+      });
+  }
+
+  function addToCart(variantId, qty) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ items: [{ id: Number(variantId), quantity: Number(qty || 1) }] })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('Add to cart failed');
+      return fetchCart();
+    });
+  }
+
+  function changeCartQty(variantId, desiredQty) {
+    var info = cartCache.get(Number(variantId));
+
+    if (!info) {
+      return fetchCart().then(function () {
+        info = cartCache.get(Number(variantId));
+        if (!info) return addToCart(variantId, desiredQty);
+        return doChange(info.key, desiredQty);
+      });
+    }
+
+    return doChange(info.key, desiredQty);
+  }
+
+  function doChange(lineKey, qty) {
+    return fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ id: lineKey, quantity: Number(qty) })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('Cart change failed');
+      return fetchCart();
+    });
+  }
+
+  function getScope() {
+    return recEl || document.querySelector(sectionSelector) || document;
+  }
+
+  function getCard(element) {
+    var root = element ? (element.closest('.card-wrapper-os') || element.closest('li.grid__item')) : null;
+    if (!root) return null;
+
+    var addWrapper = root.querySelector('.custom-addToCart-os');
+    var qtyWrap = root.querySelector('.quantity-selector-and-buyNow-wrapper-os');
+    var qtyControl = root.querySelector('[data-joy-card-quantity-control]') || qtyWrap;
+
+    return {
+      root: root,
+      addWrapper: addWrapper,
+      addButton: addWrapper ? addWrapper.querySelector('.custom-add-to-cart-btn-os') : null,
+      qtyWrap: qtyWrap,
+      qtyControl: qtyControl,
+      qtyInput: root.querySelector('[data-joy-card-quantity-input]') || root.querySelector('.quantity__input'),
+      qtyLabel: root.querySelector('[data-joy-card-quantity-label]') || root.querySelector('.custom-quantity-value-os'),
+      qtyUnit: root.querySelector('[data-joy-card-quantity-unit]'),
+      plusButton: root.querySelector('[data-joy-card-quantity-plus]') || root.querySelector('.quantity__button[name="plus"]'),
+      minusButton: root.querySelector('[data-joy-card-quantity-minus]') || root.querySelector('.quantity__button[name="minus"]'),
+      restockEl: root.querySelector('.restocking-soon-product-os'),
+      viewEl: root.querySelector('.view-product-os'),
+      hiddenInput: root.querySelector('input[name="id"], .product-variant-id')
+    };
+  }
+
+  function parseVariantData(listItem) {
+    var script = listItem ? listItem.querySelector('[data-joy-card-variant-data]') : null;
+    if (!script) return null;
+
+    try {
+      return JSON.parse(script.textContent || '{}');
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getVariantData(card, variantId) {
+    var listItem = card && card.root ? card.root.closest('li.grid__item') : null;
+    var data = parseVariantData(listItem);
+    if (!data || !Array.isArray(data.variants)) return null;
+
+    return data.variants.find(function (variant) {
+      return String(variant.id) === String(variantId);
+    }) || null;
+  }
+
+  function getSelectedVariantId(card) {
+    if (!card || !card.root) return 0;
+
+    var picker = card.root.querySelector('[data-joy-card-product-variant-picker] select');
+    if (picker && picker.value) return Number(picker.value);
+
+    if (card.hiddenInput && card.hiddenInput.value && !card.hiddenInput.disabled) {
+      return Number(card.hiddenInput.value);
+    }
+
+    return Number(card.addWrapper ? card.addWrapper.dataset.variantId : 0);
+  }
+
+  function isAvailable(card) {
+    return Boolean(card && card.addWrapper && card.addWrapper.dataset.available === 'true');
+  }
+
+  function findCardPriceElement(cardRoot) {
+    if (!cardRoot) return null;
+
+    return (
+      cardRoot.querySelector('.price__regular .price-item--regular') ||
+      cardRoot.querySelector('.price .price-item--regular') ||
+      cardRoot.querySelector('.price__sale .price-item--sale') ||
+      cardRoot.querySelector('.price-item')
+    );
+  }
+
+  function updateCardPriceDisplay(cardRoot, variant) {
+    if (!cardRoot || !variant) return;
+
+    var priceWrapper = cardRoot.querySelector('.price');
+    var regularPrice = cardRoot.querySelector('.price__regular .price-item--regular');
+    var salePrice = cardRoot.querySelector('.price__sale .price-item--sale');
+    var compareAtPrice = cardRoot.querySelector('.price__sale .price-item--regular');
+    var fallbackPrice = findCardPriceElement(cardRoot);
+    var hasCompareAtPrice = Boolean(variant.compareAtPrice);
+
+    if (priceWrapper) priceWrapper.classList.toggle('price--on-sale', hasCompareAtPrice);
+
+    if (hasCompareAtPrice) {
+      if (salePrice) salePrice.textContent = variant.price;
+      else if (fallbackPrice) fallbackPrice.textContent = variant.price;
+      if (compareAtPrice) compareAtPrice.textContent = variant.compareAtPrice;
+    } else {
+      if (regularPrice) regularPrice.textContent = variant.price;
+      else if (salePrice) salePrice.textContent = variant.price;
+      else if (fallbackPrice) fallbackPrice.textContent = variant.price;
+      if (compareAtPrice) compareAtPrice.textContent = '';
+    }
+  }
+
+  function updateQuantityLabel(card, qty) {
+    if (!card || !card.qtyLabel) return;
+
+    var quantity = Number(qty || 0);
+    var span = card.qtyLabel.querySelector('span');
+
+    if (span) {
+      span.textContent = String(quantity);
+      if (card.qtyUnit) card.qtyUnit.textContent = quantity === 1 ? 'item' : 'items';
+    } else {
+      card.qtyLabel.innerHTML = 'Added: <span>' + quantity + '</span> <span data-joy-card-quantity-unit>' + (quantity === 1 ? 'item' : 'items') + '</span>';
+      card.qtyUnit = card.qtyLabel.querySelector('[data-joy-card-quantity-unit]');
+    }
+  }
+
+  function getMaxQuantity(card, variant) {
+    var ruleMax = variant && variant.max ? Number(variant.max) : Infinity;
+    var inventory = variant && Number(variant.inventoryQuantity) > 0 && Number(variant.inventoryQuantity) < 1000000
+      ? Number(variant.inventoryQuantity)
+      : Infinity;
+
+    return Math.min(ruleMax, inventory);
+  }
+
+  function refreshQuantityButtons(card, qty) {
+    if (!card) return;
+
+    var variantId = getSelectedVariantId(card);
+    var variant = getVariantData(card, variantId);
+    var value = Number(qty || 0);
+    var max = getMaxQuantity(card, variant);
+
+    if (card.qtyInput) card.qtyInput.value = String(value);
+
+    updateQuantityLabel(card, value);
+
+    if (card.minusButton) {
+      var disableMinus = value <= 0;
+      card.minusButton.disabled = disableMinus;
+      card.minusButton.classList.toggle('disabled', disableMinus);
+    }
+
+    if (card.plusButton) {
+      var disablePlus = Number.isFinite(max) && value >= max;
+      card.plusButton.disabled = disablePlus;
+      card.plusButton.classList.toggle('disabled', disablePlus);
+    }
+  }
+
+  function applyVariantToCard(listItem, data, variant) {
+    if (!listItem || !data || !variant) return;
+
+    var card = getCard(listItem);
+    if (!card) return;
+
+    var cardRoot = card.root.querySelector('.card') || card.root;
+    updateCardPriceDisplay(cardRoot, variant);
+
+    if (card.hiddenInput) {
+      card.hiddenInput.value = variant.id;
+      card.hiddenInput.removeAttribute('disabled');
+    }
+
+    if (card.addWrapper) {
+      card.addWrapper.dataset.variantId = variant.id;
+      card.addWrapper.dataset.available = String(Boolean(variant.available));
+    }
+
+    if (card.addButton) {
+      var addLabel = card.addButton.dataset.addLabel || 'Add to cart';
+      var notifyLabel = card.addButton.dataset.notifyLabel || 'Get notified';
+      card.addButton.textContent = variant.available ? addLabel : notifyLabel;
+      card.addButton.classList.toggle('is-notify', !variant.available);
+      card.addButton.disabled = false;
+    }
+
+    if (card.qtyControl) {
+      card.qtyControl.dataset.initialVariantId = String(variant.id);
+      card.qtyControl.dataset.initialCartQuantity = String(variant.cartQuantity || 0);
+      card.qtyControl.dataset.initialInventoryQuantity = String(variant.inventoryQuantity || 1000000);
+      card.qtyControl.dataset.initialRuleMax = variant.max ? String(variant.max) : '';
+      card.qtyControl.dataset.initialStep = String(variant.step || 1);
+    }
+
+    if (card.qtyInput) {
+      var min = variant.min || 1;
+      var step = variant.step || 1;
+      card.qtyInput.value = String(min);
+      card.qtyInput.dataset.totalQuantity = String(variant.inventoryQuantity || 1000000);
+      card.qtyInput.dataset.cartQuantity = String(variant.cartQuantity || 0);
+      card.qtyInput.dataset.min = String(min);
+      card.qtyInput.min = String(min);
+      card.qtyInput.step = String(step);
+
+      if (variant.max) {
+        card.qtyInput.dataset.max = String(variant.max);
+        card.qtyInput.max = String(variant.max);
+      } else {
+        card.qtyInput.removeAttribute('data-max');
+        card.qtyInput.removeAttribute('max');
+      }
+    }
+
+    syncCardFromCart(card);
+  }
+
+  function requireVariantSelection(listItem, data) {
+    var card = getCard(listItem);
+    if (!card) return;
+
+    var cardRoot = card.root.querySelector('.card') || card.root;
+    var priceElement = findCardPriceElement(cardRoot);
+
+    if (priceElement && data && data.fromPrice) priceElement.textContent = 'From ' + data.fromPrice;
+
+    if (card.hiddenInput) card.hiddenInput.setAttribute('disabled', 'disabled');
+    if (card.addButton) card.addButton.disabled = true;
+    activate(card.addWrapper);
+    deactivate(card.qtyWrap);
+    deactivate(card.restockEl);
+    deactivate(card.viewEl);
+  }
+
+  function syncCardFromCart(card) {
+    if (!card || !card.addWrapper) return;
+
+    var picker = card.root.querySelector('[data-joy-card-product-variant-picker] select');
+    if (picker && !picker.value) {
+      activate(card.addWrapper);
+      deactivate(card.qtyWrap);
+      deactivate(card.restockEl);
+      deactivate(card.viewEl);
+      if (card.addButton) card.addButton.disabled = true;
+      return;
+    }
+
+    var variantId = getSelectedVariantId(card);
+    var item = cartCache.get(Number(variantId));
+
+    if (!isAvailable(card)) {
+      deactivate(card.qtyWrap);
+      deactivate(card.viewEl);
+      deactivate(card.addWrapper);
+      activate(card.restockEl);
+      return;
+    }
+
+    deactivate(card.restockEl);
+    deactivate(card.viewEl);
+
+    if (item && item.qty > 0) {
+      deactivate(card.addWrapper);
+      activate(card.qtyWrap);
+      refreshQuantityButtons(card, item.qty);
+    } else {
+      activate(card.addWrapper);
+      deactivate(card.qtyWrap);
+      if (card.addButton) card.addButton.disabled = false;
+    }
+  }
+
+  function syncAllCardsFromCart() {
+    var scope = getScope();
+    return fetchCart().then(function () {
+      scope.querySelectorAll('.custom-addToCart-os[data-variant-id]').forEach(function (wrapper) {
+        syncCardFromCart(getCard(wrapper));
+      });
+    }).catch(function () {
+      scope.querySelectorAll('.custom-addToCart-os[data-variant-id]').forEach(function (wrapper) {
+        var card = getCard(wrapper);
+        if (card && isAvailable(card)) {
+          activate(card.addWrapper);
+          deactivate(card.qtyWrap);
+          deactivate(card.restockEl);
+          deactivate(card.viewEl);
+        }
+      });
+    });
+  }
+
+  function formatVariantOptionText(variant) {
+    if (!variant) return '';
+    return variant.title + (variant.available ? '' : ' (Sold Out)');
+  }
+
+  function initializeVariantPickers(root) {
+    var scope = root || getScope();
+
+    scope.querySelectorAll('[data-joy-card-variant-data]').forEach(function (script) {
+      var listItem = script.closest('li.grid__item');
+      if (!listItem || listItem.dataset.joyRelatedVariantPicker === 'true') return;
+
+      var data = parseVariantData(listItem);
+      if (!data || !Array.isArray(data.variants) || data.variants.length < 2) return;
+
+      var card = getCard(listItem);
+      if (!card) return;
+
+      var insertionTarget =
+        card.root.querySelector('.quick-add.no-js-hidden') ||
+        card.root.querySelector('.qty-atc-container') ||
+        card.root.querySelector('.card-information') ||
+        card.root;
+
+      if (!insertionTarget) return;
+
+      listItem.dataset.joyRelatedVariantPicker = 'true';
+
+      var picker = document.createElement('div');
+      picker.className = 'joy-card-product-variant-picker';
+      picker.setAttribute('data-joy-card-product-variant-picker', '');
+
+      var label = document.createElement('label');
+      label.className = 'joy-card-product-variant-picker__label';
+      label.setAttribute('for', 'JoyRelatedCardVariant-' + data.productId + '-{{ section.id }}');
+      label.textContent = data.optionName || 'Variant';
+
+      var selectWrap = document.createElement('div');
+      selectWrap.className = 'joy-card-product-variant-picker__select-wrap';
+
+      var select = document.createElement('select');
+      select.id = 'JoyRelatedCardVariant-' + data.productId + '-{{ section.id }}';
+      select.className = 'joy-card-product-variant-picker__select';
+
+      var placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select ' + String(data.optionName || 'variant').toLowerCase();
+      placeholder.selected = true;
+      placeholder.disabled = true;
+      select.appendChild(placeholder);
+
+      data.variants.forEach(function (variant) {
+        var option = document.createElement('option');
+        option.value = variant.id;
+        option.textContent = formatVariantOptionText(variant);
+        select.appendChild(option);
+      });
+
+      select.addEventListener('change', function () {
+        var selected = data.variants.find(function (variant) {
+          return String(variant.id) === String(select.value);
+        });
+
+        applyVariantToCard(listItem, data, selected);
+      });
+
+      selectWrap.appendChild(select);
+      picker.appendChild(label);
+      picker.appendChild(selectWrap);
+
+      var inventoryMessage = insertionTarget.querySelector('.collection-product__inventory-os');
+      if (inventoryMessage && inventoryMessage.nextSibling) {
+        insertionTarget.insertBefore(picker, inventoryMessage.nextSibling);
+      } else if (inventoryMessage) {
+        insertionTarget.appendChild(picker);
+      } else {
+        insertionTarget.insertBefore(picker, insertionTarget.firstChild);
+      }
+
+      requireVariantSelection(listItem, data);
+    });
+  }
+
+  function bindEventsOnce() {
+    if (document.documentElement.dataset.joyRelatedAtcBound === 'true') return;
+    document.documentElement.dataset.joyRelatedAtcBound = 'true';
+
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest('.related-products .custom-add-to-cart-btn-os');
+      if (!button) return;
+
+      var card = getCard(button);
+      if (!card || !card.addWrapper) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      var variantId = getSelectedVariantId(card);
+      if (!variantId || button.disabled) return;
+
+      if (!isAvailable(card)) {
+        if (typeof window.openJoyPdpNotifyOverlay === 'function') {
+          window.openJoyPdpNotifyOverlay(card.addWrapper.dataset.productUrl || '', variantId);
+        } else if (card.addWrapper.dataset.productUrl) {
+          window.location.href = card.addWrapper.dataset.productUrl + '?variant=' + encodeURIComponent(variantId);
+        }
+        return;
+      }
+
+      if (button.dataset.joyAdding === 'true') return;
+
+      var originalText = button.textContent;
+      button.dataset.joyAdding = 'true';
+      button.disabled = true;
+      button.textContent = 'Adding...';
+
+      addToCart(variantId, 1)
+        .then(function () {
+          button.textContent = 'Added';
+          syncCardFromCart(getCard(button));
+        })
+        .catch(function (err) {
+          console.error('[Related ATC] error', err);
+          button.textContent = 'Try again';
+        })
+        .finally(function () {
+          window.setTimeout(function () {
+            button.textContent = originalText || 'Add to cart';
+            button.disabled = false;
+            button.dataset.joyAdding = 'false';
+          }, 800);
+        });
+    }, true);
+
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest('.related-products [data-joy-card-quantity-plus], .related-products [data-joy-card-quantity-minus], .related-products .quantity__button[name="plus"], .related-products .quantity__button[name="minus"]');
+      if (!button) return;
+
+      var card = getCard(button);
+      if (!card || !card.qtyWrap || !card.qtyInput) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      var variantId = getSelectedVariantId(card);
+      if (!variantId) return;
+
+      var variant = getVariantData(card, variantId);
+      var step = variant && variant.step ? Number(variant.step) : Number(card.qtyInput.step || 1);
+      var current = Number(card.qtyInput.value || 0);
+      var max = getMaxQuantity(card, variant);
+      var direction = button.matches('[data-joy-card-quantity-plus], .quantity__button[name="plus"]') ? 1 : -1;
+      var desired = Math.max(0, Math.min(max, current + (direction * step)));
+
+      refreshQuantityButtons(card, desired);
+
+      changeCartQty(variantId, desired)
+        .then(function () {
+          var updated = cartCache.get(Number(variantId));
+          var actual = updated ? updated.qty : 0;
+
+          if (actual <= 0) {
+            deactivate(card.qtyWrap);
+            activate(card.addWrapper);
+          } else {
+            refreshQuantityButtons(card, actual);
+          }
+        })
+        .catch(function (err) {
+          console.error('[Related QTY] error', err);
+          syncCardFromCart(card);
+        });
+    }, true);
+  }
+
+  function initRelatedCards(root) {
+    initializeVariantPickers(root || getScope());
+    syncAllCardsFromCart();
+  }
+
+  function boot() {
+    recEl = document.querySelector(sectionSelector);
+    bindEventsOnce();
+
+    if (recEl && (recEl.querySelector('.custom-addToCart-os[data-variant-id]') || recEl.querySelector('[data-joy-card-variant-data]'))) {
+      initRelatedCards(recEl);
+    }
+
+    if (!recEl) return;
+
+    var observer = new MutationObserver(function () {
+      if (recEl.querySelector('.custom-addToCart-os[data-variant-id]') || recEl.querySelector('[data-joy-card-variant-data]')) {
+        initRelatedCards(recEl);
+      }
+    });
+
+    observer.observe(recEl, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "t:sections.related-products.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.related-products.settings.paragraph__1.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "You may also like",
+      "label": "t:sections.related-products.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.related-products.settings.products_to_show.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.related-products.settings.columns_desktop.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "background-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.related-products.settings.header__2.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.related-products.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.related-products.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.related-products.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.related-products.settings.image_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.all.image_shape.options__1.label"
+        },
+        {
+          "value": "arch",
+          "label": "t:sections.all.image_shape.options__2.label"
+        },
+        {
+          "value": "blob",
+          "label": "t:sections.all.image_shape.options__3.label"
+        },
+        {
+          "value": "chevronleft",
+          "label": "t:sections.all.image_shape.options__4.label"
+        },
+        {
+          "value": "chevronright",
+          "label": "t:sections.all.image_shape.options__5.label"
+        },
+        {
+          "value": "diamond",
+          "label": "t:sections.all.image_shape.options__6.label"
+        },
+        {
+          "value": "parallelogram",
+          "label": "t:sections.all.image_shape.options__7.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.all.image_shape.options__8.label"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.all.image_shape.label",
+      "info": "t:sections.all.image_shape.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.related-products.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.related-products.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.related-products.settings.show_rating.label",
+      "info": "t:sections.related-products.settings.show_rating.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_quick_add",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.enable_quick_buy.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_custom_boxes",
+      "default": false,
+      "label": "Show custom boxes"
+    },
+    {
+      "type": "text",
+      "id": "customize_box_label",
+      "default": "Customize",
+      "label": "Customize Box Label"
+    },
+    {
+      "type": "header",
+      "content": "Relevant Information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_relevant_information",
+      "default": false,
+      "label": "Enable relevant information"
+    },
+    {
+      "type": "text",
+      "id": "relevant_information_heading",
+      "default": "Relevant Information",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "relevant_information_content",
+      "default": "<p>Add details about other information</p>",
+      "label": "Content"
+    },
+    {
+      "type": "text",
+      "id": "extra_section_heading",
+      "default": "Relevant Information",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "extra_section_content",
+      "default": "<p>Add details about other information</p>",
+      "label": "Content"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.related-products.settings.header_mobile.content"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "default": "2",
+      "label": "t:sections.related-products.settings.columns_mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.related-products.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.related-products.settings.columns_mobile.options__2.label"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

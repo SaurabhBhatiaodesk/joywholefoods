@@ -1,0 +1,185 @@
+ <style>
+  .policies-section-os {
+  }
+
+  .policies-row-os {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+  }
+
+  .policies-col-os {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    width: calc(20% - 14px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    transition: 0.3s;
+  }
+
+  .policies-col-os:hover {
+      transform: translateY(-10px);
+      transition: 0.3s;
+  }
+
+  .policies-icon-os {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+  }
+
+  .policies-icon-os img {
+      width: 71px;
+      height: 71px;
+  }
+  
+  .policies-col-os h3 {
+      font-size: 32px;
+      line-height: 42px;
+      font-weight: 600;
+      color: #191F3D;
+      margin-top: 1rem;
+      margin-bottom: 0;
+  }
+
+  .policies-col-os p {
+      font-size: 16px;
+      line-height: 24px;
+      color: #191F3D;
+      margin-bottom: 0;
+  }
+
+   @media screen and (max-width: 1028px) {
+     .policies-col-os {
+          width: calc(33.33% - 11px);
+      }
+   }
+   @media screen and (max-width: 767px) {
+    .policies-col-os {
+        width: calc(50% - 8px);
+    }
+    .policies-col-os h3 {
+      font-size: 28px;
+      line-height: 38px;
+    }
+   }
+</style>
+
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.60 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+
+  @media all and (max-width:480px){
+    .policies-content-os{
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .policies-row-os {
+        width: 1320px;
+        flex-wrap: nowrap;
+        margin:0 auto;
+    }
+  }
+{%- endstyle -%}
+
+
+
+<section class="policies-section-os">
+    <div class="page-width container-os section-{{ section.id }}-padding">
+        <div class="policies-content-os">
+            {% if section.settings.heading != blank %}
+              <div class="policies-heading-os">
+                <h2>{{ section.settings.heading }}</h2>
+              </div>
+            {% endif %}
+            <div class="policies-row-os">
+                {% for block in section.blocks %}
+                    <div class="policies-col-os">
+                        {% if block.settings.icon != blank %}
+                            <div class="policies-icon-os">
+                                <img src="{{ block.settings.icon | image_url }}" alt="icon" width="" height="">
+                            </div>
+                        {% endif %}
+                        {% if block.settings.title != blank %}
+                            <p>{{ block.settings.title }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+{% schema %}
+  {
+    "name": "Policies",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 120,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 120,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ],
+      "blocks": [
+    {
+      "name": "Column",
+      "type": "col",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    }
+  ],
+    "presets": [
+      {
+        "name": "Policies"
+      }
+    ]
+  }
+{% endschema %}

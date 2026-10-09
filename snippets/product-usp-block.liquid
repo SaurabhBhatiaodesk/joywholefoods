@@ -1,0 +1,129 @@
+<style>
+    .policies-section-os {
+    }
+
+    .product-usp-row-os {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .product-usp-col-os {
+        background-color: #ffffff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        width: calc(50% - 8px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
+    }
+
+    .product-usp-icon-os {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .product-usp-icon-os img {
+        width: 71px;
+        height: 71px;
+    }
+
+    .product-usp-col-os h3 {
+        font-size: 32px;
+        line-height: 42px;
+        font-weight: 600;
+        color: #191F3D;
+        margin-top: 1rem;
+        margin-bottom: 0;
+    }
+
+    .product-usp-col-os p {
+        font-size: 16px;
+        line-height: 24px;
+        color: #191F3D;
+        margin-bottom: 0;
+    }
+
+    @media screen and (max-width: 767px) {
+        .product-usp-col-os {
+            width: calc(50% - 8px);
+        }
+        .product-usp-col-os h3 {
+            font-size: 28px;
+            line-height: 38px;
+        }
+        
+    }
+
+    @media all and (max-width:480px){
+        .product-usp-row-os {
+            width: 1320px;
+            margin: 0 auto;
+            flex-wrap: nowrap;
+        }
+        .product-usp-block-os {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+    }
+</style>
+
+{% if block.type == 'usp_block' %}
+    <div class="product-usp-block-os">
+        <div class="product-usp-row-os">
+            {% if block.settings.usp_icon != blank or block.settings.usp_title != blank %}
+                <div class="product-usp-col-os">
+                {% if block.settings.usp_icon != blank %}
+                    <div class="product-usp-icon-os">
+                    <img src="{{ block.settings.usp_icon | image_url }}" alt="icon" width="" height="">
+                    </div>
+                {% endif %}
+                {% if block.settings.usp_title != blank %}
+                    <p>{{ block.settings.usp_title }}</p>
+                {% endif %}
+                </div>
+            {% endif %}
+
+            {% if block.settings.usp_icon1 != blank or block.settings.usp_title1 != blank %}
+                <div class="product-usp-col-os">
+                {% if block.settings.usp_icon1 != blank %}
+                    <div class="product-usp-icon-os">
+                    <img src="{{ block.settings.usp_icon1 | image_url }}" alt="icon" width="" height="">
+                    </div>
+                {% endif %}
+                {% if block.settings.usp_title1 != blank %}
+                    <p>{{ block.settings.usp_title1 }}</p>
+                {% endif %}
+                </div>
+            {% endif %}
+
+            {% if block.settings.usp_icon2 != blank or block.settings.usp_title2 != blank %}
+                <div class="product-usp-col-os">
+                {% if block.settings.usp_icon2 != blank %}
+                    <div class="product-usp-icon-os">
+                    <img src="{{ block.settings.usp_icon2 | image_url }}" alt="icon" width="" height="">
+                    </div>
+                {% endif %}
+                {% if block.settings.usp_title2 != blank %}
+                    <p>{{ block.settings.usp_title2 }}</p>
+                {% endif %}
+                </div>
+            {% endif %}
+
+            {% if block.settings.usp_icon3 != blank or block.settings.usp_title3 != blank %}
+                <div class="product-usp-col-os">
+                {% if block.settings.usp_icon3 != blank %}
+                    <div class="product-usp-icon-os">
+                    <img src="{{ block.settings.usp_icon3 | image_url }}" alt="icon" width="" height="">
+                    </div>
+                {% endif %}
+                {% if block.settings.usp_title3 != blank %}
+                    <p>{{ block.settings.usp_title3 }}</p>
+                {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

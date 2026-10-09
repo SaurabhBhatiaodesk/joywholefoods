@@ -1,0 +1,706 @@
+{% comment %}
+  Renders product buy-buttons.
+  Works for both main PDP buy button and sticky-addToCart-col-2-os buy button.
+{% endcomment %}
+
+{% assign sellingplans = false %}
+{% if product.selling_plan_groups.size > 0 %}
+  {% assign sellingplans = true %}
+{% endif %}
+
+{%- liquid
+  assign gift_card_recipient_feature_active = false
+  if block.settings.show_gift_card_recipient and product.gift_card?
+    assign gift_card_recipient_feature_active = true
+  endif
+
+  assign show_dynamic_checkout = false
+  if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+    assign show_dynamic_checkout = true
+  endif
+
+  assign current_variant = product.selected_or_first_available_variant
+  assign check_against_inventory = true
+  assign quantity_rule_soldout = false
+
+  if current_variant.inventory_management != 'shopify' or current_variant.inventory_policy == 'continue'
+    assign check_against_inventory = false
+  endif
+
+  if current_variant.quantity_rule.min > current_variant.inventory_quantity and check_against_inventory
+    assign quantity_rule_soldout = true
+  endif
+-%}
+
+<div
+  {{ block.shopify_attributes }}
+  class="custom-buy-buttons-wrapper"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-product-form-id="{{ product_form_id }}"
+  data-swap-enabled="{% if enable_swap_popup %}true{% else %}false{% endif %}"
+>
+  {%- if product != blank -%}
+    <div
+      class="product-form"
+      data-hide-errors="{{ gift_card_recipient_feature_active }}"
+      data-section-id="{{ section.id }}"
+    >
+      <div class="product-form__error-message-wrapper" role="alert" hidden>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          class="icon icon-error"
+          viewBox="0 0 13 13"
+        >
+          <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+          <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+          <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+          <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7"/>
+        </svg>
+        <span class="product-form__error-message"></span>
+      </div>
+
+      <form class="form custom-direct-cart-form" data-product-id="{{ product.id }}">
+        <input
+          type="hidden"
+          name="id"
+          value="{{ current_variant.id }}"
+          class="product-variant-id"
+        >
+
+        <input
+          type="hidden"
+          name="quantity"
+          value="{{ current_variant.quantity_rule.min | default: 1 }}"
+          class="product-quantity-hidden"
+        >
+
+        <input
+          type="hidden"
+          id="check_template_{{ section.id }}_{{ product.id }}"
+          value="{% if product.template_suffix == 'event' %}true{% else %}false{% endif %}"
+        >
+
+        {% if sellingplans %}
+          <input
+            type="hidden"
+            name="selling_plan"
+            value=""
+            class="product-selling-plan-id"
+          >
+        {% endif %}
+
+        <div class="product-form__buttons d">
+          <button
+            id="DirectAddToCartButton-{{ section.id }}-{{ product.id }}-{{ block.id }}"
+            data-section-id="{{ section.id }}"
+            data-product-id="{{ product.id }}"
+            type="button"
+            class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %} direct-add-to-cart-btn"
+            data-add-label="{{ 'products.product.add_to_cart' | t }}"
+            data-notify-label="Notify me"
+            data-current-variant-id="{{ current_variant.id }}"
+            data-current-variant-available="{{ current_variant.available }}"
+          >
+            <span class="btn-text">
+              {%- if current_variant.available == false or quantity_rule_soldout -%}
+                Notify me
+              {%- else -%}
+                {{ 'products.product.add_to_cart' | t }}
+              {%- endif -%}
+            </span>
+
+            <div class="loading-overlay__spinner hidden">
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="spinner"
+                viewBox="0 0 66 66"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+              </svg>
+            </div>
+          </button>
+
+          {%- if show_dynamic_checkout -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+      </form>
+    </div>
+  {%- else -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          type="button"
+          class="product-form__submit button button--full-width button--primary"
+          disabled
+        >
+          {{ 'products.product.sold_out' | t }}
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if show_pickup_availability and product != blank -%}
+    {{ 'component-pickup-availability.css' | asset_url | stylesheet_tag }}
+
+    {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
+      | where: 'pick_up_enabled', true
+    -%}
+
+    <pickup-availability
+      class="product__pickup-availabilities no-js-hidden quick-add-hidden"
+      {% if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
+        available
+      {% endif %}
+      data-root-url="{{ routes.root_url }}"
+      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      data-has-only-default-variant="{{ product.has_only_default_variant }}"
+    >
+      <template>
+        <pickup-availability-preview class="pickup-availability-preview">
+          {% render 'icon-unavailable' %}
+          <div class="pickup-availability-info">
+            <p class="caption-large">{{ 'products.product.pickup_availability.unavailable' | t }}</p>
+            <button class="pickup-availability-button link link--text underlined-link">
+              {{ 'products.product.pickup_availability.refresh' | t }}
+            </button>
+          </div>
+        </pickup-availability-preview>
+      </template>
+    </pickup-availability>
+
+    <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+</div>
+
+<script>
+  (function() {
+    function initDirectATCForWrapper(wrapper) {
+      if (!wrapper || wrapper.dataset.directAtcInit === 'true') return;
+      wrapper.dataset.directAtcInit = 'true';
+
+      const sectionId = wrapper.dataset.sectionId;
+      const productId = wrapper.dataset.productId;
+      const form = wrapper.querySelector('.custom-direct-cart-form');
+      const button = wrapper.querySelector('.direct-add-to-cart-btn');
+      const errorWrapper = wrapper.querySelector('.product-form__error-message-wrapper');
+      const errorMessage = wrapper.querySelector('.product-form__error-message');
+      const spinner = button ? button.querySelector('.loading-overlay__spinner') : null;
+      const buttonText = button ? button.querySelector('.btn-text') : null;
+      const paymentButton = wrapper.querySelector('.shopify-payment-button');
+      const variantInput = form ? form.querySelector('.product-variant-id') : null;
+      const sellingPlanInput = form ? form.querySelector('.product-selling-plan-id') : null;
+      const hiddenQtyInput = form ? form.querySelector('.product-quantity-hidden') : null;
+      const swapEnabled = wrapper.dataset.swapEnabled === 'true';
+
+      if (!form || !button || !variantInput) return;
+
+      function showError(message) {
+        if (errorMessage) errorMessage.textContent = message;
+        if (errorWrapper) errorWrapper.hidden = false;
+        console.error('Direct ATC Error:', message);
+      }
+
+      function clearError() {
+        if (errorMessage) errorMessage.textContent = '';
+        if (errorWrapper) errorWrapper.hidden = true;
+      }
+
+      function setPaymentButtonVisibility(visible) {
+        if (!paymentButton) return;
+        paymentButton.style.display = visible ? '' : 'none';
+        paymentButton.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      }
+
+      function triggerExistingNotifyPopup(variant) {
+        if (variant && variant.id) {
+          variantInput.value = variant.id;
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('variant', variant.id);
+            url.searchParams.set('notify', 'true');
+            window.history.replaceState({}, '', url.toString());
+          } catch (e) {}
+        }
+
+        const scope = getMainProductScope();
+        const openers = Array.from(scope.querySelectorAll('modal-opener[data-modal^="#PopupModal"], .product-popup-modal__opener'));
+        let openerToClick = null;
+
+        openerToClick = openers.find(function(opener) {
+          const text = (opener.textContent || '').toLowerCase();
+          const modalSelector = opener.getAttribute('data-modal');
+          const modal = modalSelector ? document.querySelector(modalSelector) : null;
+          const modalText = modal ? (modal.textContent || '').toLowerCase() : '';
+
+          return (
+            text.indexOf('notify') !== -1 ||
+            text.indexOf('newsletter') !== -1 ||
+            text.indexOf('back in stock') !== -1 ||
+            modalText.indexOf('newsletter') !== -1 ||
+            modalText.indexOf('let you know') !== -1
+          );
+        }) || openers[0] || null;
+
+        if (openerToClick) {
+          const buttonInside = openerToClick.querySelector('button, a') || openerToClick;
+          buttonInside.click();
+          return true;
+        }
+
+        document.dispatchEvent(new CustomEvent('joy:notify-me:open', {
+          detail: {
+            productId: productId,
+            variantId: variant && variant.id ? variant.id : variantInput.value
+          }
+        }));
+
+        return false;
+      }
+
+      function getMainProductScope() {
+        return document.querySelector('#MainProduct-' + sectionId) || document;
+      }
+
+      function getSelectedOptionsFromPicker() {
+        const scope = getMainProductScope();
+        const radiosPicker = scope.querySelector('#variant-radios-' + sectionId);
+        const selectsPicker = scope.querySelector('#variant-selects-' + sectionId);
+        const picker = radiosPicker || selectsPicker;
+
+        if (!picker) return null;
+
+        if (picker.tagName.toLowerCase() === 'variant-selects') {
+          return Array.from(picker.querySelectorAll('select')).map(function(select) {
+            return select.value;
+          });
+        }
+
+        if (picker.tagName.toLowerCase() === 'variant-radios') {
+          return Array.from(picker.querySelectorAll('fieldset')).map(function(fieldset) {
+            const checked = fieldset.querySelector('input:checked');
+            return checked ? checked.value : null;
+          });
+        }
+
+        return null;
+      }
+
+      function getMatchedVariant() {
+        const scope = getMainProductScope();
+        const radiosPicker = scope.querySelector('#variant-radios-' + sectionId);
+        const selectsPicker = scope.querySelector('#variant-selects-' + sectionId);
+        const picker = radiosPicker || selectsPicker;
+
+        if (!picker) {
+          return {
+            id: variantInput.value,
+            available: true
+          };
+        }
+
+        const jsonScript = picker.querySelector('script[type="application/json"]');
+        if (!jsonScript) {
+          return {
+            id: variantInput.value,
+            available: true
+          };
+        }
+
+        let variants = [];
+        try {
+          variants = JSON.parse(jsonScript.textContent);
+        } catch (e) {
+          console.error('Variant JSON parse failed', e);
+          return null;
+        }
+
+        const selectedOptions = getSelectedOptionsFromPicker();
+        if (!selectedOptions) return null;
+
+        return variants.find(function(variant) {
+          return variant.options.every(function(option, index) {
+            return option === selectedOptions[index];
+          });
+        }) || null;
+      }
+
+      function getSelectedSellingPlan() {
+        const scope = getMainProductScope();
+        const checkedSellingPlan = scope.querySelector('input[name="selling_plan"]:checked');
+        return checkedSellingPlan ? (checkedSellingPlan.value || '') : '';
+      }
+
+      function getSelectedQuantity() {
+        const scope = getMainProductScope();
+        const quantityInput = scope.querySelector('.sticky__mainquantity, input[name="quantity"][form], input[name="quantity"]');
+        const qty = quantityInput ? parseInt(quantityInput.value, 10) : 1;
+        return Number.isFinite(qty) && qty > 0 ? qty : 1;
+      }
+
+      function syncButtonState() {
+        const matchedVariant = getMatchedVariant();
+        const addLabel = button.dataset.addLabel || 'Add to cart';
+        const notifyLabel = button.dataset.notifyLabel || 'Notify me';
+
+        if (!matchedVariant || !matchedVariant.id) {
+          variantInput.value = '';
+          button.disabled = true;
+          button.setAttribute('aria-disabled', 'true');
+          button.classList.remove('joy-pdp-notify-state');
+          setPaymentButtonVisibility(false);
+          if (buttonText) buttonText.textContent = addLabel;
+          return;
+        }
+
+        variantInput.value = matchedVariant.id;
+        button.dataset.currentVariantId = matchedVariant.id;
+        button.dataset.currentVariantAvailable = matchedVariant.available ? 'true' : 'false';
+
+        if (matchedVariant.available) {
+          button.disabled = false;
+          button.removeAttribute('aria-disabled');
+          button.classList.remove('joy-pdp-notify-state');
+          setPaymentButtonVisibility(true);
+          if (buttonText) buttonText.textContent = addLabel;
+        } else {
+          button.disabled = false;
+          button.removeAttribute('aria-disabled');
+          button.classList.add('joy-pdp-notify-state');
+          setPaymentButtonVisibility(false);
+          if (buttonText) buttonText.textContent = notifyLabel;
+        }
+      }
+
+      function updateCartCountUI(cart) {
+        const countSelectors = [
+          '[data-cart-count]',
+          '.cart-count',
+          '.site-header__cart-count',
+          '.header__icon--cart .count',
+          '.header__cart-count',
+          '#cart-icon-bubble .count-bubble',
+          '.cart-count-bubble',
+          '.header__bag-count'
+        ];
+
+        countSelectors.forEach(function(selector) {
+          document.querySelectorAll(selector).forEach(function(node) {
+            node.textContent = cart.item_count;
+            node.classList.remove('hidden');
+          });
+        });
+      }
+
+      async function getCart() {
+        const response = await fetch('/cart.js', {
+          headers: { 'Accept': 'application/json' }
+        });
+        return await response.json();
+      }
+
+      function tryOpenCartDrawer() {
+        const drawerSelectors = [
+          'cart-drawer',
+          'drawer-component',
+          '#CartDrawer',
+          '.cart-drawer',
+          '[data-cart-drawer]'
+        ];
+
+        for (let i = 0; i < drawerSelectors.length; i++) {
+          const el = document.querySelector(drawerSelectors[i]);
+          if (!el) continue;
+
+          if (typeof el.open === 'function') {
+            el.open();
+            return el;
+          }
+
+          if (typeof el.show === 'function') {
+            el.show();
+            return el;
+          }
+
+          el.classList.add('is-active', 'active', 'open');
+          el.setAttribute('open', 'open');
+          return el;
+        }
+
+        return null;
+      }
+
+      async function refreshCartUI() {
+        const cart = await getCart();
+        updateCartCountUI(cart);
+
+        document.documentElement.dispatchEvent(
+          new CustomEvent('cart:updated', { detail: { cart: cart } })
+        );
+        document.dispatchEvent(
+          new CustomEvent('cart:refresh', { detail: { cart: cart } })
+        );
+
+        const drawer = tryOpenCartDrawer();
+
+        try {
+          const sectionsToRender = [
+            'cart-drawer',
+            'cart-icon-bubble',
+            'main-cart-items',
+            'main-cart-footer'
+          ];
+
+          const sectionResponse = await fetch(
+            '/?sections=' + encodeURIComponent(sectionsToRender.join(','))
+          );
+          const sectionsHtml = await sectionResponse.json();
+
+          if (sectionsHtml['cart-icon-bubble']) {
+            const bubbleTarget =
+              document.querySelector('#cart-icon-bubble') ||
+              document.querySelector('.cart-icon-bubble');
+
+            if (bubbleTarget) {
+              const temp = document.createElement('div');
+              temp.innerHTML = sectionsHtml['cart-icon-bubble'];
+              const freshBubble =
+                temp.querySelector('#cart-icon-bubble') ||
+                temp.querySelector('.cart-icon-bubble');
+
+              if (freshBubble) {
+                bubbleTarget.innerHTML = freshBubble.innerHTML;
+              }
+            }
+          }
+
+          if (sectionsHtml['cart-drawer']) {
+            const drawerTarget =
+              document.querySelector('cart-drawer') ||
+              document.querySelector('#CartDrawer') ||
+              document.querySelector('.cart-drawer') ||
+              document.querySelector('[data-cart-drawer]');
+
+            if (drawerTarget) {
+              const temp = document.createElement('div');
+              temp.innerHTML = sectionsHtml['cart-drawer'];
+
+              const freshInner =
+                temp.querySelector('cart-drawer') ||
+                temp.querySelector('#CartDrawer') ||
+                temp.querySelector('.cart-drawer') ||
+                temp.querySelector('[data-cart-drawer]');
+
+              if (freshInner) {
+                drawerTarget.innerHTML = freshInner.innerHTML;
+              } else {
+                drawerTarget.innerHTML = sectionsHtml['cart-drawer'];
+              }
+            }
+          }
+
+          if (sectionsHtml['main-cart-items']) {
+            const mainCartItems =
+              document.querySelector('#main-cart-items') ||
+              document.querySelector('.js-contents') ||
+              document.querySelector('main-cart-items');
+
+            if (mainCartItems) {
+              const temp = document.createElement('div');
+              temp.innerHTML = sectionsHtml['main-cart-items'];
+
+              const freshItems =
+                temp.querySelector('#main-cart-items') ||
+                temp.querySelector('.js-contents') ||
+                temp.querySelector('main-cart-items');
+
+              if (freshItems) {
+                mainCartItems.innerHTML = freshItems.innerHTML;
+              } else {
+                mainCartItems.innerHTML = sectionsHtml['main-cart-items'];
+              }
+            }
+          }
+
+          if (sectionsHtml['main-cart-footer']) {
+            const mainCartFooter =
+              document.querySelector('#main-cart-footer') ||
+              document.querySelector('main-cart-footer');
+
+            if (mainCartFooter) {
+              const temp = document.createElement('div');
+              temp.innerHTML = sectionsHtml['main-cart-footer'];
+
+              const freshFooter =
+                temp.querySelector('#main-cart-footer') ||
+                temp.querySelector('main-cart-footer');
+
+              if (freshFooter) {
+                mainCartFooter.innerHTML = freshFooter.innerHTML;
+              } else {
+                mainCartFooter.innerHTML = sectionsHtml['main-cart-footer'];
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Cart sections refresh skipped:', e);
+        }
+
+        return cart;
+      }
+
+      function showSuccessState() {
+        if (!buttonText) return;
+        const oldText = buttonText.textContent;
+        buttonText.textContent = 'Added';
+        setTimeout(function() {
+          syncButtonState();
+          if (buttonText.textContent === 'Added') {
+            buttonText.textContent = oldText || 'Add to cart';
+          }
+        }, 1500);
+      }
+
+      button.addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        clearError();
+
+        const matchedVariant = getMatchedVariant();
+        if (!matchedVariant || !matchedVariant.id) {
+          showError('Please select a valid variant.');
+          return;
+        }
+
+        if (matchedVariant.available === false) {
+          triggerExistingNotifyPopup(matchedVariant);
+          syncButtonState();
+          return;
+        }
+
+        const sellingPlanValue = getSelectedSellingPlan();
+        const qty = getSelectedQuantity();
+
+        variantInput.value = matchedVariant.id;
+        if (hiddenQtyInput) hiddenQtyInput.value = qty;
+        if (sellingPlanInput) sellingPlanInput.value = sellingPlanValue;
+
+        if (swapEnabled) {
+          if (!window.JoyBoxSwapPopup || typeof window.JoyBoxSwapPopup.open !== 'function') {
+            showError('Swap popup is not available. Please refresh the page and try again.');
+            return;
+          }
+
+          try {
+            await window.JoyBoxSwapPopup.open({
+              trigger: button,
+              variantId: matchedVariant.id,
+              quantity: qty,
+              sellingPlan: sellingPlanValue
+            });
+
+            showSuccessState();
+          } catch (error) {
+            if (!error || error.isSwapPopupCancelled !== true) {
+              showError((error && error.message) || 'Something went wrong while adding to cart.');
+            }
+          }
+
+          return;
+        }
+
+        button.disabled = true;
+        button.setAttribute('aria-disabled', 'true');
+        button.classList.add('loading');
+        if (spinner) spinner.classList.remove('hidden');
+
+        try {
+          const formData = new FormData();
+          formData.append('id', matchedVariant.id);
+          formData.append('quantity', qty);
+
+          if (sellingPlanValue) {
+            formData.append('selling_plan', sellingPlanValue);
+          }
+
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: formData
+          });
+
+          const data = await response.json();
+
+          if (!response.ok || data.status) {
+            throw new Error(data.description || data.message || 'Unable to add to cart.');
+          }
+
+          await refreshCartUI();
+          showSuccessState();
+        } catch (error) {
+          showError(error.message || 'Something went wrong while adding to cart.');
+          syncButtonState();
+        } finally {
+          button.classList.remove('loading');
+          if (spinner) spinner.classList.add('hidden');
+          syncButtonState();
+        }
+      });
+
+      const scope = getMainProductScope();
+      const radiosPicker = scope.querySelector('#variant-radios-' + sectionId);
+      const selectsPicker = scope.querySelector('#variant-selects-' + sectionId);
+      const picker = radiosPicker || selectsPicker;
+
+      if (picker) {
+        picker.addEventListener('change', syncButtonState);
+      }
+
+      const qtyInput = scope.querySelector('.sticky__mainquantity, input[name="quantity"][form], input[name="quantity"]');
+      if (qtyInput) {
+        qtyInput.addEventListener('change', function() {
+          if (hiddenQtyInput) hiddenQtyInput.value = getSelectedQuantity();
+        });
+        qtyInput.addEventListener('input', function() {
+          if (hiddenQtyInput) hiddenQtyInput.value = getSelectedQuantity();
+        });
+      }
+
+      const sellingPlanInputs = scope.querySelectorAll('input[name="selling_plan"]');
+      if (sellingPlanInputs.length) {
+        sellingPlanInputs.forEach(function(input) {
+          input.addEventListener('change', function() {
+            if (sellingPlanInput) {
+              sellingPlanInput.value = getSelectedSellingPlan();
+            }
+          });
+        });
+      }
+
+      syncButtonState();
+    }
+
+    function initAllDirectATCWrappers() {
+      const wrappers = document.querySelectorAll('.custom-buy-buttons-wrapper');
+      wrappers.forEach(function(wrapper) {
+        initDirectATCForWrapper(wrapper);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAllDirectATCWrappers);
+    } else {
+      initAllDirectATCWrappers();
+    }
+
+    document.addEventListener('shopify:section:load', initAllDirectATCWrappers);
+  })();
+</script>

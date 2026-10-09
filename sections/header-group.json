@@ -1,0 +1,73 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "Enter postcode to see your delivery day",
+            "link": "shopify://pages/do-we-deliver-to-you"
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-0"
+      ],
+      "custom_css": [],
+      "settings": {
+        "color_scheme": "inverse",
+        "show_line_separator": true,
+        "show_countdown": false,
+        "open_day": "Wednesday",
+        "open_time": "09:15",
+        "close_day": "Wednesday",
+        "close_time": "09:16",
+        "close_msg": "This Week Orders Are Now Closed. Next Week Orders Will Open In:",
+        "show_social": false,
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "custom_css": [
+        ".mega-menu__link--level-2 ~ ul {max-height: 250px; display: flex; flex-direction: column; flex-wrap: wrap; column-gap: 2rem;}",
+        "#HeaderMenu-shop {display: inline-block; background-color: #9BB83C; /* Bright gold background */ border-radius: 8px; /* Rounded corners */ padding: 10px 20px; /* Add space inside */ cursor: pointer; transition: background-color 0.3s ease;}",
+        "#HeaderMenu-shop:hover {background-color: #9BB83C !important;}"
+      ],
+      "settings": {
+        "logo_position": "middle-left",
+        "menu": "menu-development",
+        "menu_type_desktop": "mega",
+        "sticky_header_type": "always",
+        "show_line_separator": true,
+        "color_scheme": "background-2",
+        "menu_color_scheme": "inverse",
+        "enable_country_selector": false,
+        "enable_language_selector": true,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 8,
+        "padding_bottom": 8
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

@@ -1,0 +1,283 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_banner_PCjTQW": {
+      "type": "image-banner",
+      "blocks": {
+        "heading_G34PH3": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>Let us do the shopping for you!</strong>",
+            "heading_size": "h1"
+          }
+        },
+        "text_ee9rDB": {
+          "type": "text",
+          "settings": {
+            "text": "Afraid you might forget to put your order in on time? We get it, life is busy and even with multiple SMS and email reminders it can be hard to remember to order each week!",
+            "text_style": "body"
+          }
+        },
+        "buttons_gdewFw": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Create a Subscription",
+            "button_link_1": "shopify://collections/organic-spray-free-farm-fresh-fruit-and-veg-box-delivery-brisbane-gold-coast",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_G34PH3",
+        "text_ee9rDB",
+        "buttons_gdewFw"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/SprayFreeFarmacy_104A1279-edit_MiaForrest_1024x1024_1.webp",
+        "image_overlay_opacity": 60,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": true,
+        "desktop_content_alignment": "center",
+        "color_scheme": "background-1",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": false,
+        "show_text_below": true
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
+    "rich_text_GTcWae": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_PNhB89": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>Let us do the shopping for you!</strong>",
+            "heading_size": "h1"
+          }
+        },
+        "text_HBm34K": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Afraid you might forget to put your order in on time? We get it, life is busy and even with multiple SMS and email reminders it can be hard to remember to order each week!</p>"
+          }
+        },
+        "button_jRKiXF": {
+          "type": "button",
+          "settings": {
+            "button_label": "Create a Subscription",
+            "button_link": "shopify://collections/organic-spray-free-farm-fresh-fruit-and-veg-box-delivery-brisbane-gold-coast",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_PNhB89",
+        "text_HBm34K",
+        "button_jRKiXF"
+      ],
+      "disabled": true,
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "rich_text_ad3gUL": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_fmDT6q": {
+          "type": "heading",
+          "settings": {
+            "heading": "We don't want you to miss out on the freshest food in town so if you want a similar order each week, let us take care of it for you by creating a subscription. As an added bonus - when you choose one of our Seasonal Set Boxes on subscription - you'll save $5 on every order!",
+            "heading_size": "h2"
+          }
+        },
+        "text_QtmtYH": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Start by choosing one of our <a href=\"https://joywholefoods.com.au/collections/subscription-boxes\" title=\"Seasonal-set-boxes-fruit-veg-brisbane-gold-coast-delivery-organic\">Seasonal Set Boxes</a>. You can also add staples like bread, milk, cheese and eggs to your subscription order - these items are available on a recurring basis.</p><p>All other items in the store, like pantry items, meat and so much more, can be added as one-time items to each order as you need them.</p><p>It's super easy to set up and you can pause or cancel anytime, as long as it's by midnight Tuesday the week you want to make changes.</p>"
+          }
+        },
+        "button_nQxTGD": {
+          "type": "button",
+          "settings": {
+            "button_label": "Create a Subscription",
+            "button_link": "shopify://collections/organic-spray-free-farm-fresh-fruit-and-veg-box-delivery-brisbane-gold-coast",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        },
+        "caption_Qcrajj": {
+          "type": "caption",
+          "settings": {
+            "caption": "Pause, skip or cancel at anytime",
+            "text_style": "caption-with-letter-spacing",
+            "text_size": "medium"
+          }
+        }
+      },
+      "block_order": [
+        "heading_fmDT6q",
+        "text_QtmtYH",
+        "button_nQxTGD",
+        "caption_Qcrajj"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "collapsible_content_h9938x": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_pRmGPA": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "How do I create a subscription order?",
+            "icon": "none",
+            "row_content": "<p>Go to the <a href=\"https://joywholefoods.com.au/collections/subscription-boxes\" title=\"Seasonal-fruit-veg-boxes-organic-spray-free-brisbane-gold-coast\">Seasonal Set Box page</a> and pick your box. Choose whether you'd like it on a weekly or fortnightly basis. Add to cart and then you'll be prompted to browse the staple items available to add to your subscription order. You can also add one-time items if you like.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_pC8t69": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Will I be able to check my order each week/fortnight?",
+            "icon": "none",
+            "row_content": "<p>Yes, you'll receive an automated email every Monday prompting you to review your order. If you'd like to add one-time items, make notes (ie. if there are certain things you don't want to receive in your order) or skip an order, you can do all these things and more in our Subscription Portal.</p><p>If you just want the same order each week, you don't need to do a thing! You can put your good food on autopilot.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_33Qd3y": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Do I have to choose a Seasonal Set Box?",
+            "icon": "none",
+            "row_content": "<p>Yes. The Seasonal Set Boxes form the base of every subscription order and contain a mix of fresh, seasonal produce. By setting up a subscription, you'll save $5 on every box!</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_7rC4rp": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "How can I find out what's in the Seasonal Set Box each week?",
+            "icon": "none",
+            "row_content": "<p>The contents of our Seasonal Set Boxes change a little each week, depending on what's abundantly available. In the description for each box, you'll find a breakdown of what you can usually expect to find in these boxes. It's not an exact list, as we like to have a bit of freedom to make last minute changes if necessary - for example if produce we receive isn't to the standard we want, we may find something better for you.</p><p>Our aim with the Seasonal Set Boxes is to give you the best possible value and variety. Try one out today - we're sure you'll be delighted!</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_tNehQK": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Can I make swaps?",
+            "icon": "none",
+            "row_content": "<p>We don't want you to receive things you don't need, so if there are certain items you know you don't want to receive with your order, just let us know by adding notes ie. NO apples or onions this week please. We will then swap those out and add more of something else already in the box.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_HBahwX": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Can I add other items to my subscription?",
+            "icon": "none",
+            "row_content": "<p>We have a range of staple items including eggs, bread, milk and cheese that are available to add to your subscription order. Everything else in our store (pantry items, meat, frozen foods, extra fruit and veg) is available to purchase on a one-time basis. This means you can add them to your order each week/fortnight as needed.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_TnccP3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Can I cancel, pause or change my order?",
+            "icon": "none",
+            "row_content": "<p>Of course! In our Subscription portal, you can do all these things and more. Simply log in to our website (click the person icon next to the cart button) and click Manage Subscription.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_RFt69h": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "What if I just want to pick my own items?",
+            "icon": "none",
+            "row_content": "<p>Just use the <a href=\"https://joywholefoods.com.au/collections/all\" title=\"Shop-now-organic-food-brisbane\">SHOP button</a> to find everything you need! There is no obligation to set up a subscription order. Everything in our store can be purchased on a one-time basis including our Seasonal Set Boxes. Just order what you need when you need it.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_row_KYetqN": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "More questions?",
+            "icon": "none",
+            "row_content": "<p>Use the chat button, text us at <a href=\"tel:0480078884\" title=\"tel:0480078884\">0480 078 884</a> or email us at hello@joywholefoods.com.au. We're here to help!</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_pRmGPA",
+        "collapsible_row_pC8t69",
+        "collapsible_row_33Qd3y",
+        "collapsible_row_7rC4rp",
+        "collapsible_row_tNehQK",
+        "collapsible_row_HBahwX",
+        "collapsible_row_TnccP3",
+        "collapsible_row_RFt69h",
+        "collapsible_row_KYetqN"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "FAQs",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "color_scheme": "",
+        "container_color_scheme": "",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "image_banner_PCjTQW",
+    "main",
+    "rich_text_GTcWae",
+    "rich_text_ad3gUL",
+    "collapsible_content_h9938x"
+  ]
+}

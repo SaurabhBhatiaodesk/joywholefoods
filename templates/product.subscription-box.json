@@ -1,0 +1,336 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "e0015d23-f11c-47ef-bec7-d4d16d238cc0": {
+      "type": "custom-box-product",
+      "blocks": {
+        "f5621c8b-4f2f-4076-ad32-cce256af93af": {
+          "type": "title",
+          "settings": {}
+        },
+        "5fbdeec7-d6e8-4236-8f9a-4e29e7a158e9": {
+          "type": "price",
+          "settings": {}
+        },
+        "9529f6e2-7571-4b2d-a2fb-e3eb92f7efb8": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button"
+          }
+        },
+        "appstle_subscriptions_app_appstle_subscription_product_page_widget_kXdmL3": {
+          "type": "shopify://apps/appstle-subscription/blocks/appstle-subscription-product-page-widget/fe257d39-6f88-4f35-ab08-bd437e3aa94e",
+          "settings": {}
+        },
+        "64baadcf-6dc6-43fb-a6b8-3f0631278806": {
+          "type": "description",
+          "settings": {}
+        },
+        "9dd7d992-aa66-40bb-be3b-cd3a14260b3c": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "body"
+          }
+        },
+        "8fb2d05f-d713-40e5-9607-433ab932fe3e": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "<div class=\"product-tags\"><span class=\"product-cat\">Category: </span>{% if product.tags %}\n              {% for tag in product.tags %}\n                <span class=\"product-tag\">{{ tag }}</span>\n              {% endfor %}\n            {% endif %}\n</div>"
+          }
+        },
+        "f771609c-1832-4add-9dbf-f265d6fd12fe": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": false
+          }
+        },
+        "b06636b7-1333-43bd-9e16-f654825e0bbe": {
+          "type": "popup",
+          "settings": {
+            "text": "Sign up to be the first to know when the store opens",
+            "page": "",
+            "newsletter_popup": true
+          }
+        },
+        "collapsible_tab_w9GJPg": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "How subscriptions work",
+            "icon": "question_mark",
+            "content": "<p><strong>Never miss out on the freshest food in town! Let us take care of the shopping for you by creating a subscription. </strong></p><p>Step 1: Choose one of our <a href=\"https://joywholefoods.com.au/collections/subscription-boxes\" title=\"Seasonal-set-boxes-fruit-veg-brisbane-gold-coast-delivery-organic\">Seasonal Set Boxes</a>. As an added bonus - you'll save $5 on every box!</p><p>Step 2: Add your staples like bread, milk, cheese and eggs. We have a selection of these items that are always available.</p><p>Step 3: Each week you'll get an email from us confirming your order. Login to the subscription portal to edit your order and add one-time items like meat, pantry items, extra veg and so much more.</p><p>It's super easy to set up and you can pause or cancel anytime, as long as it's by midnight Tuesday the week you want to make changes.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "f5621c8b-4f2f-4076-ad32-cce256af93af",
+        "5fbdeec7-d6e8-4236-8f9a-4e29e7a158e9",
+        "9529f6e2-7571-4b2d-a2fb-e3eb92f7efb8",
+        "appstle_subscriptions_app_appstle_subscription_product_page_widget_kXdmL3",
+        "64baadcf-6dc6-43fb-a6b8-3f0631278806",
+        "9dd7d992-aa66-40bb-be3b-cd3a14260b3c",
+        "8fb2d05f-d713-40e5-9607-433ab932fe3e",
+        "f771609c-1832-4add-9dbf-f265d6fd12fe",
+        "b06636b7-1333-43bd-9e16-f654825e0bbe",
+        "collapsible_tab_w9GJPg"
+      ],
+      "custom_css": [
+        "a.button.button--secondary {font-size: 20px; letter-spacing: -0.6px; font-weight: 500; height: 54px; border: 2px solid #9BB83C; display: none;}"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "cover",
+        "gallery_layout": "thumbnail_slider",
+        "media_position": "left",
+        "image_zoom": "none",
+        "mobile_thumbnails": "hide",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "enable_breadcrumbs": true,
+        "customize_box_label": "Customise Box",
+        "add_items_error_msg": "Please add contents to box to continue",
+        "padding_top": 80,
+        "padding_bottom": 52,
+        "mobile_padding_top": 60,
+        "mobile_padding_bottom": 20
+      }
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "dropdown"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": false
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "c6bebe58-94bd-4233-8d75-747fdfe704f8": {
+          "type": "text",
+          "settings": {
+            "text": "<strong>Vendor:</strong> {{ product.vendor }}",
+            "text_style": "body"
+          }
+        },
+        "9521b1ce-7942-484a-a8e0-80ade18af081": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"product-tags\"><span class=\"product-cat\">Category: </span>{% if product.tags %}\n              {% for tag in product.tags %}\n                <span class=\"product-tag\">{{ tag }}</span>\n              {% endfor %}\n            {% endif %}\n</div>"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "c6bebe58-94bd-4233-8d75-747fdfe704f8",
+        "9521b1ce-7942-484a-a8e0-80ade18af081"
+      ],
+      "disabled": true,
+      "settings": {
+        "enable_sticky_info": true,
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "mobile_thumbnails": "hide",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "enable_breadcrumbs": true,
+        "padding_top": 80,
+        "padding_bottom": 100
+      }
+    },
+    "7445ee3b-e734-498f-bd75-27bb6b516ad1": {
+      "type": "product-customize-box",
+      "disabled": true,
+      "settings": {
+        "customize_box_heading": "Customise Your Box",
+        "clear_selection_label": "Clear Selection",
+        "seasonal_selection_label": "This week's seasonal selection",
+        "substitution_label": "Available substitutions",
+        "customise-box-description": "Your [PRODUCT_TITLE] can have [MAX_ITEMS] items. We have preselected our picks for you, but you can remove items by clicking on the \"-\" buttons. Then feel free to replace these with items from the Available Substitutions list or larger quantities of our preselected items.",
+        "add_items_error_msg": "Please add contents to box to continue",
+        "padding_top": 52,
+        "padding_bottom": 36,
+        "mobile_padding_top": 25,
+        "mobile_padding_bottom": 36
+      }
+    },
+    "5cd6de3e-8d80-4c80-9a06-d91a8ad121eb": {
+      "type": "waste-cycle",
+      "blocks": {
+        "3de81adf-1c8b-4442-ab9a-0c3d169c97b7": {
+          "type": "Card",
+          "settings": {
+            "card_image": "shopify://shop_images/Group_28.svg",
+            "card_title": "Pick Your Set Box",
+            "tag_day": "By Midnight Tuesday",
+            "sub_heading": "We'll tailor the box based on what's in season so you're getting the freshest produe"
+          }
+        },
+        "cb5c2371-b440-4a0c-a4e0-a03bca9a0ee5": {
+          "type": "Card",
+          "settings": {
+            "card_image": "shopify://shop_images/Layer_1.svg",
+            "card_title": "Choose Weekly or Fortnightly",
+            "tag_day": "For Your Deliveries",
+            "sub_heading": "No commitment – change, skip or cancel your order by midnight Tuesday"
+          }
+        },
+        "1d858d8b-1a70-41d8-8327-ab12ce3854b2": {
+          "type": "Card",
+          "settings": {
+            "card_image": "shopify://shop_images/eggs.svg",
+            "card_title": "Top Up Your Order",
+            "tag_day": "With Everything You Need",
+            "sub_heading": "Add a variety of locally sourced essentials to finish your shop"
+          }
+        },
+        "ba3c1097-af1a-496e-b460-24e95bc4f7ee": {
+          "type": "Card",
+          "settings": {
+            "card_image": "shopify://shop_images/glove.svg",
+            "card_title": "We'll Pick & Pack Your Order",
+            "tag_day": "Based on What's in Season",
+            "sub_heading": "Your produce and groceries are lovingly collected and packed in recycled boxes with minimal plastic."
+          }
+        }
+      },
+      "block_order": [
+        "3de81adf-1c8b-4442-ab9a-0c3d169c97b7",
+        "cb5c2371-b440-4a0c-a4e0-a03bca9a0ee5",
+        "1d858d8b-1a70-41d8-8327-ab12ce3854b2",
+        "ba3c1097-af1a-496e-b460-24e95bc4f7ee"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "How Our Set Boxes Work",
+        "text_color": "#043D22",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-14866e00-b4f4-4f01-a2ab-692fbf460377",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": false,
+        "show_custom_boxes": true,
+        "customize_box_label": "Customise",
+        "show_relevant_information": false,
+        "relevant_information_heading": "Shipping Information",
+        "relevant_information_content": "<h3>Shipping Information</h3><p><a href=\"/pages/pick-up-delivery?view=pick-up-location\" target=\"_blank\" title=\"/pages/pick-up-delivery?view=pick-up-location\">Pick up & Delivery Information</a></p>",
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 52
+      }
+    },
+    "e24b44b6-6b7d-4ae4-8431-0cb16a11a447": {
+      "type": "image-with-text",
+      "blocks": {
+        "template--16842322051287__e24b44b6-6b7d-4ae4-8431-0cb16a11a447-heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "About Us",
+            "heading_size": "h1"
+          }
+        },
+        "template--16842322051287__e24b44b6-6b7d-4ae4-8431-0cb16a11a447-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Why battle supermarket crowds for produce that's been sprayed with nasty chemicals and shipped all over the country when you can get fresh, spray-free food straight from local farmers and makers?!</p><p>We make it EASY for Brisbane and Gold Coast families to enjoy fresh organic food that tastes and smells like real food should. We support small farmers who don't use chemicals and focus on regenerating their land, as well as artisan food makers who choose only the best organic ingredients for their delicious creations. Collect for free from any of our 30+ pick up locations or choose home delivery for $10.</p><p><strong>Home delivery is FREE for orders over $190</strong></p>",
+            "text_style": "body"
+          }
+        },
+        "eae7a657-929c-4359-a5a7-7543515cd945": {
+          "type": "button",
+          "settings": {
+            "button_label": "Read More",
+            "button_link": "/pages/about-us",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "template--16842322051287__e24b44b6-6b7d-4ae4-8431-0cb16a11a447-heading-1",
+        "template--16842322051287__e24b44b6-6b7d-4ae4-8431-0cb16a11a447-text-1",
+        "eae7a657-929c-4359-a5a7-7543515cd945"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/our-story-2.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 40,
+        "padding_bottom": 100,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "e0015d23-f11c-47ef-bec7-d4d16d238cc0",
+    "main",
+    "7445ee3b-e734-498f-bd75-27bb6b516ad1",
+    "5cd6de3e-8d80-4c80-9a06-d91a8ad121eb",
+    "related-products",
+    "e24b44b6-6b7d-4ae4-8431-0cb16a11a447"
+  ]
+}

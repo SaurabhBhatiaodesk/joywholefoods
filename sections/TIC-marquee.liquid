@@ -1,0 +1,116 @@
+<style> 
+.mr-\[10vw\]{margin-right:10vw;}
+.flex{display:flex;}
+.h-12{height:6rem;}
+.w-12{width:6rem;}
+.-scale-x-100{--tw-scale-x:-1;}
+.-scale-x-100{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));}
+.items-center{align-items:center;}
+.gap-4{gap:1rem;}
+.bg-green\/10{background-color:rgba(107,145,44,.1);}
+.py-2{padding-top:.5rem;padding-bottom:.5rem;}
+.text-sm{font-size:1.4rem;line-height:1.25rem;letter-spacing: 0;}
+:focus-visible{outline:none;}
+@media (min-width:1024px){
+.lg\:gap-4{gap:1rem;}
+.lg\:text-base{font-size:1.6rem;line-height:1.5rem;letter-spacing: 0;}
+}
+@media(max-width:767px)
+  {
+    .h-12{height:5rem;}
+    .w-12{width:5rem;}
+  }
+/*! CSS Used from: Embedded */
+.rfm-marquee-container{overflow-x:hidden;display:flex;flex-direction:row;position:relative;width:var(--width);transform:var(--transform);}
+.rfm-marquee-container:hover div{animation-play-state:var(--pause-on-hover);}
+.rfm-marquee-container:active div{animation-play-state:var(--pause-on-click);}
+.rfm-marquee{flex:0 0 auto;min-width:var(--min-width);z-index:1;display:flex;flex-direction:row;align-items:center;animation:scroll var(--duration) linear var(--delay) var(--iteration-count);animation-play-state:var(--play);animation-delay:var(--delay);animation-direction:var(--direction);}
+.rfm-initial-child-container{flex:0 0 auto;display:flex;min-width:auto;flex-direction:row;align-items:center;}
+.rfm-child{transform:var(--transform);}
+/*! CSS Used keyframes */
+@keyframes scroll{0%{transform:translateX(0%);}100%{transform:translateX(-100%);}}
+
+
+  .rfm-marquee-container{
+    margin:30px 0 0
+  }@media(max-width:767px)
+  {
+    .rfm-marquee-container{
+    margin:0
+  }
+  }
+</style>
+{% capture allBlocks %}
+  {% for block in section.blocks %}
+    <div class="rfm-child" style="--transform: none;">
+          <div
+            class="flex gap-4 lg:gap-4 items-center mr-[10vw]"
+            data-sentry-component="BarItem"
+            data-sentry-source-file="MarketingBar.tsx"
+          >
+            <img src="{{ block.settings.image | image_url: width: 150, height: 150 }}" loading="lazy" width="150" height="150" class="w-12 h-12 -scale-x-100">
+            <span class="text-sm lg:text-base">{{ block.settings.text }}</span>
+          </div>
+        </div>
+  {% endfor %}
+{% endcapture %}
+
+<div class="bg-green/10 py-2" style="background:{{ section.settings.backgroundColor }}">
+  <div
+    class="rfm-marquee-container "
+    style="--pause-on-hover: paused; --pause-on-click: paused; --width: 100%; --transform: none;"
+  >
+    <div
+      class="rfm-marquee"
+      style="--play: running; --direction: normal; --duration: 29.015625s; --delay: 0s; --iteration-count: infinite; --min-width: auto;"
+    >
+      <div class="rfm-initial-child-container">
+        {{ allBlocks }}
+      </div>
+    </div> 
+    <div
+      class="rfm-marquee"
+      style="--play: running; --direction: normal; --duration: 29.015625s; --delay: 0s; --iteration-count: infinite; --min-width: auto;"
+    >
+      <div class="rfm-initial-child-container">
+        {{ allBlocks }}
+      </div>
+    </div> 
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "TIC Marquee",
+  "settings": [
+    {
+      "type": "color",
+      "id":"backgroundColor",
+      "label":"Background Color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name":"Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id":"image",
+          "label":"Image"
+        },
+        {
+          "type": "text",
+          "label":"Text",
+          "id":"text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name":"TIC Marquee"
+    }
+  ]
+}
+{% endschema %}

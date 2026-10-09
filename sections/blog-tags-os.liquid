@@ -1,0 +1,81 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+
+<div class="tags-filter-content-os">
+  <div class="page-width section-{{ section.id }}-padding"">
+    <div class="tags-filter-row-os">
+      {%- liquid
+        assign all = ''
+        if template contains 'blog'
+        unless current_tags
+        assign all = 'active'
+        endunless
+        endif
+      -%}
+      <!-- Link to View All Blogs -->
+      <a href="/blogs/{{ blog.handle }}" title="All" class="{{ all }} blog-tags">View All</a>
+    
+      <!-- Loop Through Blog Tags and Create Links -->
+      {% assign all_tags = blog.all_tags %}
+      {% for tag in all_tags %}
+        {%- liquid
+          if current_tags contains tag
+          assign selected = "active"
+          else
+          assign selected = ''
+          endif
+        -%}
+        <a href="/blogs/{{ blog.handle }}/tagged/{{ tag | handle }}" class="{{ selected }} blog-tags">{{ tag | capitalize }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Blog tags",
+  "tag": "section",
+  "class": "Blog-tags",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog tags"
+    }
+  ],
+}
+{% endschema %}

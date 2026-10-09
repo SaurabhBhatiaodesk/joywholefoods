@@ -1,0 +1,649 @@
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-totals.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+a.clear-cart-btn {
+  margin: 0 !important;
+  background: #666666;
+  height: 46px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 20px;
+  color: #fff;
+}
+
+.cart_clear_btn {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  margin-top: 15px;
+}
+
+.cart__ctas {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.section-{{ section.id }}-padding {
+  padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+  padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+}
+
+.cart-note-wrapper {
+  width: 100%;
+}
+
+.cart-box-preference {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.cart-box-preference__label,
+.cart-note-label {
+  display: block;
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: #233b2f;
+  line-height: 1.4;
+  position: static !important;
+  transform: none !important;
+}
+
+.cart-box-preference__select,
+.cart-note-textarea {
+  width: 100%;
+  border: 1px solid #9db7a3;
+  background: #fff;
+  color: #233b2f;
+  outline: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.cart-box-preference__select {
+  height: 46px;
+  padding: 0 14px;
+}
+
+.cart-box-preference__note {
+  margin: 6px 0 0;
+  color: #233b2f;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.cart-note-textarea {
+  min-height: 110px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.cart-box-preference__select:focus,
+.cart-note-textarea:focus {
+  border-color: #233b2f;
+  box-shadow: none;
+}
+
+cart-note.cart__note.field {
+  display: block !important;
+}
+
+cart-note.cart__note.field .cart-note-wrapper {
+  display: block !important;
+}
+
+cart-note.cart__note.field label {
+  position: static !important;
+  transform: none !important;
+  opacity: 1 !important;
+  font-family: 'DM Sans';
+}
+
+/* Delivery info block (above checkout button) */
+.cart-delivery-info {
+  width: 100%;
+  margin: 0 0 20px;
+  padding: 22px 24px;
+  background: var(--cdi-bg, #f6f1e0);
+  color: var(--cdi-text, #1f4a37);
+  border-radius: var(--cdi-radius, 12px);
+  font-family: 'DM Sans', sans-serif;
+  text-align: left;
+}
+
+.cart-delivery-info__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.cart-delivery-info__item + .cart-delivery-info__item {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--cdi-divider, #c9c5ae);
+}
+
+.cart-delivery-info__icon {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  margin-top: 1px;
+  color: var(--cdi-text, #1f4a37);
+}
+
+.cart-delivery-info__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cart-delivery-info__content {
+  min-width: 0;
+}
+
+.cart-delivery-info__heading {
+  margin: 0;
+  color: var(--cdi-text, #1f4a37);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.cart-delivery-info__text {
+  margin: 8px 0 0;
+  color: #000;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cart-delivery-info__note {
+  margin: 12px 0 0;
+  color: #000;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cart-delivery-info__link {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--cdi-text, #1f4a37);
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cart-delivery-info__link:hover {
+  text-decoration-thickness: 2px;
+}
+
+@media screen and (max-width: 749px) {
+  .cart-delivery-info {
+    padding: 18px 16px;
+  }
+
+  .cart-delivery-info__heading {
+    font-size: 16px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+}
+{%- endstyle -%}
+
+{%- assign selected_box_preference = cart.attributes["Box Preference"] | default: "" -%}
+
+{%- assign clean_customer_note = cart.note | default: '' | strip -%}
+{%- if clean_customer_note == "I don't mind" or clean_customer_note == "Styrofoam" or clean_customer_note == "Cardboard" -%}
+  {%- assign clean_customer_note = '' -%}
+{%- endif -%}
+
+<div class="page-width{% if cart == empty %} is-empty{% endif %}" id="main-cart-footer" data-id="{{ section.id }}">
+  <div>
+
+    {% if section.settings.clearcart and cart != empty %}
+      <div class="clearCartButton">
+        <a href="/cart/clear" class="button button--secondary">Clear Cart</a>
+      </div>
+    {% endif %}
+
+    <div class="cart__footer section-{{ section.id }}-padding">
+      {%- if settings.show_cart_note -%}
+        <cart-note class="cart__note field">
+          <div class="cart-note-wrapper">
+
+            <div class="cart-box-preference">
+              <label for="BoxPreference" class="cart-box-preference__label">Box Preference for Fresh Produce *</label>
+              <select
+                id="BoxPreference"
+                name="attributes[Box Preference]"
+                class="cart-box-preference__select"
+                form="cart"
+              >
+                <option value="" {% if selected_box_preference == blank or selected_box_preference == "I don't mind" %}selected{% endif %}>I don't mind</option>
+                <option value="Styrofoam" {% if selected_box_preference == "Styrofoam" %}selected{% endif %}>Styrofoam </option>
+                <option value="Cardboard" {% if selected_box_preference == "Cardboard" %}selected{% endif %}>Cardboard </option>
+              </select>
+              <p class="cart-box-preference__note">Cold items (meat, dairy, etc.) will generally be packed in styrofoam to maintain food safety.</p>
+            </div>
+
+            <label for="Cart-note" class="cart-note-label">
+              {{ 'sections.cart.note' | t }}
+            </label>
+
+            <textarea
+              name="note"
+              id="Cart-note"
+              class="cart-note-textarea"
+              form="cart"
+              placeholder="{{ 'sections.cart.note' | t }}"
+            >{{ clean_customer_note }}</textarea>
+
+          </div>
+        </cart-note>
+      {%- endif -%}
+
+      <div class="cart__blocks">
+        {% for block in section.blocks %}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+
+            {%- when 'subtotal' -%}
+              <div class="js-contents" {{ block.shopify_attributes }}>
+                <div>
+                  {%- if cart.cart_level_discount_applications.size > 0 -%}
+                    <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                      {%- for discount in cart.cart_level_discount_applications -%}
+                        <li class="discounts__discount discounts__discount--position">
+                          {%- render 'icon-discount' -%}
+                          {{ discount.title }}
+                          (-{{ discount.total_allocated_amount | money }})
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </div>
+
+                <div class="totals">
+                  <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>
+                  <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p>
+                </div>
+
+                <div class="cart_clear_btn">
+                  <a href="/cart/clear" class="clear-cart-btn">Clear Cart</a>
+                </div>
+
+                <small class="tax-note caption-large rte">
+                  {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                    {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                  {%- elsif cart.taxes_included -%}
+                    {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+                  {%- elsif shop.shipping_policy.body != blank -%}
+                    {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+                  {%- else -%}
+                    {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+                  {%- endif -%}
+                </small>
+              </div>
+
+            {%- else -%}
+              <div id="storePickupApp"></div>
+
+              <div class="cart__ctas" {{ block.shopify_attributes }}>
+                <noscript>
+                  <button type="submit" class="cart__update-button button button--secondary" form="cart">
+                    {{ 'sections.cart.update' | t }}
+                  </button>
+                </noscript>
+
+                <button
+                  type="submit"
+                  id="checkout"
+                  class="pppp cart__checkout-button button"
+                  name="checkout"
+                  {% if cart == empty %}disabled{% endif %}
+                  form="cart"
+                >
+                  {{ 'sections.cart.checkout' | t }}
+                </button>
+              </div>
+
+              {%- if additional_checkout_buttons -%}
+                <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
+                  {{ content_for_additional_checkout_buttons }}
+                </div>
+              {%- endif -%}
+
+              <div data-cart-footer-extra>
+              {%- if section.settings.show_delivery_info -%}
+                <div
+                  id="cart-delivery-info-{{ section.id }}"
+                  class="cart-delivery-info"
+                  data-cart-delivery-info
+                  style="--cdi-bg: {{ section.settings.delivery_info_bg }}; --cdi-text: {{ section.settings.delivery_info_text }}; --cdi-divider: {{ section.settings.delivery_info_divider }}; --cdi-radius: {{ section.settings.delivery_info_radius }}px;"
+                >
+                  {%- if section.settings.delivery_heading_1 != blank or section.settings.delivery_text_1 != blank -%}
+                    <div class="cart-delivery-info__item">
+                      <span class="cart-delivery-info__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="3" y="4.5" width="18" height="16.5" rx="3"></rect>
+                          <path d="M8 2.5v4M16 2.5v4M3 10h18"></path>
+                          <path d="M9 15.5l2.2 2.2 4-4.2"></path>
+                        </svg>
+                      </span>
+                      <div class="cart-delivery-info__content">
+                        {%- if section.settings.delivery_heading_1 != blank -%}
+                          <h3 class="cart-delivery-info__heading">{{ section.settings.delivery_heading_1 }}</h3>
+                        {%- endif -%}
+                        {%- if section.settings.delivery_text_1 != blank -%}
+                          <p class="cart-delivery-info__text">{{ section.settings.delivery_text_1 }}</p>
+                        {%- endif -%}
+                        {%- if section.settings.delivery_note_1 != blank -%}
+                          <p class="cart-delivery-info__note">{{ section.settings.delivery_note_1 }}</p>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+
+                  {%- if section.settings.delivery_heading_2 != blank or section.settings.delivery_text_2 != blank -%}
+                    <div class="cart-delivery-info__item">
+                      <span class="cart-delivery-info__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M21 11.5c0 4.4-4.4 8-9.8 8-1.1 0-2.2-.15-3.2-.45L3.5 21l1.5-3.9C3.4 15.8 2.4 13.7 2.4 11.5c0-4.4 4.4-8 9.8-8s8.8 3.6 8.8 8z"></path>
+                        </svg>
+                      </span>
+                      <div class="cart-delivery-info__content">
+                        {%- if section.settings.delivery_heading_2 != blank -%}
+                          <h3 class="cart-delivery-info__heading">{{ section.settings.delivery_heading_2 }}</h3>
+                        {%- endif -%}
+                        {%- if section.settings.delivery_text_2 != blank -%}
+                          <p class="cart-delivery-info__text">{{ section.settings.delivery_text_2 }}</p>
+                        {%- endif -%}
+                        {%- if section.settings.delivery_link_label != blank -%}
+                          <a href="{{ section.settings.delivery_link_url | default: '/pages/contact' }}" class="cart-delivery-info__link">{{ section.settings.delivery_link_label }} &rarr;</a>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+              </div>
+          {%- endcase -%}
+        {% endfor %}
+
+        <div id="cart-errors"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Keeps the cart footer in this fixed visual order no matter what order
+  // the third-party Local Pickup / Local Delivery widget renders itself
+  // in: Pickup/Delivery widget + postcode field -> Checkout button ->
+  // Delivery-info block. The checkout button and delivery-info block are
+  // both our own static markup (always adjacent, checkout first), so this
+  // just pins the delivery-info wrapper to stay immediately AFTER the
+  // checkout button — covering the case where the pickup widget's own
+  // script inserts itself somewhere in between after the fact.
+  (function () {
+    function pinExtrasAfterCheckout() {
+      const extras = document.querySelector('[data-cart-footer-extra]');
+      const ctas = document.querySelector('.cart__ctas');
+      if (!extras || !ctas) return false;
+
+      if (ctas.nextElementSibling !== extras) {
+        ctas.insertAdjacentElement('afterend', extras);
+      }
+      return true;
+    }
+
+    function startWatching() {
+      pinExtrasAfterCheckout();
+
+      const extras = document.querySelector('[data-cart-footer-extra]');
+      const scope = extras && extras.parentNode;
+      if (!scope) return;
+
+      const observer = new MutationObserver(function () {
+        pinExtrasAfterCheckout();
+      });
+      observer.observe(scope, { childList: true, subtree: true });
+
+      // Safety timeout: stop watching after 10s so this never keeps
+      // observing the DOM forever (the pickup widget should have settled
+      // into its final position well before then).
+      setTimeout(function () {
+        observer.disconnect();
+      }, 10000);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startWatching);
+    } else {
+      startWatching();
+    }
+  })();
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const boxPreference = document.getElementById("BoxPreference");
+    const cartNote = document.getElementById("Cart-note");
+    const checkoutButton = document.getElementById("checkout");
+
+    if (!boxPreference) return;
+
+    let saveTimer = null;
+    let isSaving = false;
+
+    function isBoxValue(value) {
+      const v = (value || "").trim();
+      return v === "I don't mind" || v === "Styrofoam" || v === "Cardboard";
+    }
+
+    function getCleanNote() {
+      if (!cartNote) return "";
+
+      const currentNote = (cartNote.value || "").trim();
+
+      if (isBoxValue(currentNote)) {
+        cartNote.value = "";
+        return "";
+      }
+
+      return cartNote.value || "";
+    }
+
+    async function updateCartPreference() {
+      if (isSaving) return;
+      isSaving = true;
+
+      const selectedPreference = boxPreference.value || "";
+      const cleanNote = getCleanNote();
+
+      try {
+        await fetch("/cart/update.js", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            note: cleanNote,
+            attributes: {
+              "Box Preference": selectedPreference
+            }
+          })
+        });
+      } catch (error) {
+        console.error("Cart preference update error:", error);
+      } finally {
+        isSaving = false;
+      }
+    }
+
+    function debounceSavePreference() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function () {
+        updateCartPreference();
+      }, 400);
+    }
+
+    updateCartPreference();
+
+    boxPreference.addEventListener("change", function () {
+      debounceSavePreference();
+    });
+
+    if (checkoutButton) {
+      checkoutButton.addEventListener("click", async function (event) {
+        event.preventDefault();
+
+        checkoutButton.setAttribute("disabled", "disabled");
+        checkoutButton.classList.add("loading");
+
+        await updateCartPreference();
+
+        window.location.href = "/checkout";
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-cart-footer.name",
+  "class": "cart__footer-wrapper",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "clearcart",
+      "label": "Clear Cart Button",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Delivery info block (above checkout button)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery_info",
+      "label": "Show delivery info block",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "delivery_heading_1",
+      "label": "Item 1 heading",
+      "default": "Missed the order deadline?"
+    },
+    {
+      "type": "textarea",
+      "id": "delivery_text_1",
+      "label": "Item 1 text",
+      "default": "We accept late orders until 7am the morning after your usual cutoff. Select the same delivery day next week, then message us before the late order deadline to request delivery this week. We'll change the date for you."
+    },
+    {
+      "type": "textarea",
+      "id": "delivery_note_1",
+      "label": "Item 1 small note",
+      "default": "Freshly baked bread and Maleny milk may be unavailable as they need to be ordered in advance."
+    },
+    {
+      "type": "text",
+      "id": "delivery_heading_2",
+      "label": "Item 2 heading",
+      "default": "Prefer a different delivery day?"
+    },
+    {
+      "type": "textarea",
+      "id": "delivery_text_2",
+      "label": "Item 2 text",
+      "default": "Message us with your postcode and preferred day. We can't promise, but we'd love to know what works for you."
+    },
+    {
+      "type": "text",
+      "id": "delivery_link_label",
+      "label": "Item 2 link text",
+      "default": "Send us a message"
+    },
+    {
+      "type": "url",
+      "id": "delivery_link_url",
+      "label": "Item 2 link URL",
+      "info": "Defaults to /pages/contact if left empty."
+    },
+    {
+      "type": "color",
+      "id": "delivery_info_bg",
+      "label": "Block background",
+      "default": "#f6f1e0"
+    },
+    {
+      "type": "color",
+      "id": "delivery_info_text",
+      "label": "Text and icon color",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "delivery_info_divider",
+      "label": "Divider color",
+      "default": "#c9c5ae"
+    },
+    {
+      "type": "range",
+      "id": "delivery_info_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subtotal",
+      "name": "t:sections.main-cart-footer.blocks.subtotal.name",
+      "limit": 1
+    },
+    {
+      "type": "buttons",
+      "name": "t:sections.main-cart-footer.blocks.buttons.name",
+      "limit": 1
+    },
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

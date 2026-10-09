@@ -1,0 +1,98 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
+    "multicolumn_4Pzr7B": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_xeyQKF": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/A4_Paper_Planner_Mockup_Instagram_Post_2.png",
+            "title": "4 Week Healthy Meal Plan",
+            "text": "<p>This 4-Week Healthy Meal Plan was created with one clear mission: to help you and your family eat better without the overwhelm. Inside, you’ll find nourishing meals made with real, spray-free ingredients straight from the farm, plus snack ideas, detox-friendly lifestyle tips, and weekly shopping lists to make prep a breeze.</p>",
+            "link_label": "Download Now",
+            "link": "https://cdn.shopify.com/s/files/1/0483/3758/4295/files/4_Week_Healthy_Meal_Plan_1.pdf?v=1745997511"
+          }
+        },
+        "column_HpiFt6": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/A4_Paper_Planner_Mockup_Instagram_Post_1.webp",
+            "title": "Get Your Go-To Guide for Organic Living",
+            "text": "<p>Going organic doesn’t have to mean going all in overnight. This guide is here to show you how simple it can be to start making healthier choices—for your body, your family, and the planet. From what you eat and how you clean to what you put on your skin, every section is filled with practical tips, checklists, and easy wins to help you live with more intention and fewer chemicals.</p>",
+            "link_label": "Download Now",
+            "link": "https://cdn.shopify.com/s/files/1/0483/3758/4295/files/Going_Organic_Guide_-_Spray-Free_Farmacy.pdf?v=1738724900"
+          }
+        },
+        "column_VpnnBj": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/30_Plants_a_Week_Gut_Health_Challenge.jpg",
+            "title": "7 Day Gut Health Challenge",
+            "text": "<p>Boost your gut microbiome by adding more nutritious plants to your diet - variety is key! Print this checklist, stick it on your fridge, and track your plant intake over 7 days! Be sure to choose organic/spray-free produce to avoid nasty pesticides and maximise nutrients. 🌱</p>",
+            "link_label": "Download Now",
+            "link": ""
+          }
+        },
+        "column_QnewXA": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/Weekly_Meal_Plan.jpg",
+            "title": "Meal Planning Template",
+            "text": "<p>Take the stress out of mealtime and reduce food waste with this simple weekly meal planner. Jot down your meals, make a smart shopping list, and eat healthier all week long! Print it out and stick it on your fridge to stay organised and inspired. 📝</p>",
+            "link_label": "Download Now",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_xeyQKF",
+        "column_HpiFt6",
+        "column_VpnnBj",
+        "column_QnewXA"
+      ],
+      "custom_css": [
+        ".link {text-decoration: none; font-size: inherit; margin-top: 1.5rem; background: #043D22; padding: 10px; padding-left: 20px; border-radius: 10px; padding-right: 20px; color: white;}"
+      ],
+      "name": "t:sections.multicolumn.presets.name",
+      "settings": {
+        "title": "Free Resources",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 2,
+        "column_alignment": "left",
+        "background_style": "primary",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "multicolumn_4Pzr7B"
+  ]
+}

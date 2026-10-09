@@ -1,0 +1,389 @@
+{%- comment -%}
+  Seasonal Boxes Header — standalone section
+  "Organic Seasonal Boxes" heading + subtext, an "autopilot/subscription"
+  highlight strip with CTA button, and a small note line. Fully independent
+  section, add/remove/reorder anywhere via the theme editor (e.g. above a
+  product grid section).
+{%- endcomment -%}
+
+<div
+  class="seasonal-header-section"
+  style="--sh-pad-top: {{ section.settings.padding_top }}px; --sh-pad-bottom: {{ section.settings.padding_bottom }}px; --sh-pad-top-mobile: {{ section.settings.padding_top_mobile }}px; --sh-pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px; background: {{ section.settings.background_color }};"
+>
+  <div
+    class="seasonal-header"
+    style="--sh-heading: {{ section.settings.heading_color }}; --sh-text: {{ section.settings.text_color }}; --sh-strip-bg: {{ section.settings.strip_background }}; --sh-strip-heading: {{ section.settings.strip_heading_color }}; --sh-strip-text: {{ section.settings.strip_text_color }}; --sh-btn-bg: {{ section.settings.button_background }}; --sh-btn-text: {{ section.settings.button_text_color }};"
+  >
+    {%- if section.settings.heading != blank -%}
+      <h2 class="seasonal-header__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtext_1 != blank -%}
+      <p class="seasonal-header__subtext">{{ section.settings.subtext_1 }}</p>
+    {%- endif -%}
+    {%- if section.settings.subtext_2 != blank -%}
+      <p class="seasonal-header__subtext">{{ section.settings.subtext_2 }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.strip_heading != blank or section.settings.strip_text != blank or section.settings.button_text != blank -%}
+      <div class="seasonal-header__strip">
+        <div class="seasonal-header__strip-content">
+          {%- if section.settings.strip_heading != blank -%}
+            <h3 class="seasonal-header__strip-heading">{{ section.settings.strip_heading }}</h3>
+          {%- endif -%}
+          {%- if section.settings.strip_text != blank -%}
+            <p class="seasonal-header__strip-text">{{ section.settings.strip_text }}</p>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.button_text != blank -%}
+          <div class="seasonal-header__strip-action">
+            <a
+              href="{{ section.settings.button_link | default: '/pages/subscriptions' }}"
+              class="seasonal-header__button"
+            >
+              {{ section.settings.button_text }}
+            </a>
+            {%- if section.settings.button_caption != blank -%}
+              <span class="seasonal-header__button-caption">{{ section.settings.button_caption }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.footnote != blank -%}
+      <p class="seasonal-header__footnote">{{ section.settings.footnote }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.seasonal-header-section {
+  padding-top: var(--sh-pad-top, 32px);
+  padding-bottom: var(--sh-pad-bottom, 24px);
+  padding-left: clamp(16px, 5vw, 56px);
+  padding-right: clamp(16px, 5vw, 56px);
+}
+.seasonal-header-section *, .seasonal-header-section *::before, .seasonal-header-section *::after { box-sizing: border-box; }
+
+.seasonal-header {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+}
+
+.seasonal-header__heading {
+  margin: 0 0 10px 0;
+  color: var(--sh-heading, #1f4a37);
+  font-size: 59px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.seasonal-header__subtext {
+  margin: 6px 0 0;
+  color: var(--sh-text, #4b5b52);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.seasonal-header__strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 28px;
+  padding: 24px 32px;
+  background: var(--sh-strip-bg, #e4ece0);
+  border-radius: 14px;
+  text-align: left;
+}
+
+.seasonal-header__strip-content {
+  min-width: 0;
+}
+
+.seasonal-header__strip-heading {
+  margin: 0;
+  color: var(--sh-strip-heading, #1f4a37);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.seasonal-header__strip-text {
+  margin: 6px 0 0;
+  color: var(--sh-strip-text, #4b5b52);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.seasonal-header__strip-action {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.seasonal-header__button {
+  display: inline-block;
+  padding: 14px 28px;
+  background: var(--sh-btn-bg, #1f4a37);
+  color: var(--sh-btn-text, #ffffff);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1;
+  white-space: nowrap;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.seasonal-header__button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.seasonal-header__button-caption {
+  color: var(--sh-strip-text, #4b5b52);
+  font-size: 12.5px;
+}
+
+.seasonal-header__footnote {
+  margin: 18px 0 0;
+  color: var(--sh-text, #4b5b52);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 749px) {
+  .seasonal-header-section {
+    padding-top: var(--sh-pad-top-mobile, 24px);
+    padding-bottom: var(--sh-pad-bottom-mobile, 20px);
+  }
+
+  .seasonal-header__heading {
+    font-size: 34px;
+  }
+
+  .seasonal-header__subtext {
+    font-size: 13.5px;
+  }
+
+  .seasonal-header__strip {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 16px;
+    padding: 20px 18px;
+    margin-top: 20px;
+  }
+
+  .seasonal-header__strip-content {
+    text-align: center;
+  }
+
+  .seasonal-header__strip-heading {
+    font-size: 24px;
+  }
+
+  .seasonal-header__strip-text {
+    font-size: 13.5px;
+  }
+
+  .seasonal-header__strip-action {
+    width: 100%;
+  }
+
+  .seasonal-header__button {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .seasonal-header__footnote {
+    font-size: 12.5px;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Seasonal boxes header",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Desktop padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Mobile padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Organic Seasonal Boxes"
+    },
+    {
+      "type": "text",
+      "id": "subtext_1",
+      "label": "Subtext line 1",
+      "default": "Fresh, seasonal produce picked for variety and value."
+    },
+    {
+      "type": "text",
+      "id": "subtext_2",
+      "label": "Subtext line 2",
+      "default": "Choose a box below for a one time order."
+    },
+    {
+      "type": "header",
+      "content": "Subscription strip"
+    },
+    {
+      "type": "text",
+      "id": "strip_heading",
+      "label": "Strip heading",
+      "default": "Put Your Order on Autopilot"
+    },
+    {
+      "type": "textarea",
+      "id": "strip_text",
+      "label": "Strip text",
+      "default": "Choose a seasonal box, your favourite staples, or both. Delivered every week, fortnight or month."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Build your subscription"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Defaults to /pages/subscriptions if left empty."
+    },
+    {
+      "type": "text",
+      "id": "button_caption",
+      "label": "Caption under button",
+      "default": "Set one up today"
+    },
+    {
+      "type": "header",
+      "content": "Footnote"
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "Footnote text",
+      "default": "Want to make swaps? Add your requests when you add your box to cart. Swaps are made to equal value."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#4b5b52"
+    },
+    {
+      "type": "color",
+      "id": "strip_background",
+      "label": "Strip background",
+      "default": "#e4ece0"
+    },
+    {
+      "type": "color",
+      "id": "strip_heading_color",
+      "label": "Strip heading color",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "strip_text_color",
+      "label": "Strip text color",
+      "default": "#4b5b52"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Seasonal boxes header"
+    }
+  ]
+}
+{% endschema %}

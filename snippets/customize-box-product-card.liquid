@@ -1,0 +1,29 @@
+<div class="customize-box__product_card {% if selected %}selected{% endif %}" data-frozen="{% if card_product.tags contains 'Frozen Foods'%}TRUE{% else %}FALSE{%endif%}" data-product-id="{{ card_product.id }}" data-qty="{{ qty }}" data-product-title="{{ card_product.title }}" >
+  <div class="customize-box__img-wrapper">
+    <img src="{{ card_product.featured_image | img_url: '400x' }}" alt="{{ card_product.featured_image.alt }}" loading="lazy" width="auto" height="auto">
+  </div>
+  <h5 class="customize-box__product_name">{{ card_product.title }}</h5>
+  <div class="customize-box__quantity">
+    <quantity-input class="quantity cart-quantity">
+      <button class="quantity__button no-js-hidden" name="minus" type="button">
+        <span class="visually-hidden">
+          {{- 'products.product.quantity.decrease' | t: product: variant.title | escape -}}
+        </span>
+        {% render 'icon-minus' %}
+      </button>
+      <input
+        class="quantity__input"
+        data-quantity-variant-id="{{ variant.id }}"
+        type="number" value="{{ qty }}" min="0"
+        data-product-id="{{ card_product.id }}"
+        readonly
+      >
+      <button class="quantity__button no-js-hidden disabled" name="plus" type="button" disabled>
+        <span class="visually-hidden">
+          {{- 'products.product.quantity.increase' | t: product: variant.title | escape -}}
+        </span>
+        {% render 'icon-plus' %}
+      </button>
+    </quantity-input>
+  </div>
+</div>

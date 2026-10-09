@@ -1,0 +1,333 @@
+  <script>
+    window.addEventListener("globoFilterRenderCompleted", () => {
+      const templateName = "{{ template.name }}";
+      const SELECTORS = {
+        addWrapper: '.custom-addToCart-os[data-variant-id]',
+        addBtn: '.custom-add-to-cart-btn-os',
+        view: '.view-product-os',
+        qtyBuyWrapper: '.quantity-selector-and-buyNow-wrapper-os',
+        restock: '.restocking-soon-product-os',
+        counter: '.header-cart-counter-os',
+        qtyInput: '.quantity__input',
+        qtyPlus:  '.quantity__button[name="plus"]',
+        qtyMinus: '.quantity__button[name="minus"]',
+        customQtyText: '.custom-quantity-value-os',
+      };
+
+      const activate   = (el) => { if (el) { el.classList.add("active");   el.setAttribute("aria-hidden","false"); } };
+      const deactivate = (el) => { if (el) { el.classList.remove("active"); el.setAttribute("aria-hidden","true");  } };
+
+      const addWrappers = Array.from(document.querySelectorAll(SELECTORS.addWrapper));
+      if (!addWrappers.length) { 
+        console.log("[INIT] No cards found for", SELECTORS.addWrapper); 
+        return;
+      }
+
+      const cards = addWrappers.map(wrap => {
+        const cardRoot = wrap.parentElement;
+        const qtyBuyEl = cardRoot.querySelector(SELECTORS.qtyBuyWrapper);
+        const qtyInputEl = qtyBuyEl ? qtyBuyEl.querySelector(SELECTORS.qtyInput) : null;
+        const qtyPlusEl  = qtyBuyEl ? qtyBuyEl.querySelector(SELECTORS.qtyPlus)  : null;
+        const qtyMinusEl = qtyBuyEl ? qtyBuyEl.querySelector(SELECTORS.qtyMinus) : null;
+        const customQtyTextEl = qtyBuyEl ? qtyBuyEl.querySelector(SELECTORS.customQtyText) : null;
+
+        return {
+          wrap,
+          cardRoot,
+          variantId: Number(wrap.getAttribute('data-variant-id')),
+          available: String(wrap.getAttribute('data-available')) === 'true',
+          viewEl: cardRoot.querySelector(SELECTORS.view),
+          qtyBuyEl,
+          qtyInputEl,
+          qtyPlusEl,
+          qtyMinusEl,
+          customQtyTextEl,
+          restockEl: cardRoot.querySelector(SELECTORS.restock),
+          busy: false,
+        };
+      });
+
+      // --- NEW: normalize +/- button disabled state based on input value/min/max
+      function refreshQtyButtons(card) {
+        if (!card || !card.qtyInputEl) return;
+        const input = card.qtyInputEl;
+
+        const val = Number(input.value || 0);
+        const min = Number(input.getAttribute('min') || 0);
+        const maxAttr = input.getAttribute('max');
+        const hasMax = maxAttr !== null && maxAttr !== undefined && maxAttr !== "";
+        const max = hasMax ? Number(maxAttr) : Infinity;
+
+        console.log("input ::", input);
+        console.log("val ::", val);
+        console.log("min ::", min);
+        console.log("maxAttr ::", input);
+        console.log("hasMax ::", hasMax);
+        console.log("max ::", max);
+        
+        // Custom quantity label
+        if (card.customQtyTextEl) {
+          card.customQtyTextEl.innerHTML = `Added: <span>${val}</span> ${val > 1 ? 'items' : 'item'}`;
+        }
+
+        // Minus button
+        if (card.qtyMinusEl) {
+          const shouldDisableMinus = card.busy || val <= min;
+          card.qtyMinusEl.disabled = shouldDisableMinus;
+          card.qtyMinusEl.classList.toggle('disabled', shouldDisableMinus);
+        }
+        
+        // Plus button
+        if (card.qtyPlusEl) {
+          const reachedMax = hasMax && isFinite(max) && val >= max;
+          const shouldDisablePlus = card.busy || reachedMax;
+          card.qtyPlusEl.disabled = shouldDisablePlus;
+          card.qtyPlusEl.classList.toggle('disabled', shouldDisablePlus);
+        }
+      }
+
+      // ------- cart state cache (variantId -> { key, qty })
+      let cartCache = new Map();
+
+      async function fetchCart() {
+        const res = await fetch("/cart.js", { headers: { Accept: "application/json" } });
+        if (!res.ok) throw new Error("Failed to fetch cart");
+        const cart = await res.json();
+        cartCache = new Map((cart.items || []).map(it => [Number(it.variant_id), { key: it.key, qty: Number(it.quantity) }]));
+        {% comment %} console.log("[CART] fetched; item_count:", cart.item_count); {% endcomment %}
+        return cart;
+      }
+
+      function updateCartCounter(count) {
+        const bubble = document.querySelector(SELECTORS.counter);
+        if (!bubble) return;
+        bubble.textContent = count > 99 ? "99+" : String(count);
+        bubble.classList.toggle("is-empty", count === 0);
+      }
+
+      function setQtyBusy(card, busy) {
+        card.busy = busy;
+        if (card.qtyInputEl) {
+          card.qtyInputEl.disabled = busy;
+          card.qtyInputEl.setAttribute("aria-busy", busy ? "true" : "false");
+        }
+        // Let refreshQtyButtons decide +/- disabled & class
+        refreshQtyButtons(card);
+      }
+
+      // ------- initial layout pass
+      let needsCartCheck = false;
+      for (const c of cards) {
+        if (!c.available) {
+          activate(c.restockEl);
+          deactivate(c.viewEl); deactivate(c.qtyBuyEl); deactivate(c.wrap);
+          continue;
+        }
+        if (templateName === 'index') {
+          activate(c.viewEl);
+          deactivate(c.qtyBuyEl); deactivate(c.wrap); deactivate(c.restockEl);
+          continue;
+        }
+        needsCartCheck = true;
+        deactivate(c.viewEl); deactivate(c.qtyBuyEl); deactivate(c.wrap); deactivate(c.restockEl);
+      }
+
+      if (needsCartCheck) {
+        fetchCart()
+          .then(cart => {
+            for (const c of cards) {
+              if (!c.available || templateName === 'index') continue;
+              const info = cartCache.get(c.variantId);
+              if (info && info.qty > 0) {
+                activate(c.qtyBuyEl); deactivate(c.wrap);
+                if (c.qtyInputEl) c.qtyInputEl.value = info.qty;
+                refreshQtyButtons(c); // ← ensure minus isn’t stuck disabled
+              } else {
+                activate(c.wrap); deactivate(c.qtyBuyEl);
+              }
+              deactivate(c.viewEl); deactivate(c.restockEl);
+            }
+            updateCartCounter(cart.item_count);
+          })
+          .catch(err => {
+            console.warn("[INIT] cart fetch failed; default to Add to cart", err);
+            for (const c of cards) {
+              if (!c.available || templateName === 'index') continue;
+              activate(c.wrap); deactivate(c.qtyBuyEl); deactivate(c.viewEl); deactivate(c.restockEl);
+            }
+          });
+      }
+
+      // ------- Add-to-cart action
+      const revertTimers = new WeakMap();
+      function clearRevertTimer(btn){ const t=revertTimers.get(btn); if(t){clearTimeout(t); revertTimers.delete(btn);} }
+      function setBtnState(btn, state, opts = {}) {
+        clearRevertTimer(btn);
+        btn.dataset.state = state;
+        switch (state) {
+          case "adding":
+            btn.disabled = true; btn.setAttribute("aria-busy","true"); btn.textContent = opts.text || "Adding…"; break;
+          case "added":
+            btn.disabled = false; btn.removeAttribute("aria-busy");    btn.textContent = opts.text || "Added!";  break;
+          case "error":
+            btn.disabled = false; btn.removeAttribute("aria-busy");    btn.textContent = opts.text || "Try again"; break;
+          default:
+            btn.disabled = false; btn.removeAttribute("aria-busy");    btn.textContent = opts.text || "Add to cart";
+        }
+      }
+
+      async function addToCart(variantId, qty = 1) {
+        {% comment %} console.log("[ATC] start", { variantId, qty }); {% endcomment %}
+        const res = await fetch("/cart/add.js", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ items: [{ id: Number(variantId), quantity: Number(qty) }] })
+        });
+        if (!res.ok) {
+          const errText = await res.text().catch(() => "");
+          console.error("[ATC] failed", errText);
+          throw new Error("Add to cart failed: " + errText);
+        }
+        const cart = await fetchCart();
+        updateCartCounter(cart.item_count);
+        {% comment %} console.log("[ATC] success; new item_count:", cart.item_count); {% endcomment %}
+        return cart;
+      }
+
+      async function setCartQtyByKey(variantId, desiredQty) {
+        {% comment %} console.log("[QTY] setCartQtyByKey start", { variantId, desiredQty }); {% endcomment %}
+        let info = cartCache.get(variantId);
+        if (!info) { await fetchCart(); info = cartCache.get(variantId); }
+
+        if (!info) {
+          {% comment %} console.log("[QTY] no line item key for variant; adding fresh"); {% endcomment %}
+          const cart = await addToCart(variantId, desiredQty);
+          return cart;
+        }
+
+        const res = await fetch("/cart/change.js", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ id: info.key, quantity: Number(desiredQty) })
+        });
+        if (!res.ok) {
+          const errText = await res.text().catch(() => "");
+          console.error("[QTY] change.js failed", errText);
+          throw new Error("Cart change failed: " + errText);
+        }
+
+        const cart = await fetchCart();
+        updateCartCounter(cart.item_count);
+        {% comment %} console.log("[QTY] change.js success; new item_count:", cart.item_count); {% endcomment %}
+        return cart;
+      }
+
+      document.addEventListener("click", async (e) => {
+        const btn = e.target.closest(SELECTORS.addBtn);
+        if (!btn) return;
+
+        const wrap = btn.closest(SELECTORS.addWrapper);
+        if (!wrap) return;
+
+        const card = cards.find(c => c.wrap === wrap);
+        if (!card || !card.available) return;
+        if (btn.dataset.state === "adding") return;
+
+        setBtnState(btn, "adding");
+        try {
+          const cart = await addToCart(card.variantId, 1);
+          setBtnState(btn, "added");
+
+          const info = cartCache.get(card.variantId);
+          activate(card.qtyBuyEl);
+          deactivate(card.wrap);
+          if (card.qtyInputEl && info) card.qtyInputEl.value = info.qty;
+          refreshQtyButtons(card); // ← ensure correct +/- state after swap
+        } catch (err) {
+          console.error("[ATC] error", err);
+          setBtnState(btn, "error");
+        }
+      });
+
+      // ------- Quantity selector → cart sync
+      let qtyDebounce;
+
+      function getCardFromQtyInput(target) {
+        const wrap = target.closest(SELECTORS.qtyBuyWrapper);
+        if (!wrap) return null;
+        return cards.find(c => c.qtyBuyEl === wrap);
+      }
+
+      function handleQtyCommit(inputEl) {
+        const card = getCardFromQtyInput(inputEl);
+        if (!card) { console.warn("[QTY] no card for input"); return; }
+        if (card.busy) { 
+          {% comment %} console.log("[QTY] busy; skip");  {% endcomment %}
+          return;
+        }
+
+        const desired = Number(inputEl.value || 0);
+        if (Number.isNaN(desired) || desired < 0) {
+          console.warn("[QTY] invalid desired", inputEl.value);
+          return;
+        }
+
+        {% comment %} console.log("[QTY] commit desired", { variantId: card.variantId, desired }); {% endcomment %}
+
+        setQtyBusy(card, true); // locks input & updates +/- via refreshQtyButtons
+
+        clearTimeout(qtyDebounce);
+        qtyDebounce = setTimeout(async () => {
+          try {
+            const cart = await setCartQtyByKey(card.variantId, desired);
+
+            const info = cartCache.get(card.variantId);
+            const actual = info ? info.qty : 0;
+            {% comment %} console.log("[QTY] applied actual", actual); {% endcomment %}
+            if (card.qtyInputEl) card.qtyInputEl.value = actual;
+
+            if (actual <= 0) {
+              deactivate(card.qtyBuyEl);
+              activate(card.wrap);
+            }
+          } catch (err) {
+            console.error("[QTY] change error", err);
+          } finally {
+            setQtyBusy(card, false);   // unlock
+            refreshQtyButtons(card);   // ← normalize minus/plus after unlock
+          }
+        }, 150);
+      }
+
+      document.addEventListener("input", (e) => {
+        const input = e.target;
+        if (!(input instanceof HTMLInputElement)) return;
+        if (!input.closest(SELECTORS.qtyBuyWrapper)) return;
+        if (!input.matches(SELECTORS.qtyInput)) return;
+        {% comment %} console.log("[QTY] input event", input.value); {% endcomment %}
+        handleQtyCommit(input);
+      }, true);
+
+      // 🔁 REPLACE your +/- click handler with this (no pre-lock; commit on next frame)
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest(`${SELECTORS.qtyPlus}, ${SELECTORS.qtyMinus}`);
+        if (!btn) return;
+
+        const wrap = btn.closest(SELECTORS.qtyBuyWrapper);
+        if (!wrap) return;
+
+        const input = wrap.querySelector(SELECTORS.qtyInput);
+        if (!input) { console.warn("[QTY] no input inside qty wrapper"); return; }
+
+        // Let the theme update the input first; then we commit (debounced inside)
+        requestAnimationFrame(() => {
+          handleQtyCommit(input); // will lock immediately via setQtyBusy(card, true)
+        });
+      });
+
+
+      // OPTIONAL: If any qty UI is visible in markup on first load, normalize its buttons once.
+      for (const c of cards) refreshQtyButtons(c);
+    });
+  </script>
+  

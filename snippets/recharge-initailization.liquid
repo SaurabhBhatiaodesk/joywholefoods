@@ -1,0 +1,99 @@
+<!-- Add this in theme.liquid -->
+ <script src="https://static.rechargecdn.com/assets/storefront/recharge-client-1.24.0.min.js"></script>
+<script> 
+  alert('Initializing Recharge SDK...');
+  (async () => {
+    try {
+      console.log("Initializing Recharge SDK...");
+
+      // Check if a session exists in localStorage
+      let session = JSON.parse(localStorage.getItem('rechargeSession'));
+
+      if (!session) {
+        console.log("No saved session found. Logging in via Shopify App Proxy...");
+        try {
+          session = await recharge.auth.loginShopifyAppProxy();
+          console.log("Recharge session obtained:", session);
+          // Save session to localStorage
+          if (session) {
+            localStorage.setItem('rechargeSession', JSON.stringify(session));
+            console.log("Session saved to localStorage.");
+          }
+        } catch (error) {
+          console.error("Failed to log in via Shopify App Proxy:", error);
+          // alert("Please log in to access your subscription1.");
+          return;
+        }
+      } else {
+        console.log("Using saved session from localStorage:", session);
+      }
+
+      // Initialize the Recharge SDK with the session
+      await recharge.init({
+        storeIdentifier: 'https://sprayfreefarmacy.myshopify.com',
+        storefrontAccessToken: 'strfnt_0c842473948d99203d168ca6e40fdae04265ce11bf6e94d6d1a695c2be4aedb8',
+        loginRetryFn: async () => {
+          console.log("Session expired. Attempting re-login via Shopify App Proxy...");
+          try {
+            const newSession = await recharge.auth.loginShopifyAppProxy();
+            console.log("New session obtained:", newSession);
+
+          
+
+            if (newSession) {
+              localStorage.setItem('rechargeSession', JSON.stringify(newSession));
+              console.log("New session saved to localStorage.");
+              return newSession;
+            }
+
+      
+
+          } catch (error) {
+            console.error("Re-login failed:", error);
+            alert("Please log in again.");
+            return null;
+          }
+        },
+      });
+
+ const subscriptionData = {
+      address_id: 180093080,
+      charge_interval_frequency: 30,
+      next_charge_scheduled_at: '2025-10-18',
+      order_interval_frequency: 1,
+      order_interval_unit: 'day',
+      quantity: 1,
+      external_variant_id: {
+        ecommerce: '44796330836183',
+      },
+      external_product_id: {
+        ecommerce: '8356362715351',
+      },
+    };
+
+    try {
+      const createSubscriptionResponse = await recharge.subscription.createSubscription(session, subscriptionData);
+      console.log("Subscription created successfully", createSubscriptionResponse);
+    } catch (error) {
+        if (error.response) {
+          console.error("API Error Response:", error.response.status, error.response.data);
+        } else if (error.request) {
+          console.error("Request Error:", error.request);
+        } else {
+          console.error("Error Message:", error.message);
+        }
+        console.error("Subscription creation failed:", error);
+      }
+    console.log("Recharge SDK initialized successfully.");
+  } catch (error) {
+    console.error("Recharge SDK initialization failed:", error);
+    alert("Recharge SDK initialization error. Check the console for details.");
+  }
+})();
+      console.log("Recharge SDK initialized successfully.");
+    } catch (error) {
+      console.error("Recharge SDK initialization failed:", error);
+      alert("Recharge SDK initialization error. Check console for details.");
+    }
+  })();
+</script>

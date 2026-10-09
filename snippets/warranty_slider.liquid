@@ -1,0 +1,131 @@
+<style>
+.warranty_slider .warranty_description p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 20px;
+}
+.warranty_slider {
+    background: #f2f2f2;
+    padding: 0px;
+}
+.warranty_slider .warranty_slide button.slick-prev ,.warranty_slider .warranty_slide button.slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    left: -15px;
+    background:tranparent;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    font-size: 0;
+}
+.warranty_slider .warranty_slide button.slick-prev {
+  background-image: url("https://cdn.shopify.com/s/files/1/0483/3758/4295/files/prev-arrow.png");
+  background-repeat: no-repeat;
+  background-size:contain;
+  background-osition:0 0;
+}
+.warranty_slider .warranty_slide button.slick-next {
+  background-image: url("https://cdn.shopify.com/s/files/1/0483/3758/4295/files/next-arrow.png");
+  background-repeat: no-repeat;
+  background-size:contain;
+  background-osition:0 0;
+}
+.warranty_slider .warranty_slide .slick-track {
+    display: flex;
+    align-items: center;
+}
+.warranty_slider .warranty_slide .warranty_image img {
+    object-fit: contain;
+    max-width: 90%;
+    margin: auto;
+}
+.warranty_slider .warranty_slide button.slick-next {
+ left: unset;
+  right:-15px;
+}
+@media screen and (max-width:767px) {
+  .warranty_slider .warranty_slide button.slick-prev {
+    left: -10px;
+    height:30px;
+    width:30px;
+  }
+  .warranty_slider .warranty_slide button.slick-next {
+    right: -10px;
+    height:30px;
+    width:30px;
+  }
+}
+</style>
+<div class="warranty_slider">
+  <div class="warranty_slide">  
+  {% if block.settings.warranty_image1 != blank %}
+    <div class="warranty_image">
+      <img src="{{ block.settings.warranty_image1 | img_url: 'master' }}" alt="warranty_icon1">
+    </div>
+    {% endif %}
+    
+     {% if block.settings.warranty_image2 != blank %}
+    <div class="warranty_image">
+      <img src="{{ block.settings.warranty_image2 | img_url: 'master' }}" alt="warranty_icon2">
+    </div>
+    {% endif %}
+    
+     {% if block.settings.warranty_image3 != blank %}
+    <div class="warranty_image">
+      <img src="{{ block.settings.warranty_image3 | img_url: 'master' }}" alt="warranty_icon3">
+    </div>
+    {% endif %}
+    
+     {% if block.settings.warranty_image4 != blank %}
+    <div class="warranty_image">
+      <img src="{{ block.settings.warranty_image4 | img_url: 'master' }}" alt="warranty_icon4">
+    </div>
+    {% endif %}
+
+    {% if block.settings.warranty_image5 != blank %}
+    <div class="warranty_image">
+      <img src="{{ block.settings.warranty_image5 | img_url: 'master' }}" alt="warranty_icon4">
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+<script>
+$(document).ready(function(){
+      $('.warranty_slide').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        dots: false,
+        speed: 300,
+        infinite: true,
+        autoplaySpeed: 4000,
+        autoplay: true,
+        responsive: [
+      {
+        breakpoint: 991,
+        settings: {
+          slidesToShow: 1,
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          slidesToShow: 2,
+        }
+      },
+     {
+        breakpoint: 575,
+        settings: {
+          slidesToShow: 1,
+        }
+      }
+    ]
+  });
+});
+
+</script>

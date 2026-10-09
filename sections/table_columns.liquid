@@ -1,0 +1,324 @@
+<style>
+
+/* Base font → DM Sans */
+.table_columns {
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Table styles */
+.table_columns th {
+  background: #043D22;
+  border: none !important;
+  min-width: 200px;
+  width: 33%;
+}
+
+.table_columns tbody td {
+  border: 1px solid #959595;
+  text-align: center;
+}
+
+.table_columns th p {
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.table_columns table {
+  box-shadow: none;
+  border: 1px solid #959595;
+  min-width: 800px;
+}
+
+.table_columns .inner_table {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  overflow: auto;
+  max-width: 90%;
+}
+
+.table_columns tbody td p {
+  font-size: 16px;
+  line-height: 22px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Reset paragraph spacing */
+p {
+  margin: 0;
+}
+
+/* HEADING → Holiday (FIXED weight + color) */
+.about_title p {
+  color: #086C3F; /* medium green */
+  font-family: 'Holiday Journey', cursive !important;
+  font-size: 41px;
+  font-style: normal;
+  font-weight: 400 !important;
+  line-height: 1.2;
+  letter-spacing: 0;
+  margin: 0;
+  text-align: center;
+  padding: 3rem 0 0 0;
+}
+
+/* Responsive */
+@media screen and (max-width:1024px) {
+  .table_columns {
+    min-width: inherit;
+  }
+}
+
+@media screen and (max-width:767px) {
+  .about_title p {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  .table_columns th,
+  .table_columns tbody td {
+    width: 100%;
+    max-width: 33%;
+  }
+
+  .table_columns th:first-child,
+  .table_columns tbody td:first-child {
+    max-width: 40%;
+  }
+
+  .table_columns .inner_table thead tr th:last-child,
+  .table_columns .inner_table tbody tr td:last-child {
+    border-bottom: none !important;
+  }
+
+  .table_columns th p {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .table_columns .inner_table {
+    justify-content: start;
+  }
+}
+
+</style>
+
+
+<div class="section-{{ section.id }}-padding">
+  <div class="table_columns">
+    <h2 class="about_title">{{ section.settings.table_heading }}</h2>
+    <div class="inner_table">
+      <table>
+        
+        <thead>
+          <tr>
+            {% if section.settings.column_heading1 != blank %}<th>{{ section.settings.column_heading1 }}</th> {% endif %}
+            {% if section.settings.column_heading2 != blank %} <th>{{ section.settings.column_heading2 }}</th> {% endif %}
+            {% if section.settings.column_heading3 != blank %}<th>{{ section.settings.column_heading3 }}</th> {% endif %}
+            {% if section.settings.column_heading4 != blank %}<th>{{ section.settings.column_heading4 }}</th> {% endif %}
+          </tr>
+        </thead>
+        <tbody> 
+        {% for block in section.blocks %}
+            <tr> 
+              {% if block.settings.column_data1 != blank %}
+                <td>
+                  <span>{{ block.settings.column_data1 }}</span>
+                </td>
+              {% endif %}
+              {% if block.settings.column_data2 != blank %}
+                  <td>
+                    <span>{{ block.settings.column_data2 }}</span>
+                  </td>
+              {% endif %}
+              {% if block.settings.column_data3 != blank %}
+                <td>
+                  <span>{{ block.settings.column_data3 }}</span>
+                </td>
+              {% endif %}
+              {% if block.settings.column_data4 != blank %}
+                <td>
+                  <span>{{ block.settings.column_data4 }}</span>
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+.table_columns th {
+    background: #043D22;
+    border: none !important;
+    min-width: 200px;
+    width: 33%;
+}
+.table_columns tbody td {
+    border: 1px solid #959595;
+    text-align: center;
+}
+.table_columns th p {
+    color: #fff;
+}
+.table_columns table {
+    box-shadow: none;
+    border: 1px solid #959595;
+    min-width: 800px;
+}
+.table_columns .inner_table {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    overflow: auto;
+    max-width: 90%;
+}
+.table_columns tbody td p {
+    font-size: 16px;
+    line-height:22px;
+}
+p{
+  margin:0;
+}
+.about_title p {
+    color: #043D22;
+    font-family: 'DM Sans 9pt', serif;
+    font-size: 41px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 111.3%;
+    letter-spacing: -1.77px;
+    margin: 0;
+    text-align: center;
+    padding: 3rem 0 0 0;
+}
+@media screen and (max-width:1024px) {
+  .table_columns {
+    min-width: inherit;
+  }
+}
+
+@media screen and (max-width:767px) {
+  .about_title p {
+    font-size: 32px;
+    line-height: 111.3%;
+  }
+  .table_columns th,.table_columns tbody td  {
+    width: 100%;
+    max-width:33%;
+  }
+  .table_columns th:first-child, .table_columns tbody td:first-child {
+    max-width: 40%;
+  }
+  .table_columns .inner_table thead tr th:last-child,
+  .table_columns .inner_table tbody tr td:last-child{
+    border-bottom:none !important;
+  }
+  .table_columns th p {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .table_columns .inner_table {
+    justify-content: start;
+  }
+}
+
+
+</style>
+
+{% schema %}
+{
+  "name": "table_columns",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "table_heading",
+      "label": "table_heading"
+    },
+    {
+      "type": "richtext",
+      "id": "column_heading1",
+      "label": "column_heading1"
+    },
+    {
+      "type": "richtext",
+      "id": "column_heading2",
+      "label": "column_heading2"
+    },
+    {
+      "type": "richtext",
+      "id": "column_heading3",
+      "label": "column_heading3"
+    },
+     {
+      "type": "richtext",
+      "id": "column_heading4",
+      "label": "column_heading4"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  
+  "blocks": [
+    {
+      "type": "column",
+      "name": "column",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "column_data1",
+          "label": "column_data1"
+        },
+        {
+          "type": "richtext",
+          "id": "column_data2",
+          "label": "column_data2"
+        },
+        {
+          "type": "richtext",
+          "id": "column_data3",
+          "label": "column_data3"
+        },
+        {
+          "type": "richtext",
+          "id": "column_data4",
+          "label": "column_data4"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "table_columns",
+      "settings": {
+      },
+      "blocks": [
+        {
+          "type": "column" 
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

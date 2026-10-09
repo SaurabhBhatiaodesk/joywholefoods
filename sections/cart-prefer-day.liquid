@@ -1,0 +1,224 @@
+{%- comment -%}
+  Prefer a Different Delivery Day — standalone section
+  Centered heading + subtext + "Send us a message" button. Fully
+  independent section, add/remove/reorder anywhere via the theme editor.
+{%- endcomment -%}
+
+<div
+  class="prefer-day-section"
+  style="--pd-pad-top: {{ section.settings.padding_top }}px; --pd-pad-bottom: {{ section.settings.padding_bottom }}px; --pd-pad-top-mobile: {{ section.settings.padding_top_mobile }}px; --pd-pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px; background: {{ section.settings.background_color }}; --pd-heading: {{ section.settings.heading_color }}; --pd-text: {{ section.settings.text_color }}; --pd-btn-bg: {{ section.settings.button_background }}; --pd-btn-text: {{ section.settings.button_text_color }};"
+>
+  <div class="prefer-day">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="prefer-day__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtext != blank -%}
+      <p class="prefer-day__subtext">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+    {%- if section.settings.button_text != blank -%}
+      <a
+        href="{{ section.settings.button_link | default: '/pages/contact' }}"
+        class="prefer-day__button"
+      >
+        {{ section.settings.button_text }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.prefer-day-section {
+  padding-top: var(--pd-pad-top, 20px);
+  padding-bottom: var(--pd-pad-bottom, 20px);
+  padding-left: clamp(16px, 5vw, 56px);
+  padding-right: clamp(16px, 5vw, 56px);
+}
+.prefer-day-section *, .prefer-day-section *::before, .prefer-day-section *::after { box-sizing: border-box; }
+
+.prefer-day {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+}
+
+.prefer-day__heading {
+  margin: 0;
+  color: var(--pd-heading, #1f4a37);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.prefer-day__subtext {
+  margin: 8px 0 0;
+  color: var(--pd-text, #4b5b52);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.prefer-day__button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 14px 32px;
+  background: var(--pd-btn-bg, #1f4a37);
+  color: var(--pd-btn-text, #ffffff);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.prefer-day__button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+@media screen and (max-width: 749px) {
+  .prefer-day-section {
+    padding-top: var(--pd-pad-top-mobile, 16px);
+    padding-bottom: var(--pd-pad-bottom-mobile, 16px);
+  }
+
+  .prefer-day__heading {
+    font-size: 30px;
+  }
+
+  .prefer-day__subtext {
+    font-size: 13px;
+  }
+
+  .prefer-day__button {
+    display: block;
+    width: 100%;
+    padding: 13px 20px;
+    text-align: center;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Prefer a different day",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#faf3e6"
+    },
+    {
+      "type": "header",
+      "content": "Desktop padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Mobile padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Prefer a Different Delivery Day?"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Let us know your postcode and preferred day. We can't promise, but your feedback helps us plan future delivery runs."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Send us a message"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Defaults to /pages/contact if left empty."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#4b5b52"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Prefer a different day banner"
+    }
+  ]
+}
+{% endschema %}

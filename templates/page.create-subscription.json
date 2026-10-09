@@ -1,0 +1,111 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
+    "e522c12c-29ed-406a-903a-ab4ba878bc8d": {
+      "type": "rich-text",
+      "blocks": {
+        "template--16843122901207__e522c12c-29ed-406a-903a-ab4ba878bc8d-heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Create a Subscription",
+            "heading_size": "h0"
+          }
+        }
+      },
+      "block_order": [
+        "template--16843122901207__e522c12c-29ed-406a-903a-ab4ba878bc8d-heading-1"
+      ],
+      "custom_css": [
+        "h2 {font-size: 59px; letter-spacing: -1.77px;}",
+        "p {font-size: 18px; letter-spacing: -0.36px; color: #043D22; font-weight: 700;}",
+        "@media (max-width: 767px) {h2 {font-size: 32px; }}"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 80,
+        "padding_bottom": 52
+      }
+    },
+    "4b6b419b-6363-4c37-ace0-5e7ee9609617": {
+      "type": "image-with-text",
+      "blocks": {
+        "template--16843122901207__4b6b419b-6363-4c37-ace0-5e7ee9609617-heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Want the same order on autopilot every week?",
+            "heading_size": "h1"
+          }
+        },
+        "template--16843122901207__4b6b419b-6363-4c37-ace0-5e7ee9609617-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>No worries! Simply fill out the form below to tell us what you'd like, and we'll take care of the rest. All you have to do is confirm your payment - you can pay with each order, or monthly or quarterly in advance.</p><p>If you want to adjust every order to suit your needs - please place each order individually.</p>",
+            "text_style": "body"
+          }
+        },
+        "template--16843122901207__4b6b419b-6363-4c37-ace0-5e7ee9609617-button-1": {
+          "type": "button",
+          "settings": {
+            "button_label": "Create a Subscription",
+            "button_link": "https://forms.gle/ebUXgFfBcGEW6zCY8",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "template--16843122901207__4b6b419b-6363-4c37-ace0-5e7ee9609617-heading-1",
+        "template--16843122901207__4b6b419b-6363-4c37-ace0-5e7ee9609617-text-1",
+        "template--16843122901207__4b6b419b-6363-4c37-ace0-5e7ee9609617-button-1"
+      ],
+      "custom_css": [
+        "h2.image-with-text__heading.inline-richtext.h1 {font-size: 42px; letter-spacing: -1.26px; margin-bottom: 10px;}",
+        ".image-with-text__content {padding: 20px 0 20px 80px; padding-left: 80px;}",
+        "p {color: #141414; letter-spacing: -0.36px; line-height: 1.7em; font-size: 18px;}",
+        "@media (max-width: 1024px) {.image-with-text__content {padding-left: 40px; }}",
+        "@media (max-width: 767px) {.image-with-text__content {padding-left: 0; } h2 {font-size: 29px !important; }}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/img.png",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "e522c12c-29ed-406a-903a-ab4ba878bc8d",
+    "4b6b419b-6363-4c37-ace0-5e7ee9609617"
+  ]
+}

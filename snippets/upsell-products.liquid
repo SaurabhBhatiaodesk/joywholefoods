@@ -1,0 +1,181 @@
+<div id="modalUpsellProducts" class="modal21">
+<span class="backSide2"></span>
+  <!-- Modal content -->
+  <div class="modal21-content"> 
+    
+    <div class="modal21-body">
+      <span class="close21" onclick="noUpsells()">
+        <svg class="closeBtnSvg" width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 1c6.071 0 11 4.929 11 11s-4.929 11-11 11-11-4.929-11-11 4.929-11 11-11zm0 10.293l5.293-5.293.707.707-5.293 5.293 5.293 5.293-.707.707-5.293-5.293-5.293 5.293-.707-.707 5.293-5.293-5.293-5.293.707-.707 5.293 5.293z"></path></svg>
+      </span>
+
+      <h3 class="h2 headingTopUp">{{ section.settings.headingUpsellPopup }}</h3>
+      
+      <div class="wrapperAllProducts">
+        {% for product in upsellProducts.value %}
+          {% if product.available %}
+            <div class="justWrapperAtTopupsells">
+            <input type="checkbox" data-value="{{ product.selected_or_first_available_variant.id }}" checked id="thisProduct{{ product.id }}" class="checkboxInUp">
+            <label class="inlineProductDetails" for="thisProduct{{ product.id }}">
+              <img src="{{ product.featured_image | image_url: width: 300 }}" width="100%" height="auto" loading="lazy">
+              <div class="otherDetailsUp">
+                <h3 class="card__heading h5">{{ product.title }}</h3>
+                <div class="price"><div class="price__container"><div class="price__regular">
+                  <span class="price-item price-item--regular">{{ product.price | money }}</span>
+                </div></div></div> 
+              </div>
+            </label>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="selectionAreaUp">
+        <button class="button button--full-width button--secondary" onclick="noUpsells()" type="button">{{ section.settings.noPopup }}</button>
+        <button class="button button--full-width button--primary" onclick="proceedWithUpsells()" type="button">{{ section.settings.yesPopup }}</button>
+      </div>
+      
+    </div> 
+  </div>
+
+</div>
+<style>
+  div#modalUpsellProducts .modal21-body {
+    max-width: 700px;
+}div#modalUpsellProducts .modal21-content {
+width: 100%;
+    max-width: 95%;
+    max-height: 95vh;
+    overflow: auto;
+} 
+div#modalUpsellProducts input[type="checkbox"] {
+  padding: 0;
+  height: initial;
+  width: initial;
+  margin-bottom: 0;
+  display: none;
+  cursor: pointer;
+} 
+div#modalUpsellProducts [type="checkbox"]+label:before {
+  content:'';
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: 2px solid #9BB83C;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-right: 5px;
+} 
+div#modalUpsellProducts input[type="checkbox"]:checked + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 45%;
+    left: 4px;
+    width: 6px;
+    height: 14px;
+    border: solid #9BB83C;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translateY(-50%);
+}.justWrapperAtTopupsells {
+    display: flex;
+    width: 100%;
+}label.inlineProductDetails img {
+    width: 70px;
+    height: 70px;    margin: 0 30px 0 20px;
+    object-fit: contain;
+}.otherDetailsUp {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}.otherDetailsUp h3{
+  margin:0 !important
+}label.inlineProductDetails {
+    display: flex;
+    align-items: center;
+    position: relative;width: 100%;
+    cursor: pointer;
+}.justWrapperAtTopupsells {
+    border-bottom: 1px solid #dedede;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}.otherDetailsUp .price__regular {
+    font-family: DM Sans 9pt;
+    letter-spacing: -.22px;
+    font-size: 0.9em;
+}h3.h2.headingTopUp {
+    margin-top: 0;
+}.selectionAreaUp {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+.selectionAreaUp button.button {
+    font-weight: 600;
+    letter-spacing: 0;
+    font-size: 1.1em;padding: 0 5px;
+}
+@media(max-width:767px)
+  {
+    label.inlineProductDetails img { 
+    margin: 0 20px 0 10px;
+}.justWrapperAtTopupsells { 
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}.selectionAreaUp { 
+    margin-top: 20px;
+}
+  }
+</style>
+
+
+<script>
+$('#{{ product_form_id }}').on('submit', function () {
+    console.log('form Submitted');
+
+  document.querySelector('div#modalUpsellProducts').style.display = "flex";
+});
+
+function noUpsells()
+  {
+    $('div#modalUpsellProducts').hide()
+  }
+  
+function proceedWithUpsells()
+  {
+    var allChecks = $('div#modalUpsellProducts input[type="checkbox"]:checked');
+
+    if(allChecks.length == 0)
+    {
+      noUpsells();
+      return;
+    }
+
+    var items = [];
+    
+    allChecks.each(function(idx, item) {
+    var checkbox = $(item);
+    
+      var data = {quantity:1,id:parseInt(checkbox.data('value'))}
+      items.push(data);
+    });
+
+    console.log(items);
+    //now add to cart
+    
+    $.ajax({
+    type: 'POST',
+    url: '/cart/add.js',
+    data: {items},
+    dataType: 'json', 
+    success: function (data) { 
+      window.parent.location.href = '/cart';
+    } 
+    }); 
+    
+  }
+</script>
+
+

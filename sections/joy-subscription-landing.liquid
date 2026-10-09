@@ -1,0 +1,639 @@
+{% comment %}
+  Joy Wholefoods "Build Your Subscription" landing — bespoke section for ONE shop
+  (dantt-subscription-box.myshopify.com / joywholefoods.com.au theme).
+
+  See docs/superpowers/specs/2026-08-19-joyxjoy-landing-design.md §4 for the design
+  this section implements. Do NOT copy this section into another theme/app — it is
+  not a general Joy Subscription feature, it is custom work for one merchant.
+
+  This section does exactly 3 things (spec §4):
+    1. Inject `window.AVADA_JW = {bundles, categories}` from Liquid — 0 round-trip.
+    2. Render the `.jw-landing-root` mount point the Preact bundle attaches to
+       (packages/scripttag/src/subscriptionBoxJoyxjoy/managers/DisplayManager.js
+       reads `window.AVADA_JW` and mounts `<LandingApp bundles categories />` into
+       `document.querySelector('.jw-landing-root')`).
+    3. Load the bundle script (`avada-subscription-box-joyxjoy-main.min.js`), URL
+       configurable via a section setting — see "Bundle script URL" below for why.
+
+  Everything else — hero copy, "how it works", frequency selector, the 3 product
+  sections, summary panel, delivery/FAQ, swap modal — is rendered client-side by the
+  Preact components already built under
+  packages/scripttag/src/subscriptionBoxJoyxjoy/components/. This section
+  intentionally contains NO markup for any of that; duplicating it in Liquid would
+  just drift out of sync with the real UI.
+
+  Does NOT touch any file already in this theme. Prefix `jw-` only.
+{% endcomment %}
+
+{%- comment -%}
+  `shop.metafields.avada_custom_landing.data` resolves to the Metafield OBJECT
+  (has `.type`/`.value`/...), not the parsed JSON — this metafield has a
+  definition (storefront=PUBLIC_READ), and per Shopify's own Liquid docs
+  (shopify.dev/docs/api/liquid/objects/metafield, "Accessing metafields of type
+  json"), the parsed JSON only lives at `.value`. Reading `cfg.bundles` off the
+  Metafield object itself (no `.value`) silently returns nil — no error, just an
+  empty loop — which is exactly the bug this line had. `.value` on a nil/missing
+  metafield is also nil (Liquid doesn't throw on nil.value), so `cfg` safely ends
+  up nil when the metafield hasn't been written yet — the design-mode empty
+  notice below (`cfg.bundles == blank`) still fires correctly in that case.
+{%- endcomment -%}
+{%- assign cfg = shop.metafields.avada_custom_landing.data.value -%}
+{%- comment -%}
+  App-side plan group to read from each box's `avada_subscription_plan_v2` metafield.
+  Blank = emit every group and let the widget decide. Set it to one id (e.g.
+  TcK4u92j1Oe8okOKiSl7) to pin exactly which group the page shows.
+{%- endcomment -%}
+{%- assign plan_group_id = section.settings.plan_group_id | strip -%}
+
+<div class="jw-landing">
+  {%- comment -%}
+    `custom_font2` is "DM Sans 9pt". theme.liquid interpolates it unquoted into
+    --font-body-family, where `9pt` parses as a dimension token and invalidates every
+    font-family reading that variable — the text falls back to Times. Re-declare both names
+    quoted, scoped to this section rather than fixing the merchant's global layout. The class
+    is doubled to outrank the runtime stylesheet, which is appended after this block.
+  {%- endcomment -%}
+  <style>
+    .jw-landing.jw-landing {
+      {%- if settings.custom_font2 != blank %}
+      --jw-font-body: "{{ settings.custom_font2 }}", -apple-system, BlinkMacSystemFont, sans-serif;
+      {%- endif %}
+      {%- if settings.custom_font1 != blank %}
+      --jw-font-heading: "{{ settings.custom_font1 }}", sans-serif;
+      {%- endif %}
+    }
+  </style>
+  {%- comment -%}
+    ============================================================================
+    1) window.AVADA_JW — bundles (spec §4, code block is verbatim from the spec).
+
+    Metafield shape written by updateCustomLandingMetaField
+    (packages/functions/src/services/metafieldService.js):
+      shop.metafields.avada_custom_landing.data.value == {
+        shopId: <string>,
+        bundles: [ {productId, handle, name, status}, ... ]
+      }
+    (`.value` — `shop.metafields.<ns>.<key>` alone is the Metafield object, not
+    the parsed JSON; see the `{%- assign cfg = ... -%}` line above.)
+    `status` is the merchant's raw form toggle (boolean: true = active, false =
+    draft) — see fixedBundleService.js `rebuildCustomLandingMetafield()`, which
+    passes `data.status` through unconverted (the ACTIVE/DRAFT string conversion
+    only happens for the Shopify productSet call, not for this metafield). Liquid
+    truthiness treats only `nil`/`false` as falsy, so `{% if b.status %}` below
+    correctly keeps `true` and drops `false` regardless of whether a future write
+    ever changes the exact truthy representation.
+
+    Price / image / availability / selling plans are deliberately NOT read from the
+    metafield (they would be a stale, wrong-currency snapshot) — they're resolved
+    fresh from `all_products[handle]` at render time, same pattern as
+    extensions/theme-app-extension/blocks/app-embed.liquid:1-40. A bundle whose
+    product handle no longer resolves (deleted/unavailable) is silently skipped
+    rather than crashing this section — merchants can delete a Fixed Bundle product
+    without this page erroring.
+    ============================================================================
+  {%- endcomment -%}
+  <script>
+    window.AVADA_JW = {
+      bundles: [
+        {%- comment -%}
+          Two sources, in priority order.
+
+          1. "Seasonal box collections" — the merchant curates which boxes this page
+             offers. No `all_products` lookup at all, so the 20-unique-handle-per-page
+             budget never applies. `collection_list` takes up to 20 collections and each
+             collection yields up to 50 products, so the ceiling stops being a real one.
+
+          2. `all_products[handle]` over every Fixed Bundle in the shop — what themes
+             configured before the picker existed still use. Kept working, but it CANNOT
+             show more than 20 boxes: `all_products` resolves 20 unique handles per page
+             (shopify.dev/docs/api/liquid/objects/all_products) and silently returns an
+             EmptyDrop past that. A box not published to the Online Store channel spends
+             one of the 20 and returns nothing. Measured on this merchant: 72 bundles,
+             16 resolved, 4 slots burnt on unpublished boxes, 52 never looked at.
+
+          Either way a product is only emitted when the metafield lists it as a live
+          Fixed Bundle, so a stray product sitting in a picked collection never renders
+          as a box the cart cannot build.
+        {%- endcomment -%}
+        {%- assign bundle_count = 0 -%}
+        {%- assign bundle_handles = ',' -%}
+        {%- assign emitted_handles = ',' -%}
+        {%- for b in cfg.bundles -%}
+          {%- if b.status -%}
+            {%- assign bundle_handles = bundle_handles | append: b.handle | append: ',' -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if section.settings.box_collections.size > 0 -%}
+          {%- for box_collection in section.settings.box_collections -%}
+            {%- for p in box_collection.products -%}
+              {%- assign needle = ',' | append: p.handle | append: ',' -%}
+              {%- comment -%}
+                Commas on both sides so `bakery` never matches `bakery-gf`.
+                `emitted_handles` guards a product sitting in two picked collections —
+                the same de-duplication the category pickers do, for the same reason:
+                one entry per product, or the shopper sees the box twice.
+              {%- endcomment -%}
+              {%- if bundle_handles contains needle -%}
+                {%- unless emitted_handles contains needle -%}
+                  {%- if bundle_count > 0 -%},{%- endif -%}
+                  {%- render 'joy-subscription-bundle-json', product: p, plan_group_id: plan_group_id -%}
+                  {%- assign emitted_handles = emitted_handles | append: p.handle | append: ',' -%}
+                  {%- assign bundle_count = bundle_count | plus: 1 -%}
+                {%- endunless -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for b in cfg.bundles -%}
+            {%- if b.status -%}
+              {%- assign p = all_products[b.handle] -%}
+              {%- comment -%}
+                Gate on a real property, not on `p` itself: an unresolvable handle yields
+                an EmptyDrop, and an EmptyDrop is still truthy in `{% if p %}`. That let
+                every unresolvable bundle through with blank title, price, image and
+                selling_plan_groups — 72 entries of which only 16 held anything, and no
+                trace of why a box never appeared.
+              {%- endcomment -%}
+              {%- if p.id -%}
+                {%- if bundle_count > 0 -%},{%- endif -%}
+                {%- render 'joy-subscription-bundle-json', product: p, plan_group_id: plan_group_id -%}
+                {%- assign bundle_count = bundle_count | plus: 1 -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      ],
+      planGroupId: {{ plan_group_id | json }},
+      {%- comment -%}
+        SB-16578 — section 2 only offers staples the merchant put in the plan. The
+        catalog endpoint the widget pages through (/collections/*/products.json)
+        returns no selling-plan data at all, so plan membership is snapshotted into
+        this metafield by buildLandingPlanProducts (rebuilt on every Fixed Bundle
+        save). `false` = no snapshot yet → the widget shows everything rather than an
+        empty section.
+      {%- endcomment -%}
+      planProducts: {{ cfg.planProducts | json | default: false }},
+      planStatuses: {{ shop.metafields.avada_subscription_plan_v2.statuses | default: false }},
+      categories: [
+        {%- comment -%}
+          ==========================================================================
+          2) window.AVADA_JW.categories — section 2/3 catalog (spec §4 "Category
+          section 2/3" decision: Shopify Collections, injected via Liquid, merchant
+          curates by editing this section's blocks in the theme editor — no code
+          change needed to add/remove/reorder a category).
+
+          DEVIATION FROM THE SPEC'S PSEUDOCODE COMMENT — flagged, not guessed past:
+          spec §4 shows `categories: [ /* {% for c in collections %} handle, title,
+          products */ ]`, i.e. looping the GLOBAL `collections` object (every
+          collection in the store). That was left as a comment, not literal code,
+          and looping the global object would also surface collections that have
+          nothing to do with this page (homepage collections, "frontpage", hidden
+          collections, etc.) with no way for the merchant to exclude one without
+          deleting the Shopify collection itself. Section **blocks** (`type:
+          "category"`, each pointing at one merchant-picked collection) is the
+          standard Shopify pattern for "merchant tự đổi danh mục" (spec's own stated
+          intent) without touching code, and is what every other section in this
+          theme does for collection pickers (see `sections/featured-collection.liquid`
+          convention). Confirmed no existing section/template name collides with this
+          one in `~/projects/subscriptions/.temp/theme_export__joywholefoods-...zip`.
+
+          Each product is shaped to match exactly what
+          ProductPickerSection/pickerLogic.js + ProductCard.js already read from
+          `/collections/{handle}/products.js` (the lazy-fetch endpoint) — see
+          getVariants()/priceOfVariant()/labelOfVariant() (variant.id/title/price)
+          and ProductCard.js (product.id/title/vendor/featured_image/images/variants).
+          `price` is cents (Liquid `variant.price`), matching formatMoney.js's
+          documented assumption.
+
+          Eager vs lazy — ALL-OR-NOTHING per category, never a partial/truncated
+          list. `ProductPickerSection.js:145` only triggers its lazy-fetch when a
+          category's `products` array is *empty*
+          (`!Array.isArray(target.products) || target.products.length === 0`), and
+          `fetchCategoryProducts()` *replaces* `category.products` wholesale
+          (`ProductPickerSection.js:123-125`) rather than appending to it. That means
+          a truncated (non-empty but incomplete) array would never trigger a fetch,
+          and every item past the cut would be permanently unreachable — no
+          lazy-fetch, no "load more". So this section emits either the FULL
+          collection or an EMPTY array — never a slice.
+
+          THE HARD 50 CEILING (found in round 2 of review, fixed here — read before
+          changing `eager_product_limit`): per Shopify's own docs
+          (shopify.dev/docs/api/liquid/objects/collection), `collection.products`
+          without a `{% paginate %}` tag silently caps at 50 items, while
+          `collection.products_count` is the collection's TRUE total. A first version
+          of this section gated purely on `c.products_count <= eager_limit` with
+          `eager_limit`'s schema `max` at 60 — for a real category with, say, 55
+          products and the setting turned up to 55+, `products_count` (55) passed the
+          `<= eager_limit` check, but the un-paginated `{% for %}` loop below still
+          only emitted Shopify's silent 50-item cap: a non-empty, TRUNCATED array,
+          reproducing this exact bug at a different threshold. Fixed two ways
+          together (belt + suspenders — either one alone is fragile to a future edit
+          of the other):
+            1. Schema `max` is now capped at 50 (see settings block) so the setting
+               itself cannot request more than Liquid can safely deliver unpaginated.
+            2. The Liquid gate ALSO hard-codes `c.products_count <= 50` directly
+               (not just `<= eager_limit`) so that even if a future edit raises the
+               schema `max` again without touching this file, the loop still refuses
+               to run for any collection above 50 and correctly falls back to `[]`
+               instead of a silent truncation.
+          Ceiling is 50 products, not eager_limit's nominal max — the two happen to
+          coincide today because of fix #1, but fix #2 is what actually enforces it.
+          A category that comes back empty this way lazy-fetches its full product
+          list client-side the first time its tab is clicked (see `handleSetCategory`
+          in ProductPickerSection.js) — untouched by this section, just relied upon.
+          This is what spec §4's "Danh mục lớn thì lazy-fetch ... khi khách bấm tab"
+          is describing structurally.
+
+          TWO SOURCES FEED THIS LOOP (dantt, follow-up to the original spec):
+            1. Section settings `staple_collections` / `oneoff_collections`
+               (`type: "collection_list"`, schema above) — the RECOMMENDED way to
+               add a category now: one picker per step, multi-select, no per-
+               collection block needed. Confirmed via Shopify docs
+               (shopify.dev/docs/storefronts/themes/architecture/settings/input-settings):
+               a `collection_list` setting's Liquid value is an ARRAY OF COLLECTION
+               OBJECTS (not handles) — same shape as `collections[handle]` — and
+               supports an optional `limit` attribute (default/max 50); this section
+               sets `limit: 20` on both (well above the 7 seed collections, still
+               under Shopify's 50 hard cap).
+            2. Section blocks — `category` (both steps, legacy), `staple_category`
+               (step 2 only), `oneoff_category` (step 3 only). Kept ONLY because
+               `collection_list` has no per-item field for a tab-label override, and
+               this merchant's real collection handles are long
+               (`farm-fresh-organics-spray-free-fruit-and-vegetables-delivered-...`)
+               — a block is how a merchant renames one specific tab without
+               touching code. A collection that doesn't need a custom label never
+               needs a block at all now.
+          A merchant who wants the SAME collection in both steps picks it in BOTH
+          collection_list settings (or adds it as one legacy `category` block).
+
+          De-duplication is by COLLECTION HANDLE across BOTH sources — if the same
+          collection is picked via a setting AND a block (or via both step
+          settings, or multiple blocks), its `products[]` array is only serialized
+          ONCE in the emitted `categories[]` array (never twice), with
+          `in_staples`/`in_oneoff` flags on that single entry OR'd across every
+          source that referenced it, and the block's `title` override (if any)
+          winning over the collection's own title. `LandingApp.js` filters this one
+          array into the two per-step lists client-side — see its
+          `buildStepCategories` — so the wire payload never doubles up a
+          collection's product list just because it's used in both steps.
+          ==========================================================================
+        {%- endcomment -%}
+        {%- comment -%}
+          Pass 1 — collect the set of collection handles referenced by either
+          settings source or any of the 3 block types, in order, deduped via
+          `| uniq`. Liquid has no mutable map/hash, so flags per handle are
+          recomputed in pass 2 below by re-scanning both settings arrays (capped at
+          `limit: 20` each, schema above) and `section.blocks` (capped at
+          `max_blocks: 20`, schema below) for that handle — bounded loops, not
+          unbounded.
+        {%- endcomment -%}
+        {%- assign category_handles_raw = '' -%}
+        {%- for c in section.settings.staple_collections -%}
+          {%- assign category_handles_raw = category_handles_raw | append: c.handle | append: '|' -%}
+        {%- endfor -%}
+        {%- for c in section.settings.oneoff_collections -%}
+          {%- assign category_handles_raw = category_handles_raw | append: c.handle | append: '|' -%}
+        {%- endfor -%}
+        {%- for block in section.blocks -%}
+          {%- assign block_types = 'category,staple_category,oneoff_category' | split: ',' -%}
+          {%- if block_types contains block.type -%}
+            {%- assign c = block.settings.collection -%}
+            {%- if c -%}
+              {%- assign category_handles_raw = category_handles_raw | append: c.handle | append: '|' -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign category_handles = category_handles_raw | split: '|' | uniq -%}
+        {%- assign eager_limit = section.settings.eager_product_limit -%}
+        {%- for handle in category_handles -%}
+          {%- assign c = collections[handle] -%}
+          {%- if c -%}
+            {%- comment -%}
+              Pass 2 — re-scan both settings arrays (flags only — no per-item
+              label) and blocks (flags + title override, first non-blank override
+              wins in block order) for this handle. Every source that references a
+              handle just ORs its flag(s) in — a block's title override always
+              wins over the collection's own title, regardless of which source(s)
+              also referenced the same handle.
+            {%- endcomment -%}
+            {%- assign category_title = c.title -%}
+            {%- assign in_staples = false -%}
+            {%- assign in_oneoff = false -%}
+            {%- for sc in section.settings.staple_collections -%}
+              {%- if sc.handle == handle -%}
+                {%- assign in_staples = true -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- for sc in section.settings.oneoff_collections -%}
+              {%- if sc.handle == handle -%}
+                {%- assign in_oneoff = true -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- for block in section.blocks -%}
+              {%- assign block_handle = block.settings.collection.handle -%}
+              {%- if block_handle == handle -%}
+                {%- if block.settings.title != blank -%}
+                  {%- assign category_title = block.settings.title -%}
+                {%- endif -%}
+                {%- if block.type == 'category' -%}
+                  {%- assign in_staples = true -%}
+                  {%- assign in_oneoff = true -%}
+                {%- elsif block.type == 'staple_category' -%}
+                  {%- assign in_staples = true -%}
+                {%- elsif block.type == 'oneoff_category' -%}
+                  {%- assign in_oneoff = true -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+              {%- if forloop.index0 > 0 -%},{%- endif -%}
+              {
+                "handle": {{ c.handle | json }},
+                "title": {{ category_title | json }},
+                "in_staples": {{ in_staples | json }},
+                "in_oneoff": {{ in_oneoff | json }},
+                "products": [
+                  {%- comment -%}
+                    All-or-nothing: only loop (and therefore only emit any
+                    products at all) when the WHOLE collection fits under BOTH the
+                    merchant's setting AND Shopify's own hard 50-item cap on an
+                    un-paginated `collection.products` (see "THE HARD 50 CEILING"
+                    note above — `products_count <= 50` is NOT redundant with
+                    `products_count <= eager_limit` even though eager_limit's
+                    schema max is also 50 today: this second check is what keeps
+                    this loop safe if that schema max is ever changed without
+                    updating this file). A collection over either bound gets `[]`
+                    here, never a truncated slice.
+                  {%- endcomment -%}
+                  {%- if eager_limit > 0 and c.products_count <= eager_limit and c.products_count <= 50 -%}
+                    {%- for product in c.products -%}
+                      {%- if forloop.index0 > 0 -%},{%- endif -%}
+                      {
+                        "id": {{ product.id | json }},
+                        "title": {{ product.title | json }},
+                        "vendor": {{ product.vendor | json }},
+                        "price": {{ product.price | json }},
+                        "featured_image": {{ product.featured_image | json }},
+                        "images": {{ product.images | json }},
+                        "variants": [
+                          {%- for variant in product.variants -%}
+                            {%- if forloop.index0 > 0 -%},{%- endif -%}
+                            {
+                              "id": {{ variant.id | json }},
+                              "title": {{ variant.title | json }},
+                              "price": {{ variant.price | json }},
+                              "compare_at_price": {{ variant.compare_at_price | json }},
+                              "available": {{ variant.available | json }},
+                              "inventory_quantity": {{ variant.inventory_quantity | json }},
+                              "inventory_policy": {{ variant.inventory_policy | json }},
+                              "inventory_management": {{ variant.inventory_management | json }}
+                            }
+                          {%- endfor -%}
+                        ]
+                      }
+                    {%- endfor -%}
+                  {%- endif -%}
+                ],
+                {%- comment -%}
+                  Thumbnails for "How it works" steps 2 and 3, emitted separately from
+                  `products` above on purpose. That array is all-or-nothing and comes
+                  back EMPTY for any collection over the eager ceiling — which is every
+                  real category here, since Shopify caps an un-paginated
+                  `collection.products` at 50 and these run into the hundreds. Section 2
+                  survives that by fetching its own catalog at runtime; the steps section
+                  has no fetch, so with no separate field its thumbnails were always
+                  blank on a real store.
+
+                  These four must NOT be folded back into `products`: ProductPickerSection
+                  treats a non-empty `products` as "already loaded" and skips its
+                  lazy-fetch, which would strand every product past the fourth.
+
+                  `limit: 4` also keeps Liquid from fetching the array's default 50
+                  products just to read four images.
+                {%- endcomment -%}
+                "step_images": [
+                  {%- for product in c.products limit: 4 -%}
+                    {%- if forloop.index0 > 0 -%},{%- endif -%}
+                    {{ product.featured_image | json }}
+                  {%- endfor -%}
+                ]
+              }
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    };
+  </script>
+
+  {%- comment -%}
+    ==========================================================================
+    Data-empty notice — spec instructs this explicitly ("đừng render root rồi để
+    JS chết im lặng"): `avada_custom_landing` is NULL on the dev store until the
+    metafield is rebuilt (merchant needs to open+save at least one Fixed Bundle for
+    `rebuildCustomLandingMetafield()` to run). A shopper must never see anything
+    here; a merchant/dev in the theme editor (`request.design_mode`) must see an
+    obvious reason nothing is rendering, instead of a silently blank/broken page.
+    ==========================================================================
+  {%- endcomment -%}
+  {%- if request.design_mode and cfg.bundles == blank -%}
+    <div class="jw-landing-empty-notice" style="margin:0 auto;max-width:1226px;padding:24px 20px;">
+      <p style="background:#fbecec;color:#9b2c2c;border:1px solid #f0b7b7;border-radius:8px;padding:14px 18px;font:14px/1.5 sans-serif;">
+        ⚠️ Joy Wholefoods landing: <code>shop.metafields.avada_custom_landing.data</code> is empty.
+        Open and save at least one Product Fixed Bundle in the Joy Subscription admin
+        so the metafield gets built — this notice only shows in the theme editor,
+        never to customers.
+      </p>
+    </div>
+  {%- endif -%}
+  {%- comment -%}
+    `all_products` resolves at most 20 unique handles per page
+    (shopify.dev/docs/api/liquid/objects/all_products). Past that it returns an
+    EmptyDrop for every further handle, with no error, so bundles beyond the 20th are
+    simply absent from the page and nothing says why. An unresolvable handle still
+    spends one of the 20 — a box that is not published to the Online Store channel
+    burns a slot and returns nothing.
+
+    Measured on this merchant: 72 bundles in the metafield, the first 20 handles
+    attempted, 16 resolved, 4 spent on unpublished boxes, 52 never looked at.
+  {%- endcomment -%}
+  {%- assign bundle_total = cfg.bundles | size -%}
+  {%- if request.design_mode and bundle_total > 20 and section.settings.box_collections.size == 0 -%}
+    <div class="jw-landing-empty-notice" style="margin:0 auto;max-width:1226px;padding:0 20px 24px;">
+      <p style="background:#fff8e1;color:#8a6d1f;border:1px solid #f0dfa6;border-radius:8px;padding:14px 18px;font:14px/1.5 sans-serif;">
+        ⚠️ Joy Wholefoods landing: this shop has {{ bundle_total }} Product Fixed Bundles,
+        but Liquid can only read <strong>20</strong> of them per page
+        (<code>all_products</code> limit). {{ bundle_total | minus: 20 }} bundle(s) are
+        invisible to this section, and any box not published to the Online Store sales
+        channel still uses up one of the 20 while returning nothing. Pick one or more
+        collections under <strong>Seasonal box collections</strong> above — that path
+        reads the collections directly and has no such limit. Only shows in the theme
+        editor.
+      </p>
+    </div>
+  {%- endif -%}
+  {%- if request.design_mode and section.blocks.size == 0 and section.settings.staple_collections.size == 0 and section.settings.oneoff_collections.size == 0 -%}
+    <div class="jw-landing-empty-notice" style="margin:0 auto;max-width:1226px;padding:0 20px 24px;">
+      <p style="background:#fff8e1;color:#8a6d1f;border:1px solid #f0dfa6;border-radius:8px;padding:14px 18px;font:14px/1.5 sans-serif;">
+        ⚠️ Joy Wholefoods landing: no categories configured — sections 2 ("Add your
+        staples") and 3 ("This week's one-off items") will show no items. Pick
+        collections in "Staple collections (step 2)" / "One-off collections (step
+        3)" above, or add a "Category" block for a custom tab label.
+      </p>
+    </div>
+  {%- endif -%}
+
+  <div class="jw-landing-root"></div>
+</div>
+
+{%- comment -%}
+  ============================================================================
+  3) Bundle script — spec §4 point 3.
+
+  URL is a section setting, NOT a hardcoded constant: the CDN URL
+  (`cdn-joy-sub.avada.io`) is where CI (`.gitlab/ci/production.yml:199-203`) will
+  eventually publish `static/scripttag/*`, but the bundle isn't deployed there yet.
+  To test on the dev store today, upload the built `.min.js` to Shopify Files and
+  paste that `cdn.shopify.com` URL into this setting — no code change, no redeploy
+  of the theme file. Empty setting falls back to the CDN default.
+  ============================================================================
+{%- endcomment -%}
+{%- assign script_url = section.settings.bundle_script_url | default: 'https://cdn-joy-sub.avada.io/scripttag/avada-subscription-box-joyxjoy-main.min.js' -%}
+{%- if script_url != blank -%}
+  <script src="{{ script_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Joy Subscription Landing",
+  "tag": "section",
+  "class": "jw-landing-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Bundle script"
+    },
+    {
+      "type": "text",
+      "id": "plan_group_id",
+      "label": "Subscription plan group ID",
+      "info": "App plan group id (Joy Subscription) to read discounts from, e.g. TcK4u92j1Oe8okOKiSl7. Leave empty to expose every group."
+    },
+    {
+      "type": "text",
+      "id": "bundle_script_url",
+      "label": "Bundle script URL",
+      "default": "https://cdn-joy-sub.avada.io/scripttag/avada-subscription-box-joyxjoy-main.min.js",
+      "info": "Defaults to the Avada CDN build. While that build isn't deployed yet, upload avada-subscription-box-joyxjoy-main.min.js to Shopify Files (Settings > Files) and paste the cdn.shopify.com URL here instead. Leave empty to disable loading the script entirely."
+    },
+    {
+      "type": "header",
+      "content": "Categories (sections 2 & 3)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pick collections for step 2 and step 3 below — this is the recommended way to add categories now. The block list further down (\"Category\", \"Staple category\", \"One-off category\") still works and is only needed when you want to override a collection's tab label (e.g. a long collection name)."
+    },
+    {
+      "type": "collection_list",
+      "id": "box_collections",
+      "label": "Seasonal box collections (step 1)",
+      "limit": 20,
+      "info": "Which boxes section 1 offers. Recommended: without this the section falls back to reading every Fixed Bundle in the shop through all_products, which Shopify caps at 20 products per page — any box past the 20th silently disappears. Picking collections here removes that limit and lets you control exactly which boxes appear. Only products that are Product Fixed Bundles in Joy Subscription are shown."
+    },
+    {
+      "type": "collection_list",
+      "id": "staple_collections",
+      "label": "Staple collections (step 2)",
+      "limit": 20,
+      "info": "Shown under \"Add your staples\" (step 2). A collection also picked here and as a block is only sent to the storefront once — flags merge, block's tab-label override (if any) wins."
+    },
+    {
+      "type": "collection_list",
+      "id": "oneoff_collections",
+      "label": "One-off collections (step 3)",
+      "limit": 20,
+      "info": "Shown under \"One-off items\" (step 3). A collection also picked here and as a block is only sent to the storefront once — flags merge, block's tab-label override (if any) wins."
+    },
+    {
+      "type": "range",
+      "id": "eager_product_limit",
+      "label": "Eager-load threshold (products per category)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 25,
+      "info": "All-or-nothing per category, never a partial list: a category with this many products or fewer loads its FULL product list on page load; a bigger category (or this set to 0) loads NONE of its products upfront and fetches its full list on-demand the first time the shopper clicks that category's tab. Capped at 50 — Shopify's own collection.products silently truncates past 50 items when not paginated, so this section refuses to eager-load beyond that no matter how high this is set."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category (both steps)",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Shows in BOTH \"Add your staples\" (step 2) AND \"One-off items\" (step 3). Kept for existing templates — for a new category, use the \"Staple/One-off collections\" pickers above instead. Only add a block when you need to override this collection's tab label."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab label override",
+          "info": "Leave empty to use the collection's own title."
+        }
+      ]
+    },
+    {
+      "type": "staple_category",
+      "name": "Staple category (step 2)",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Shows only in \"Add your staples\" (step 2) — recurring items. Only add this block if you need a custom tab label; otherwise pick the collection in \"Staple collections (step 2)\" above."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab label override",
+          "info": "Leave empty to use the collection's own title."
+        }
+      ]
+    },
+    {
+      "type": "oneoff_category",
+      "name": "One-off category (step 3)",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Shows only in \"One-off items\" (step 3) — this order only, no auto-renew. Only add this block if you need a custom tab label; otherwise pick the collection in \"One-off collections (step 3)\" above."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab label override",
+          "info": "Leave empty to use the collection's own title."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Joy Subscription Landing"
+    }
+  ]
+}
+{% endschema %}

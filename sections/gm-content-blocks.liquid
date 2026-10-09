@@ -1,0 +1,142 @@
+<div class="about background">
+    <div class="about__container">
+        <div class="about__heading">
+            <h2 class="about__title">{{ section.settings.heading }}</h2>
+        </div>
+        <div class="about__description">
+            {{ section.settings.paragraph }}
+        </div>
+        <div class="about__heading">
+            <h6 class="sub__heading">{{ section.settings.subheading }}</h6>
+        </div>
+        <div class="about__description">
+            {{ section.settings.paragraph2 }}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+  {
+    "name": "GM Content Blocks",
+    "settings": [
+        {
+            "type": "color",
+            "id": "bg_color",
+            "label": "Select Color",
+            "default": "#ffffff"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Lorem ipsum"
+        },
+        {
+            "type": "richtext",
+            "id": "paragraph",
+            "label": "Paragraph"
+        },
+        {
+            "type": "text",
+            "id": "subheading",
+            "label": "Sub Heading",
+            "default": "Lorem ipsum"
+        },
+        {
+            "type": "richtext",
+            "id": "paragraph2",
+            "label": "Paragraph"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 300,
+            "step": 4,
+            "unit": "px",
+            "label": "t:sections.all.padding.padding_top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 300,
+            "step": 4,
+            "unit": "px",
+            "label": "t:sections.all.padding.padding_bottom",
+            "default": 0
+        }
+    ],
+    "presets": [
+    {
+      "name": "GM Content Blocks"
+
+    }
+  ]
+
+  }
+{% endschema %}
+
+<style>
+    .about.background{
+      background-color:{{ section.settings.bg_color }};
+    }
+    .about {
+      padding-top: {{ section.settings.padding_top }}px !important;
+      padding-bottom: {{ section.settings.padding_bottom }}px !important;
+      padding-left: 120px;
+      padding-right: 120px;
+      text-align: center;
+    }
+    .about__title {
+        color: #043D22;
+        font-family: 'DM Sans 9pt', serif;
+        font-size: 59px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 111.3%; /* 65.667px */
+        letter-spacing: -1.77px;
+        margin-bottom:41px;
+    }
+    .about__description{
+        color:  #141414;
+        text-align: center;
+        font-family: 'DM Sans 9pt', sans-serif;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 145.3%; /* 26.154px */
+        letter-spacing: -0.36px;
+    }
+    .about .about__container .about__description:nth-child(2) p:first-child {
+        margin-bottom: 37px !important;
+    }
+    .about__container {
+        max-width:948px;
+        margin:auto
+    }
+    .sub__heading {
+        color: #043D22;
+        font-family: 'DM Sans 9pt', sans-serif;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 145.3%;
+        letter-spacing: -0.36px;
+        margin-bottom:40px;
+    }
+    @media only screen and (max-width: 768px) {
+        .about {
+            padding-right: 100px;
+            padding-left: 100px;
+        }
+    }
+    @media only screen and (max-width: 425px) {
+        .about {
+            padding-right: 22px;
+            padding-left: 22px;
+        }
+    }
+ 
+</style>

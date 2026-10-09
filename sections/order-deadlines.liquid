@@ -1,0 +1,236 @@
+{% comment %} Order Deadlines section {% endcomment %}
+<section class="order-deadlines section-{{ section.id }}{% if cart.item_count == 0 %} order-deadlines--hidden{% endif %}">
+  <div class="order-deadlines__inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="order-deadlines__heading">{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+
+    <div class="order-deadlines__table-wrap" role="table" aria-label="{{ section.settings.heading | escape }}">
+      <div class="order-deadlines__row order-deadlines__row--header" role="row">
+        <h3 class="order-deadlines__cell" role="columnheader">{{ section.settings.col_delivery | escape }}</h3>
+        <h3 class="order-deadlines__cell" role="columnheader">{{ section.settings.col_cutoff | escape }}</h3>
+        <h3 class="order-deadlines__cell" role="columnheader">{{ section.settings.col_late | escape }}</h3>
+      </div>
+
+      {% for block in section.blocks %}
+        <div class="order-deadlines__row" role="row" {{ block.shopify_attributes }}>
+          <h3 class="order-deadlines__cell" role="cell">{{ block.settings.delivery_day | escape }}</h3>
+          <h3 class="order-deadlines__cell" role="cell">{{ block.settings.usual_cutoff | escape }}</h3>
+          <h3 class="order-deadlines__cell" role="cell">{{ block.settings.late_orders | escape }}</h3>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.note != blank %}
+      <p class="order-deadlines__note">{{ section.settings.note }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .section-{{ section.id }} {
+    background: {{ section.settings.background_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  }
+  .section-{{ section.id }} .order-deadlines__inner {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+  .section-{{ section.id }} .order-deadlines__heading {
+    margin: 0 0 18px;
+    text-align: center;
+    color: {{ section.settings.heading_color }};
+    font-size: clamp(24px, 3vw, 38px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+  }
+  .section-{{ section.id }} .order-deadlines__table-wrap {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid {{ section.settings.border_color }};
+    border-radius: {{ section.settings.border_radius }}px;
+    background: rgba(255,255,255,.18);
+  }
+
+  .section-{{ section.id }} .order-deadlines__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+  }
+
+  .section-{{ section.id }} .order-deadlines__row--header {
+    background: {{ section.settings.header_background }};
+    color: {{ section.settings.header_text_color }};
+    font-weight: 900;
+  }
+  .section-{{ section.id }}.order-deadlines--hidden {
+    display: none !important;
+    }
+  .section-{{ section.id }} .order-deadlines__cell {
+    min-width: 0;
+    padding: 9px 14px;
+    border-right: 1px solid {{ section.settings.border_color }};
+    border-bottom: 1px solid {{ section.settings.border_color }};
+    text-align: left;
+    vertical-align: middle;
+    color: {{ section.settings.text_color }};
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25;
+    box-sizing: border-box;
+    margin:0;
+    font-family: 'DM Sans 9pt';
+  }
+
+  .section-{{ section.id }} .order-deadlines__row--header .order-deadlines__cell {
+    color: {{ section.settings.header_text_color }};
+    font-weight: 700;
+  }
+
+  .section-{{ section.id }} .order-deadlines__cell:last-child {
+    border-right: 0;
+  }
+
+  .section-{{ section.id }} .order-deadlines__row:last-child .order-deadlines__cell {
+    border-bottom: 0;
+  }
+
+  .section-{{ section.id }} .order-deadlines__note {
+    margin: 10px 0 0;
+    text-align: center;
+    color: {{ section.settings.text_color }};
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  @media screen and (max-width: 749px) {
+    .section-{{ section.id }} { padding-left: 12px; padding-right: 12px; }
+    .section-{{ section.id }} .order-deadlines__heading { margin-bottom: 12px; font-size: 25px; }
+    .section-{{ section.id }} .order-deadlines__table th,
+    .section-{{ section.id }} .order-deadlines__table td { padding: 8px 9px; font-size: 12px; }
+    .section-{{ section.id }} .order-deadlines__note { font-size: 11px; }
+    .section-{{ section.id }} .order-deadlines__cell {
+       font-size: 11px; 
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const section = document.querySelector('.section-{{ section.id }}');
+
+    if (!section) return;
+
+    async function updateOrderDeadlineVisibility() {
+      try {
+        const response = await fetch('/cart.js', {
+          credentials: 'same-origin',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (!response.ok) return;
+
+        const cart = await response.json();
+
+        section.classList.toggle(
+          'order-deadlines--hidden',
+          cart.item_count === 0
+        );
+      } catch (error) {
+        console.warn('Cart check failed:', error);
+      }
+    }
+
+    /*
+     * Shopify/theme cart events
+     */
+    [
+      'cart:updated',
+      'cart:change',
+      'cart:refresh',
+      'cart:rendered'
+    ].forEach(function (eventName) {
+      document.addEventListener(eventName, updateOrderDeadlineVisibility);
+    });
+
+    /*
+     * Detect AJAX cart changes
+     */
+    const originalFetch = window.fetch;
+
+    window.fetch = async function () {
+      const response = await originalFetch.apply(this, arguments);
+
+      try {
+        const request = arguments[0];
+        const url = request instanceof Request
+          ? request.url
+          : String(request);
+
+        if (
+          url.includes('/cart/add') ||
+          url.includes('/cart/change') ||
+          url.includes('/cart/update') ||
+          url.includes('/cart/clear')
+        ) {
+          setTimeout(updateOrderDeadlineVisibility, 100);
+        }
+      } catch (error) {
+        console.warn('Cart update detection failed:', error);
+      }
+
+      return response;
+    };
+  })();
+</script>
+
+
+{% schema %}
+{
+  "name": "Order Deadlines",
+  "tag": "section",
+  "class": "order-deadlines-section",
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"ORDER DEADLINES"},
+    {"type":"text","id":"col_delivery","label":"Delivery day column","default":"Delivery day"},
+    {"type":"text","id":"col_cutoff","label":"Usual cutoff column","default":"Usual cutoff"},
+    {"type":"text","id":"col_late","label":"Late orders column","default":"Late orders until"},
+    {"type":"text","id":"note","label":"Note","default":"All times are Brisbane time. Delivery days depend on your postcode."},
+    {"type":"range","id":"max_width","label":"Maximum width","min":600,"max":1400,"step":20,"unit":"px","default":1000},
+    {"type":"range","id":"padding_top","label":"Top padding","min":0,"max":100,"step":4,"unit":"px","default":28},
+    {"type":"range","id":"padding_bottom","label":"Bottom padding","min":0,"max":100,"step":4,"unit":"px","default":28},
+    {"type":"range","id":"border_radius","label":"Table corner radius","min":0,"max":20,"step":1,"unit":"px","default":5},
+    {"type":"color","id":"background_color","label":"Background","default":"#F8F5E9"},
+    {"type":"color","id":"border_color","label":"Table border","default":"#B7C3A8"},
+    {"type":"color","id":"heading_color","label":"Heading color","default":"#164D38"},
+    {"type":"color","id":"header_background","label":"Table header background","default":"#E6EBD8"},
+    {"type":"color","id":"header_text_color","label":"Table header text","default":"#28533F"},
+    {"type":"color","id":"text_color","label":"Table text","default":"#315642"}
+  ],
+  "blocks": [
+    {
+      "type":"deadline",
+      "name":"Deadline row",
+      "settings":[
+        {"type":"text","id":"delivery_day","label":"Delivery day","default":"Wednesday"},
+        {"type":"text","id":"usual_cutoff","label":"Usual cutoff","default":"Monday, 10am"},
+        {"type":"text","id":"late_orders","label":"Late orders until","default":"Tuesday, 7am"}
+      ]
+    }
+  ],
+  "presets":[
+    {
+      "name":"Order Deadlines",
+      "blocks":[
+        {"type":"deadline","settings":{"delivery_day":"Wednesday","usual_cutoff":"Monday, 10am","late_orders":"Tuesday, 7am"}},
+        {"type":"deadline","settings":{"delivery_day":"Thursday","usual_cutoff":"Tuesday, 10am","late_orders":"Wednesday, 7am"}},
+        {"type":"deadline","settings":{"delivery_day":"Friday","usual_cutoff":"Wednesday, 10am","late_orders":"Thursday, 7am"}},
+        {"type":"deadline","settings":{"delivery_day":"Saturday","usual_cutoff":"Wednesday, 10am","late_orders":"Thursday, 7am"}}
+      ]
+    }
+  ]
+}
+{% endschema %}

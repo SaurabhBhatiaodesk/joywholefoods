@@ -1,0 +1,373 @@
+{%- comment -%}
+  Missed the Cutoff — standalone section
+  "Missed the usual cutoff?" card with numbered steps + CTA button.
+  Fully independent section, can be added/removed/reordered anywhere via
+  the theme editor (cart page, a regular page, etc.).
+{%- endcomment -%}
+
+<div
+  class="missed-cutoff-section"
+  style="--mc-pad-top: {{ section.settings.padding_top }}px; --mc-pad-bottom: {{ section.settings.padding_bottom }}px; --mc-pad-top-mobile: {{ section.settings.padding_top_mobile }}px; --mc-pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px; background: {{ section.settings.section_background }};"
+>
+  <div
+    class="missed-cutoff"
+    style="--mc-card-bg: {{ section.settings.card_background }}; --mc-heading: {{ section.settings.heading_color }}; --mc-text: {{ section.settings.text_color }}; --mc-number-bg: {{ section.settings.number_background }}; --mc-number-text: {{ section.settings.number_text_color }}; --mc-btn-bg: {{ section.settings.button_background }}; --mc-btn-text: {{ section.settings.button_text_color }}; --mc-radius: {{ section.settings.card_radius }}px;"
+  >
+    {%- if section.settings.heading != blank -%}
+      <h2 class="missed-cutoff__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtext != blank -%}
+      <p class="missed-cutoff__subtext">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+
+    {%- assign step_blocks = section.blocks | where: 'type', 'step' -%}
+    {%- if step_blocks.size > 0 -%}
+      <ol class="missed-cutoff__steps">
+        {%- for block in step_blocks -%}
+          <li class="missed-cutoff__step" {{ block.shopify_attributes }}>
+            <span class="missed-cutoff__number" aria-hidden="true">{{ forloop.index }}</span>
+            <span class="missed-cutoff__step-text">{{ block.settings.text }}</span>
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+
+    {%- if section.settings.note_1 != blank -%}
+      <p class="missed-cutoff__note">{{ section.settings.note_1 }}</p>
+    {%- endif -%}
+    {%- if section.settings.note_2 != blank -%}
+      <p class="missed-cutoff__note">{{ section.settings.note_2 }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_text != blank -%}
+      <a
+        href="{{ section.settings.button_link | default: '/pages/contact' }}"
+        class="missed-cutoff__button"
+      >
+        {{ section.settings.button_text }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.missed-cutoff-section {
+  padding-top: var(--mc-pad-top, 40px);
+  padding-bottom: var(--mc-pad-bottom, 40px);
+  padding-left: clamp(16px, 5vw, 56px);
+  padding-right: clamp(16px, 5vw, 56px);
+}
+.missed-cutoff-section *, .missed-cutoff-section *::before, .missed-cutoff-section *::after { box-sizing: border-box; }
+
+.missed-cutoff {
+  width: 100%;
+  max-width:900px;
+  margin: 0 auto;
+  padding: 32px 36px;
+  background: var(--mc-card-bg, #faf3e6);
+  border-radius: var(--mc-radius, 16px);
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+}
+
+.missed-cutoff__heading {
+  margin: 0;
+  color: var(--mc-heading, #1f4a37);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.missed-cutoff__subtext {
+  margin: 10px 0 0;
+  color: var(--mc-text, #4b5b52);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.missed-cutoff__steps {
+    list-style: none;
+    margin: 22px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+    max-width: 501px;
+    margin-inline: auto;
+}
+.missed-cutoff__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.missed-cutoff__number {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--mc-number-bg, #1f4a37);
+  color: var(--mc-number-text, #ffffff);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.missed-cutoff__step-text {
+  padding-top: 3px;
+  color: var(--mc-text, #4b5b52);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.missed-cutoff__note {
+  margin: 16px 0 0;
+  color: var(--mc-text, #4b5b52);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.missed-cutoff__button {
+  display: inline-block;
+  margin-top: 22px;
+  padding: 14px 32px;
+  background: var(--mc-btn-bg, #1f4a37);
+  color: var(--mc-btn-text, #ffffff);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: 1;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.missed-cutoff__button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+@media screen and (max-width: 589px) {
+  .missed-cutoff {
+    padding: 24px 20px;
+  }
+
+  .missed-cutoff__heading {
+    font-size:30px;
+  }
+
+  .missed-cutoff__subtext {
+    font-size: 14px;
+  }
+
+  .missed-cutoff__steps {
+    gap: 10px;
+  }
+
+  .missed-cutoff__step-text {
+    font-size: 14px;
+  }
+
+  .missed-cutoff__note {
+    font-size: 12px;
+  }
+
+  .missed-cutoff__button {
+    display: block;
+    width: 100%;
+    padding: 13px 20px;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .missed-cutoff-section {
+    padding-top: var(--mc-pad-top-mobile, 32px);
+    padding-bottom: var(--mc-pad-bottom-mobile, 32px);
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Missed the cutoff card",
+  "settings": [
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#faf3e6"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Desktop padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Mobile padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Missed the usual cutoff?"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "We can still accept late orders until 7am the following morning."
+    },
+    {
+      "type": "textarea",
+      "id": "note_1",
+      "label": "Note line 1",
+      "default": "Please place your order and send your message before the late order deadline."
+    },
+    {
+      "type": "textarea",
+      "id": "note_2",
+      "label": "Note line 2",
+      "default": "Freshly baked bread and Maleny Dairies milk may be unavailable, as these need to be ordered in advance."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Send us a message"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Defaults to /pages/contact if left empty."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#4b5b52"
+    },
+    {
+      "type": "color",
+      "id": "number_background",
+      "label": "Step number background",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "number_text_color",
+      "label": "Step number text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Step text",
+          "default": "Choose the same delivery day next week at checkout."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Missed the cutoff card",
+      "blocks": [
+        { "type": "step", "settings": { "text": "Choose the same delivery day next week at checkout." } },
+        { "type": "step", "settings": { "text": "Send us a quick message asking for delivery this week, and we'll change the date for you." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

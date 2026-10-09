@@ -1,0 +1,421 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
+    "image_banner_CzfGN3": {
+      "type": "image-banner",
+      "blocks": {
+        "heading_pXAPaB": {
+          "type": "heading",
+          "settings": {
+            "heading": "So you want to ditch the big supermarkets and buy your groceries from farmers and food makers that care about your health (and the planet)?",
+            "heading_size": "h1"
+          }
+        },
+        "text_YniFxQ": {
+          "type": "text",
+          "settings": {
+            "text": "You’re in the right place.",
+            "text_style": "subtitle"
+          }
+        },
+        "buttons_Mf9YLb": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Order Now",
+            "button_link_1": "",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_pXAPaB",
+        "text_YniFxQ",
+        "buttons_Mf9YLb"
+      ],
+      "settings": {
+        "image_overlay_opacity": 0,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "show_text_box": true,
+        "desktop_content_alignment": "center",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": true,
+        "show_text_below": true
+      }
+    },
+    "rich_text_htPVPh": {
+      "type": "rich-text",
+      "blocks": {
+        "text_eGyU9A": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Since 2015, we’ve been delivering fresh organic and spray-free food from our network of incredible local farmers and food makers.</p><p>Our priorities:</p><ul><li>Support organic and regenerative farmers</li><li>Keep prices fair, not inflated</li><li>Avoid waste – we use recycled boxes and minimal packaging</li><li>Ensure our food is free from nasty additives</li></ul><p> </p>"
+          }
+        },
+        "button_hnyWf8": {
+          "type": "button",
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "text_eGyU9A",
+        "button_hnyWf8"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "left",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "multicolumn_jKATcT": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_dbgxnR": {
+          "type": "column",
+          "settings": {
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_qW3Ybp": {
+          "type": "column",
+          "settings": {
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_gieRqD": {
+          "type": "column",
+          "settings": {
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_dbgxnR",
+        "column_qW3Ybp",
+        "column_gieRqD"
+      ],
+      "settings": {
+        "title": "Multicolumn",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 3,
+        "column_alignment": "left",
+        "background_style": "primary",
+        "button_label": "Button label",
+        "button_link": "",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "testimonial_83BKAN": {
+      "type": "testimonial",
+      "blocks": {
+        "review_xi3DAy": {
+          "type": "Review",
+          "settings": {
+            "text": "<p>Review text here</p>",
+            "ratings": 5,
+            "name": "Name",
+            "location": "Location"
+          }
+        },
+        "review_MWBeTR": {
+          "type": "Review",
+          "settings": {
+            "text": "<p>Review text here</p>",
+            "ratings": 5,
+            "name": "Name",
+            "location": "Location"
+          }
+        },
+        "review_gFRM6f": {
+          "type": "Review",
+          "settings": {
+            "text": "<p>Review text here</p>",
+            "ratings": 5,
+            "name": "Name",
+            "location": "Location"
+          }
+        }
+      },
+      "block_order": [
+        "review_xi3DAy",
+        "review_MWBeTR",
+        "review_gFRM6f"
+      ],
+      "settings": {
+        "heading": "Heading",
+        "button_label": "Button label",
+        "button_link": ""
+      }
+    },
+    "newsletter_AUKX3f": {
+      "type": "newsletter",
+      "blocks": {
+        "heading_kirEYP": {
+          "type": "heading",
+          "settings": {
+            "heading": "SAVE 10%",
+            "heading_size": "h1"
+          }
+        },
+        "paragraph_w4hzaq": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Off your first order</p>"
+          }
+        },
+        "email_form_WGDFQx": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading_kirEYP",
+        "paragraph_w4hzaq",
+        "email_form_WGDFQx"
+      ],
+      "settings": {
+        "color_scheme": "background-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "multicolumn_Gm8Ayi": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_rhqqRx": {
+          "type": "column",
+          "settings": {
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_Xqdq3L": {
+          "type": "column",
+          "settings": {
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_LTf7qG": {
+          "type": "column",
+          "settings": {
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_rhqqRx",
+        "column_Xqdq3L",
+        "column_LTf7qG"
+      ],
+      "settings": {
+        "title": "Ways to Shop",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 3,
+        "column_alignment": "left",
+        "background_style": "primary",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "accent-1",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "featured_collection_QRBWYx": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Best Sellers",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "best-selling",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": false,
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image_with_text_BaKMKV": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_4pbnCi": {
+          "type": "heading",
+          "settings": {
+            "heading": "Hey, we’re the Ottaway Family",
+            "heading_size": "h1"
+          }
+        },
+        "text_Crb9LM": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "text_style": "body"
+          }
+        },
+        "button_mY3jKP": {
+          "type": "button",
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_4pbnCi",
+        "text_Crb9LM",
+        "button_mY3jKP"
+      ],
+      "settings": {
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 0
+      }
+    },
+    "waste_cycle_P7dt9w": {
+      "type": "waste-cycle",
+      "blocks": {
+        "card_Yh9jEd": {
+          "type": "Card",
+          "settings": {
+            "card_title": "Lorem ipsum",
+            "tag_day": "Lorem ipsum",
+            "sub_heading": "Lorem ipsum"
+          }
+        },
+        "card_a36MPc": {
+          "type": "Card",
+          "settings": {
+            "card_title": "Lorem ipsum",
+            "tag_day": "Lorem ipsum",
+            "sub_heading": "Lorem ipsum"
+          }
+        },
+        "card_MRhLm9": {
+          "type": "Card",
+          "settings": {
+            "card_title": "Lorem ipsum",
+            "tag_day": "Lorem ipsum",
+            "sub_heading": "Lorem ipsum"
+          }
+        },
+        "card_8YgLNX": {
+          "type": "Card",
+          "settings": {
+            "card_title": "Lorem ipsum",
+            "tag_day": "Lorem ipsum",
+            "sub_heading": "Lorem ipsum"
+          }
+        }
+      },
+      "block_order": [
+        "card_Yh9jEd",
+        "card_a36MPc",
+        "card_MRhLm9",
+        "card_8YgLNX"
+      ],
+      "settings": {
+        "heading": "How it Works",
+        "text_color": "#043D22",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_banner_CzfGN3",
+    "rich_text_htPVPh",
+    "multicolumn_jKATcT",
+    "testimonial_83BKAN",
+    "newsletter_AUKX3f",
+    "multicolumn_Gm8Ayi",
+    "featured_collection_QRBWYx",
+    "image_with_text_BaKMKV",
+    "waste_cycle_P7dt9w"
+  ]
+}

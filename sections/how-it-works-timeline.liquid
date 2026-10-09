@@ -1,0 +1,261 @@
+<style>
+    .zero1 {
+      padding-left: 120px;
+      padding-right: 120px;
+    }
+  .zero_section {
+    padding-top: 50px;
+    padding-bottom: 120px;
+}
+  .zero__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+        max-width: 1140px;
+    margin: 0 auto;
+  }
+  img.zero__img-img {
+    max-width: 509px;
+    width: 100%;
+    height: 509px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+h2.zero__heading {
+    font-size: 59px;
+    letter-spacing: -1.77px;
+    margin: 0 0 30px;
+}
+
+h6.zero__date {
+    color: #141414;
+    letter-spacing: -0.3px;
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.zero__content-container.zero--bg {
+    border-radius: 50px;
+    background: rgba(161, 137, 112, 0.20);
+    display: inline-block;
+    padding: 4px 15px;
+    margin-bottom: 30px;
+}
+
+.zero__content-container {
+    color: #141414;
+    letter-spacing: -0.36px;
+    font-size: 18px;
+    line-height: 1.7em;
+}
+  .curlyicone {
+    text-align: center;
+}
+    @media only screen and (max-width: 1024px) { 
+        .zero1 {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+    }
+    @media only screen and (max-width: 768px) { 
+        .zero__img-container {
+    padding-right: 20px;
+}
+
+.zero__content {
+    padding-left: 20px;
+}
+
+h2.zero__heading {
+    font-size: 36px;
+}
+
+
+    }
+  @media (max-width: 767px) {
+    .zero__container {
+    flex-direction: column;
+}
+
+.curlyicone {
+    display: none;
+}
+
+.zero1 {
+    padding: 30px 20px;
+}
+  }
+    @media only screen and (max-width: 425px) {
+        .zero1 {
+            padding-right: 22px;
+            padding-left: 22px;
+        }
+    }
+    .zero__img-container {
+        position: relative;
+        width: 50%;
+        padding-right: 45px;
+    }
+   
+    .zero__content {
+        width: 50%;
+        padding-left: 45px;
+        
+    }
+
+    .curlyicon {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .reverse-container {
+        flex-direction: row-reverse;
+    }
+    .image-column {
+        padding-left: 45px;
+        padding-right: 0;
+    }
+    .content-column {
+        padding-right: 45px;
+        padding-left: 0;
+    }
+    @media only screen and (max-width: 425px) {  
+        .zero__img-container {
+            width: 100%;
+            padding-right: 0px;
+        }
+        .zero_section  {
+            padding-top:60px !important;
+        }
+        .zero__content {
+            width: 100%;
+            margin-top: 2rem;
+            padding-left: 0px;
+        }
+        .reverse-container {
+            flex-direction: column;
+        }
+        .image-column {
+            padding-left: 0px;
+            padding-right: 0;
+            
+        }
+        .content-column {
+            padding-right: 0px;
+            padding-left: 0;
+            margin-top:2rem;
+        }
+    }
+    
+  </style>
+<div class="zero_section">
+{%- for block in section.blocks -%}
+    {% assign is_even = forloop.index | modulo: 2 %}
+ 
+        {% if section.blocks.size > 1 and forloop.index > 1 %}
+            {% assign is_even = forloop.index | modulo: 2 %}
+            {% if  is_even == 0 %}
+                <div class="curlyicone"> {% render 'curly-arrow' %} </div>
+                {%else%} 
+                <div class="curlyicone"> {% render 'curly-arrow-2' %} </div>
+            {% endif %} 
+        {% endif %}
+
+<div class="zero1" >
+    <div class="zero__container container_1 {% if block.settings.image_alignment == 'righ_to_left' %}reverse-container{% endif %}" >
+        <div class="zero__img-container {% if block.settings.image_alignment == 'righ_to_left' %}image-column{% endif %}" >
+            <img class="zero__img-img"src="{{ block.settings.image | img_url: 'master' }}" loading="lazy" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}">
+        </div>
+        <div class="zero__content {% if block.settings.image_alignment == 'righ_to_left' %}content-column{% endif %}" >
+            {% if block.settings.zero__date != blank %}
+            <div class="zero__content-container zero--bg">
+                <h6 class="zero__date">{{ block.settings.zero__date }}</h6> 
+            </div>
+            {% endif %}
+            {% if block.settings.heading_title != blank %}
+            <div class="zero__content-container">
+                <h2 class="zero__heading">{{ block.settings.heading_title }}</h2>
+            </div>
+            {% endif %}
+            {% if block.settings.decription != blank %}
+            <div class="zero__content-container">
+                {{ block.settings.decription }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{%- endfor -%}
+</div>
+{% schema %}
+  {
+    "name": "How it works Timeline",
+    "settings": [],
+	"blocks": [
+        {
+            "type": "Image",
+            "name": "Image with text",
+            "settings": [
+              
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "zero__date",
+                    "label": "Date label",
+                    "default": "lorem ipsum"
+                },
+                {
+                    "type": "text",
+                    "id": "heading_title",
+                    "label": "Heading",
+                    "default": "lorem ipsum"
+                },                  
+                {
+                    "type": "textarea",
+                    "id": "decription",
+                    "label": "Description",
+                    "default": "lorem ipsum"
+                },     
+                {
+                    "type": "select",
+                    "id": "image_alignment",
+                    "label": "Position",
+                    "options": [
+                      {
+                        "value": "left_to_right",
+                        "label": "Left to Right"
+                      },
+                      {
+                        "value": "righ_to_left",
+                        "label": "Righ to Left"
+                      }
+                    ],
+                    "default": "left_to_right"
+                }  
+            
+        ]
+        }
+       
+    ],
+    "presets": [
+      {
+          "name": "How it works Timeline"
+      }
+    ]
+
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

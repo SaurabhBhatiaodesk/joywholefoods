@@ -1,0 +1,203 @@
+<div class="warranty">
+  <div class="warranty_swipe">
+    <div class="swipe_group">
+      {% if block.settings.warranty_icon1 != blank %}
+      <div class="warranty_icon">
+        <img src="{{ block.settings.warranty_icon1 | img_url: 'master' }}" alt="warranty_icon">
+      </div>
+      {% endif %}
+      
+      {% if block.settings.warranty_description1 != blank %}
+       <div class="warranty_description">
+        {{ block.settings.warranty_description1 }}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="swipe_group">
+      {% if block.settings.warranty_icon2 != blank %}
+      <div class="warranty_icon">
+        <img src="{{ block.settings.warranty_icon2 | img_url: 'master' }}" alt="warranty_icon">
+      </div>
+      {% endif %}
+      
+      {% if block.settings.warranty_description2 != blank %}
+       <div class="warranty_description">
+        {{ block.settings.warranty_description2 }}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="swipe_group">
+      {% if block.settings.warranty_icon3 != blank %}
+      <div class="warranty_icon">
+        <img src="{{ block.settings.warranty_icon3 | img_url: 'master' }}" alt="warranty_icon">
+      </div>
+      {% endif %}
+      
+      {% if block.settings.warranty_description3 != blank %}
+       <div class="warranty_description">
+        {{ block.settings.warranty_description3 }}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="swipe_group">
+      {% if block.settings.warranty_icon4 != blank %}
+      <div class="warranty_icon">
+        <img src="{{ block.settings.warranty_icon4 | img_url: 'master' }}" alt="warranty_icon">
+      </div>
+      {% endif %}
+      
+      {% if block.settings.warranty_description4 != blank %}
+       <div class="warranty_description">
+        {{ block.settings.warranty_description4 }}
+      </div>
+      {% endif %}
+    </div>
+
+    {% comment %}
+    <div class="swipe_group">
+      {% if block.settings.warranty_icon5 != blank %}
+      <div class="warranty_icon">
+        <img src="{{ block.settings.warranty_icon5 | img_url: 'master' }}" alt="warranty_icon">
+      </div>
+      {% endif %}
+      
+      {% if block.settings.warranty_description5 != blank %}
+       <div class="warranty_description">
+        {{ block.settings.warranty_description5 }}
+      </div>
+      {% endif %}
+    </div>
+    {% endcomment %}
+</div>
+</div>
+<script>
+$(document).ready(function(){
+      $('.warranty_swipe').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        dots: false,
+        speed: 300,
+        infinite: true,
+        autoplaySpeed: 4000,
+        autoplay: true,
+        responsive: [
+      {
+        breakpoint: 991,
+        settings: {
+          slidesToShow: 1,
+        }
+      }
+    ]
+  });
+});
+
+</script>
+<style>
+.warranty .warranty_description p {
+    margin: 0;
+    font-size: 20px;
+    line-height: 28px;
+    font-family: DM Sans 9pt, sans-serif;
+    color: #043D22;
+}
+.warranty {
+    background: #fff;
+    padding: 0px;
+    outline: 4px solid #043D22;
+}
+.warranty .warranty_swipe .warranty_icon img {
+    max-height: 125px;
+    max-width: inherit;
+}
+.warranty .warranty_swipe button.slick-prev ,.warranty .warranty_swipe button.slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    background-color: #fff;
+    left: -20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    font-size: 0;
+    z-index:11;
+}
+.warranty .warranty_swipe .swipe_group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 15px;
+    padding: 1rem 3rem;
+}
+.warranty .warranty_swipe button.slick-prev {
+  background-image: url("https://cdn.shopify.com/s/files/1/0483/3758/4295/files/arrow-left.png");
+  background-repeat: no-repeat;
+  background-size:contain;
+  background-position:0 0;
+}
+.warranty .warranty_swipe button.slick-next {
+  background-image: url("https://cdn.shopify.com/s/files/1/0483/3758/4295/files/arrow-right.png");
+  background-repeat: no-repeat;
+  background-size:contain;
+  background-position:0 0;
+}
+.warranty .warranty_swipe .slick-track {
+    display: flex;
+    align-items: center;
+}
+.warranty .warranty_swipe .warranty_image img {
+    object-fit: contain;
+    max-width: 90%;
+    margin: auto;
+}
+.warranty .warranty_swipe button.slick-next {
+ left: unset;
+  right:-20px;
+}
+.quick-add-modal__content .warranty {
+    display: none;
+}
+@media screen and (max-width:991px) {
+  .warranty .warranty_description p {
+    font-size: 18px;
+    line-height: 26px;
+  }
+  .warranty .warranty_swipe .warranty_icon img {
+    max-height: 100px;
+  }
+  .warranty .warranty_swipe .swipe_group {
+    padding: 1rem 2rem;
+  }
+}
+  
+@media screen and (max-width:767px) {
+  .warranty .warranty_swipe .warranty_icon img {
+      max-height: 130px;
+  }
+  .warranty {
+    max-width: 95%;
+    margin: auto;
+  }
+  .warranty .warranty_swipe .swipe_group {
+    padding: 1rem 3rem;
+  }
+}
+
+@media screen and (max-width:575px) {
+  .warranty .warranty_swipe .swipe_group {
+    flex-wrap: wrap;
+    text-align: center;
+    row-gap:15px;
+  }
+ .warranty .warranty_swipe .swipe_group {
+    padding: 1rem 2rem;
+  }
+}
+
+</style>

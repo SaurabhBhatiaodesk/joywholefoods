@@ -1,0 +1,329 @@
+{{ 'component-article-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-blog.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% if blog.handle == "organic-meal-kits-recipe-collection" %}
+  {% assign allBlogsLength = blog.articles.size %}
+{% else %}  
+  {% assign allBlogsLength = 9 %}
+{% endif %}
+{%- paginate blog.articles by allBlogsLength -%}
+  <div class="test-class-os main-blog page-width section-{{ section.id }}-padding">
+    <h1 class="title--primary{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+      {{ blog.title | escape }}
+    </h1>
+    {% if section.settings.show_description %}
+      {% if blog.metafields.custom.blog_description %}
+         {{ blog.metafields.custom.blog_description | metafield_tag }}
+      {% endif %}
+    {% endif %}
+
+    
+    {% if blog.tags.size > 0 %}
+      <div class="blog-filter-os blog-filter">
+        <label class="blog-filter__label select-label" for="BlogTagFilter">Filter by</label>
+        <div class="select-group">
+          <select id="BlogTagFilter" data-blog-tag-filter>
+
+            <option value="{{ blog.url }}">All Topics</option>
+            {% for tag in blog.all_tags %}
+              {% assign current_tag_downcased = current_tags | downcase %}
+              {% assign tag_downcased = tag | downcase %}
+              {% if tag != 'Dinners Box' %}
+                 <option class="{{ tag }}" value="{{ blog.url }}/tagged/{{ tag | handleize }}" {% if current_tag_downcased contains tag_downcased %}selected{% endif %}>{{ tag }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+
+          {% comment %}<select id="BlogTagFilter" onChange="window.location.href=this.value" data-blog-tag-filter>
+            <option value="{{ blog.url }}">All Topics</option>
+            {% for tag in blog.all_tags %}
+              {% assign current_tag_downcased = current_tags | downcase %}
+              {% assign tag_downcased = tag | downcase %}
+              <option value="{{ blog.url }}/tagged/{{ tag | handleize }}" 
+                {% if current_tag_downcased contains tag_downcased %}selected{% elsif blog.handle == "organic-meal-kits-recipe-collection" and tag == 'Dinners Box' %}selected{% endif %}>
+                {{ tag }}
+              </option>
+            {% endfor %}
+          </select>{% endcomment %}
+
+
+      
+
+          <!-- Conditions for 'organic-meal-kits-recipe-collection' to show data respect to 'dinners-box' starts -->
+          {% if blog.handle == "organic-meal-kits-recipe-collection" %}
+            
+            {% comment %} <script>
+              // document.addEventListener("DOMContentLoaded", () => {
+                  // Check if we should auto-redirect
+                  const userSelectedAllTopics = sessionStorage.getItem('userSelectedAllTopics');
+                  console.log("Auto-redirect check - userSelectedAllTopics -------------", userSelectedAllTopics);
+              
+                  if (userSelectedAllTopics !== 'true') {
+                      const pageHandle = "{{ blog.handle }}";
+                      const currentUrl = window.location.href;
+                      const targetValue = "/blogs/organic-meal-kits-recipe-collection/tagged/dinners-box";
+              
+                      if (pageHandle === "organic-meal-kits-recipe-collection" && 
+                          !currentUrl.includes("/tagged/")) {
+                          console.log("userSelectedAllTopics iffff ------");
+                          
+                          const select = document.querySelector("#BlogTagFilter");
+                          if (select) {
+                              for (let i = 0; i < select.options.length; i++) {
+                                  if (select.options[i].value === targetValue) {
+                                      select.selectedIndex = i;
+                                      break;
+                                  }
+                              }
+                          }
+                        
+                          window.location.href = targetValue;
+                      }
+                  } else {
+                      console.log("userSelectedAllTopics elseee ---------------");
+                      // sessionStorage.removeItem('userSelectedAllTopics');
+                      // sessionStorage.setItem('userSelectedAllTopics', "true");
+                  }
+              // });
+          </script> {% endcomment %}
+          {% endif %}
+          <!-- Conditions for 'organic-meal-kits-recipe-collection' to show data respect to 'dinners-box' ends -->
+
+
+
+      
+          
+          {% include 'icon-caret' %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% comment %}<div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+      {%- assign sorted_articles = blog.articles | sort: 'title' -%}
+      {%- for article in sorted_articles -%}
+        <div
+          class="blog-articles__article article{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+          {% if settings.animations_reveal_on_scroll %}
+            data-cascade
+            style="--animation-order: {{ forloop.index }};"
+          {% endif %}
+        >
+          {%- render 'article-card',
+            article: article,
+            media_height: section.settings.image_height,
+            media_aspect_ratio: article.image.aspect_ratio,
+            show_image: section.settings.show_image,
+            show_date: section.settings.show_date,
+            show_author: section.settings.show_author,
+            show_excerpt: true
+          -%}
+        </div>
+      {%- endfor -%}
+    </div>{% endcomment %}
+
+    <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+      {% if blog.handle == "organic-meal-kits-recipe-collection" %}
+        {%- assign sorted_articles = blog.articles | sort: 'title' -%}
+        {%- for article in sorted_articles -%}
+          <div
+            class="blog-articles__article article{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            {%- render 'article-card',
+              article: article,
+              media_height: section.settings.image_height,
+              media_aspect_ratio: article.image.aspect_ratio,
+              show_image: section.settings.show_image,
+              show_date: section.settings.show_date,
+              show_author: section.settings.show_author,
+              show_excerpt: true
+            -%}
+          </div>
+        {%- endfor -%}
+      {% else %}
+        {%- for article in blog.articles -%}
+          <div
+            class="blog-articles__article article{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            {%- render 'article-card',
+              article: article,
+              media_height: section.settings.image_height,
+              media_aspect_ratio: article.image.aspect_ratio,
+              show_image: section.settings.show_image,
+              show_date: section.settings.show_date,
+              show_author: section.settings.show_author,
+              show_excerpt: true
+            -%}
+          </div>
+        {%- endfor -%}
+      {% endif %}
+    </div>
+    {%- if paginate.pages > 1 -%}
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endif -%}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "t:sections.main-blog.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main-blog.settings.header.content"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:sections.main-blog.settings.layout.options__1.label"
+        },
+        {
+          "value": "collage",
+          "label": "t:sections.main-blog.settings.layout.options__2.label"
+        }
+      ],
+      "default": "collage",
+      "label": "t:sections.main-blog.settings.layout.label",
+      "info": "t:sections.main-blog.settings.layout.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "t:sections.main-blog.settings.show_image.label"
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.main-blog.settings.image_height.options__1.label"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.main-blog.settings.image_height.options__2.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.main-blog.settings.image_height.options__3.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.main-blog.settings.image_height.options__4.label"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.main-blog.settings.image_height.label",
+      "info": "t:sections.main-blog.settings.image_height.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "default": true,
+      "label": "Show blog description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "t:sections.main-blog.settings.show_date.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": false,
+      "label": "t:sections.main-blog.settings.show_author.label"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-blog.settings.paragraph.content"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}
+
+
+
+
+
+
+<!-- Auto-redirect logic -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+   // Filter change handler
+    function handleBlogFilterChange(event) {
+        const selectElement = event.target;
+        // console.log("handleBlogFilterChange --------------", selectElement.value);
+    
+        // Only set sessionStorage for "All Topics" selection
+        if (selectElement.value === "{{ blog.url }}") {
+            // console.log("handleBlogFilterChange if ----------");
+            sessionStorage.setItem('userSelectedAllTopics', 'true');
+        } else {
+            console.log("handleBlogFilterChange else ----------");
+            // sessionStorage.removeItem('userSelectedAllTopics');
+            sessionStorage.setItem('userSelectedAllTopics', 'false');
+        }
+        
+        window.location.href = selectElement.value;
+    }
+
+    // Set up event listener
+    const filterSelect = document.querySelector('#BlogTagFilter');
+    if (filterSelect) {
+        filterSelect.addEventListener("change", handleBlogFilterChange);
+    }
+  });
+</script>

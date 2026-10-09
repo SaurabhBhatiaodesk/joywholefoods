@@ -1,0 +1,24 @@
+.button-show-more {
+  padding-left: 0;
+  justify-content: flex-start;
+  padding-bottom: 1.1rem;
+}
+
+.button-show-more,
+.button-show-less {
+  margin-top: 1.5rem;
+}
+
+
+@media(max-width:567px){
+  div#ProductGridContainer {
+    margin-top: 10px;
+}
+.active-facets.active-facets-mobile {
+    margin: 0px 10px;
+}
+.active-facets__button, .active-facets__button-remove {
+    margin: 0;
+    padding: 5px !important;
+}
+}

@@ -1,0 +1,122 @@
+.customize-box__clear {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between; 
+}
+.customize-box__line {
+  width: 85%; 
+}
+.customize-box__reset {
+  cursor: pointer;
+  color: #4a4a4a;
+  font-family: DM Sans 9pt, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 135.3%;
+  background: none;
+  letter-spacing: -.32px;
+  border: none;
+  display: flex;
+  align-items: center;
+  opacity: .5;
+  gap: 10px;
+}
+.customize-box__line hr {
+  margin: 2rem 0;
+}
+.customize-box__img-wrapper img{
+  width: 100%;
+  min-height: 170px;
+  object-fit: cover;
+  border-radius: 5px
+}
+.customize-box__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-column-gap: 60px;
+  grid-row-gap: 40px;
+}
+.customize-box___wrapper > div {
+  width: fit-content;
+  margin: 0 auto;
+}
+.customize-box__options .customize-box__heading {
+  margin: 18px 0;
+}
+.customize-box__product_card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+.customize-box__quantity {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+.customize-box__product_card:not(.selected) {
+  opacity: 0.5;
+}
+.customize-box__product_card:not(.selected) .customize-box__quantity {
+  pointer-events: none;
+}
+.customize-box__btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+#customizeBox .page-width {
+  max-width: 1060px;
+}
+.customize-box__heading{
+  font-size: 22px;
+  margin-top: 0;
+}
+.customize-box__count {
+  margin-bottom: 40px;
+}
+.customize-box__product_name {
+  font-size: 12px;
+  color: #141414;
+  letter-spacing: -.34px;
+}
+.customize-box__options .customize-box__substitution-heading {
+  margin: 40px 0;
+}
+.customize-box__options .quantity:after {
+  box-shadow: 0 0 0 var(--inputs-border-width) #c4d1d0;
+}
+@media screen and (max-width: 1024px) {
+  .customize-box__line {
+    width: 80%; 
+  } 
+  .customize-box__grid {
+    grid-column-gap: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+@media screen and (max-width: 768px) {
+  .customize-box__line {
+    width: 60%; 
+  } 
+  .customize-box__grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+@media screen and (max-width: 767px) {
+  .customize-box__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media screen and (max-width: 425px) {
+  .customize-box__line {
+    width: 40%; 
+  } 
+  .product-breadcrumbs.page-width {
+    display: none;
+  }
+}

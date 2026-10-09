@@ -1,0 +1,65 @@
+
+<div class="our-story-banner">
+  <div class="our-story-banner__wrapper">
+    {% if section.settings.heading %}
+    <div class="our-story-banner__heading-container">
+      {% if section.settings.hero_banner %}
+        <h1 class="our-story-banner__heading">{{ section.settings.heading }}</h1>
+
+      {% else %}
+        <h2 class="our-story-banner__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% if section.settings.image %}
+      <img src="{{ section.settings.image | img_url: 'master' }}">
+    {% endif %}
+
+    {% if section.settings.paragraph %}
+    <div class="our-story-banner__content">
+        {{ section.settings.paragraph }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Our Story Banner",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "hero_banner",
+          "default": false,
+          "label": "Hero banner"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+        },
+        {
+            "type": "richtext",
+            "id": "paragraph",
+            "label": "Paragraph"
+        }
+    ],
+	"blocks": [],
+    "presets": [
+      {
+          "name": "Our Story Banner"
+      }
+    ]
+
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

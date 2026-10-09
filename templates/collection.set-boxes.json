@@ -1,0 +1,108 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "show_custom_description": true,
+        "color_scheme": "scheme-d373b410-820e-478c-b1df-365d750fb989"
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-seasonalboxes",
+      "custom_css": [
+        ".filter-container {max-width: 186px; width: 100%;}"
+      ],
+      "settings": {
+        "products_per_page": 20,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": true,
+        "show_rating": false,
+        "quick_add": "none",
+        "enable_filtering": true,
+        "filter_type": "vertical",
+        "enable_sorting": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "f871fd93-da79-4e27-a515-1eafe769fb50": {
+      "type": "image-banner",
+      "blocks": {
+        "template--16842321854679__f871fd93-da79-4e27-a515-1eafe769fb50-heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Let Us Do The Shopping For You",
+            "heading_size": "h1"
+          }
+        },
+        "template--16842321854679__f871fd93-da79-4e27-a515-1eafe769fb50-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "Afraid you might forget to put your order in on time? We don't want you to miss out on the freshest food in town so if you want a similar order each week, let us take care of it for you by creating a subscription. Start with one of our seasonal Set Boxes and add any extras you'd like with each order. We'll pop the order through for you weekly or fortnightly (your choice), and you can make any necessary changes up until midnight Tuesday. It's super easy to set up and you can pause or cancel anytime.",
+            "text_style": "body"
+          }
+        },
+        "template--16842321854679__f871fd93-da79-4e27-a515-1eafe769fb50-buttons-1": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Create Your Subscription Order",
+            "button_link_1": "shopify://collections/organic-spray-free-farm-fresh-fruit-and-veg-box-delivery-brisbane-gold-coast",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "template--16842321854679__f871fd93-da79-4e27-a515-1eafe769fb50-heading-1",
+        "template--16842321854679__f871fd93-da79-4e27-a515-1eafe769fb50-text-1",
+        "template--16842321854679__f871fd93-da79-4e27-a515-1eafe769fb50-buttons-1"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".banner__box.content-container {padding-left: 0;}",
+        ".banner__content {padding-left: 20px; padding-right: 20px; padding-bottom: 240px;}",
+        "h2.banner__heading.inline-richtext.h1 {font-size: 52px;}",
+        ".banner__text.rte.body p {color: #141414; font-size: 18px; letter-spacing: -0.36px; line-height: 1.7em;}",
+        ".banner__text.rte.body {max-width: 470px;}",
+        ".banner {margin-bottom: -202px;}",
+        "@media (max-width: 767px) {.banner__box {padding-right: 0; } h2.banner__heading.inline-richtext.h1 {font-size: 32px; } .banner__content {padding-bottom: 0px; }}"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/custom_boxes_2.png",
+        "image_overlay_opacity": 0,
+        "image_height": "large",
+        "desktop_content_position": "middle-left",
+        "show_text_box": false,
+        "desktop_content_alignment": "left",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "stack_images_on_mobile": true,
+        "show_text_below": true
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "product-grid",
+    "f871fd93-da79-4e27-a515-1eafe769fb50"
+  ]
+}

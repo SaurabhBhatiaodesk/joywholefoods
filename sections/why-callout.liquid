@@ -1,0 +1,82 @@
+<div class="timeframe-content" style="background-image: url('{{ section.settings.image | img_url: 'original'}}')">
+  <div class="image"><img src="{{ section.settings.image | img_url: 'original'}}" alt="{{ section.settings.image .alt }}" /></div>
+  
+  <div class="page-width">
+    <div class="content">
+      <h3>{{ section.settings.title }}</h3>
+      <p>{{ section.settings.description }}</p>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  /* Callout */
+  .timeframe-content h3{
+    font-size: 25px;
+  }
+  .timeframe-content {
+    background-size: cover;
+    background-position: top right;
+    padding: 100px 50px;
+    margin: 0 auto; 
+  }
+  .timeframe-content .image {
+    display: none;
+  }
+  .timeframe-content img {
+    width: 100%;
+  }
+  .timeframe-content .content {
+    width: 50%;
+    background: #fff;
+    padding: 70px 50px;
+  }
+  @media screen and (max-width: 767px) {
+    .timeframe-content .content {
+      width: 75%;
+    }
+    .timeframe-content {
+      padding: 0px;
+      background-image: none!important;
+    }
+    .timeframe-content .image {
+      display: block;
+    }
+   .timeframe-content .content {
+      padding: 0;
+      width: 100%;
+      margin: 0 auto;
+    }
+  }
+{% endstyle %}  
+
+{% schema %}
+  {
+    "name": "Call Out",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "label": "Description"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      }
+	],
+    "presets": [
+      {
+        "name": "Call Out"
+      }
+    ]
+  }
+{% endschema %}
+
+{% javascript %}
+{% endjavascript %}

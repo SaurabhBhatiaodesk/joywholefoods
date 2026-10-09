@@ -1,0 +1,103 @@
+<section id="gm-main-article">
+    <div class="page-width">
+        <div class="gm-main-article-container">
+            <div class="article-tag">              
+                <p>{{ article.tags }}</p>                   
+            </div>
+
+            <div class="article-title">
+                <h2> {{ article.title }} </h2>
+            </div>
+
+            <div class="article-date">
+                <p> {{ article.published_at | date:  '%b %d, %Y' }}</p>
+            </div>
+
+            <div class="article-image">
+                      {% if article.image  %}
+                            <img src="{{ article.image | img_url: 'master' }}">
+                      {% endif %}
+            </div>
+
+            <div class="article-content">
+                <p>{{ article.content }}</p>
+            </div>
+        </div>  
+    </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "GM Main Article",
+  "settings": [	
+    ],
+
+    "presets": [
+    {
+      "name": "GM Main Article"
+
+    }
+  ]
+  
+}
+{% endschema %}
+<style>
+#gm-main-article  .gm-main-article-container {
+    padding: 60px 0;
+}
+#gm-main-article .gm-main-article-container .article-tag p {
+    color: #141414;
+    font-weight: 500;
+    line-height: 21.79px;
+    letter-spacing: -0.3px;
+    text-align: center;
+    background: #ECE7E2;
+    width: 230px;
+    padding: 10px;
+    border-radius: 50px;
+    margin: auto;
+}
+#gm-main-article .gm-main-article-container .article-title h2 {
+    text-align: center;
+    font-size: 59px;
+    line-height: 65.67px;
+    letter-spacing: -0.3px;
+    font-weight: 700;
+    color: #043D22;
+    margin: 20px auto;
+    width: 790px;
+}
+#gm-main-article .gm-main-article-container .article-date p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 29.06px;
+    color: #043D22;
+    letter-spacing: -0.4px;
+    text-transform: uppercase;
+    text-align: center;
+}
+#gm-main-article .gm-main-article-container .article-image img {
+    width: 1143px;
+    height: 487px;
+    object-fit: cover;
+}
+#gm-main-article .gm-main-article-container .article-content p {
+    font-size: 18px;
+    letter-spacing:  -0.36px;
+    line-height: 26.15px;
+    font-weight: 400;
+    color: #141414;
+}
+#gm-main-article .gm-main-article-container .article-content h4 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 46.74px;
+    letter-spacing: -1.26px;
+    color: #043D22;
+}
+#gm-main-article .gm-main-article-container .article-content {
+    width: 987px;
+    margin: auto;
+}
+</style>

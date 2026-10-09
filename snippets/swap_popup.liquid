@@ -1,0 +1,490 @@
+{{ 'swap_popup.css' | asset_url | stylesheet_tag }}
+
+<!-- --- Swap-Popup --- -->
+
+<div class="swap-popup swap_pdp_popup" style="display:none;" data-collection="{{ first_collection }}">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+
+    width="16"
+
+    height="16"
+
+    fill="currentColor"
+
+    class="bi bi-x cross-icon close-btn"
+
+    viewBox="0 0 16 16"
+  >
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+  </svg>
+
+  <h2>Do you want to make any swaps to your box?</h2>
+
+  <h1>Actually I'd love to make the following swaps please</h1>
+
+  <div class="swap-check">
+    <input type="text" class="swap-box" placeholder="You can make 2–3 swaps — simply let us know what you'd like instead">
+  </div>
+
+  <div class="popup_btns">
+    <button type="button" class="close-btn addToCart-no-swap-os" qnty="1">No swaps</button>
+
+    <button type="button" qnty="1" class="submit_swap">Save swaps</button>
+  </div>
+
+  <a class="see-box">See box contents</a>
+</div>
+
+<script>
+  (function () {
+    if (window.organicSeasonalSwapInitialized) return;
+
+    window.organicSeasonalSwapInitialized = true;
+
+    var pending = {
+      trigger: null,
+
+      variantId: null,
+
+      quantity: 1,
+
+      sellingPlan: '',
+
+      resolve: null,
+
+      reject: null,
+    };
+
+    function getPopup() {
+      return document.querySelector('.swap-popup');
+    }
+
+    function getProductUrlFromButton(button) {
+      if (!button) return '';
+
+      var directUrl = button.dataset.productUrl || button.getAttribute('data-product-url') || '';
+
+      if (directUrl) return directUrl;
+
+      var productCard = button.closest(
+        '[data-product-url], .card-wrapper-os, .grid__item, .card-wrapper, .product-card, product-card'
+      );
+
+      if (productCard) {
+        var cardUrl = productCard.getAttribute('data-product-url');
+
+        if (cardUrl) return cardUrl;
+
+        var productLink = productCard.querySelector('a[href*="/products/"]');
+
+        if (productLink) return productLink.href;
+      }
+
+      if (window.location.pathname.indexOf('/products/') !== -1) {
+        return window.location.pathname + window.location.search;
+      }
+
+      return '';
+    }
+
+    function getVariantIdFromButton(button) {
+      if (!button) return null;
+
+      var form = button.closest('form');
+
+      var variantInput = form ? form.querySelector('[name="id"]') : null;
+
+      var variantContainer = button.closest('[data-variant-id]');
+
+      return (
+        button.dataset.variantId ||
+        (variantInput ? variantInput.value : '') ||
+        (variantContainer ? variantContainer.dataset.variantId : '') ||
+        null
+      );
+    }
+
+    function getQuantityFromButton(button) {
+      var form = button ? button.closest('form') : null;
+
+      var card = button ? button.closest('.card-wrapper-os, .grid__item') : null;
+
+      var quantityInput =
+        (form ? form.querySelector('[name="quantity"]') : null) ||
+        (card ? card.querySelector('.quantity__input') : null);
+
+      var quantity = quantityInput ? parseInt(quantityInput.value || '1', 10) : 1;
+
+      return Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
+    }
+
+    function getSellingPlanFromButton(button) {
+      var form = button ? button.closest('form') : null;
+
+      var sellingPlanInput = form ? form.querySelector('[name="selling_plan"]') : null;
+
+      return sellingPlanInput ? sellingPlanInput.value || '' : '';
+    }
+
+    function isCollectionSwapButton(button) {
+      return Boolean(
+        button &&
+          (button.matches('.swap-product-btn-os, [data-force-box-swaps-popup="true"]') ||
+            button.closest('[data-force-box-swaps-popup="true"]'))
+      );
+    }
+
+    function resetPending() {
+      pending.trigger = null;
+
+      pending.variantId = null;
+
+      pending.quantity = 1;
+
+      pending.sellingPlan = '';
+
+      pending.resolve = null;
+
+      pending.reject = null;
+    }
+
+    function openPopup(options) {
+      var popup = getPopup();
+
+      if (!popup) {
+        return Promise.reject(new Error('Swap popup markup was not found.'));
+      }
+
+      if (pending.reject) {
+        var previousReject = pending.reject;
+
+        var previousError = new Error('Swap popup was replaced by another request.');
+
+        previousError.isSwapPopupCancelled = true;
+
+        resetPending();
+
+        previousReject(previousError);
+      }
+
+      options = options || {};
+
+      pending.trigger = options.trigger || null;
+
+      pending.variantId = options.variantId || getVariantIdFromButton(pending.trigger);
+
+      pending.quantity = parseInt(options.quantity || getQuantityFromButton(pending.trigger) || 1, 10);
+
+      pending.sellingPlan = options.sellingPlan || getSellingPlanFromButton(pending.trigger) || '';
+
+      var seeBoxLink = popup.querySelector('.see-box');
+
+      var currentBoxUrl = options.productUrl || getProductUrlFromButton(pending.trigger);
+
+      if (seeBoxLink && currentBoxUrl) {
+        seeBoxLink.href = currentBoxUrl;
+      }
+
+      if (!Number.isFinite(pending.quantity) || pending.quantity < 1) {
+        pending.quantity = 1;
+      }
+
+      var input = popup.querySelector('.swap-box');
+
+      if (input) input.value = '';
+
+      popup.style.display = 'block';
+
+      setTimeout(function () {
+        if (input) input.focus();
+      }, 50);
+
+      return new Promise(function (resolve, reject) {
+        pending.resolve = resolve;
+
+        pending.reject = reject;
+      });
+    }
+
+    function closePopup(cancelled) {
+      var popup = getPopup();
+
+      var reject = pending.reject;
+
+      if (popup) {
+        popup.style.display = 'none';
+
+        var input = popup.querySelector('.swap-box');
+
+        if (input) input.value = '';
+      }
+
+      resetPending();
+
+      if (cancelled && reject) {
+        var error = new Error('Swap popup closed.');
+
+        error.isSwapPopupCancelled = true;
+
+        reject(error);
+      }
+    }
+
+    function completePending(data) {
+      var resolve = pending.resolve;
+
+      closePopup(false);
+
+      if (resolve) resolve(data);
+    }
+
+    function setLoading(loading) {
+      var popup = getPopup();
+
+      if (!popup) return;
+
+      popup.querySelectorAll('.submit_swap, .addToCart-no-swap-os').forEach(function (button) {
+        button.disabled = loading;
+      });
+    }
+
+    function getCartComponent() {
+      return document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+    }
+
+    function getSections(cartComponent) {
+      if (!cartComponent || typeof cartComponent.getSectionsToRender !== 'function') {
+        return ['cart-drawer', 'cart-icon-bubble'];
+      }
+
+      return cartComponent.getSectionsToRender().map(function (section) {
+        return section.id;
+      });
+    }
+
+    function updateCartBubble() {
+      return fetch('/cart.js')
+        .then(function (response) {
+          return response.json();
+        })
+
+        .then(function (cart) {
+          var cartIcon = document.getElementById('cart-icon-bubble');
+
+          if (!cartIcon) return cart;
+
+          var bubble = cartIcon.querySelector('.cart-count-bubble');
+
+          if (!bubble && cart.item_count > 0) {
+            bubble = document.createElement('div');
+
+            bubble.className = 'cart-count-bubble';
+
+            bubble.innerHTML = '<span aria-hidden="true"></span>' + '<span class="visually-hidden"></span>';
+
+            cartIcon.appendChild(bubble);
+          }
+
+          if (!bubble) return cart;
+
+          var visible = bubble.querySelector('span[aria-hidden="true"]');
+
+          var sr = bubble.querySelector('.visually-hidden');
+
+          if (visible) visible.textContent = cart.item_count;
+
+          if (sr) {
+            sr.textContent = cart.item_count + (cart.item_count === 1 ? ' item' : ' items');
+          }
+
+          bubble.style.display = cart.item_count > 0 ? '' : 'none';
+
+          return cart;
+        });
+    }
+
+    function addPendingProduct(properties) {
+      var variantId = pending.variantId || getVariantIdFromButton(pending.trigger);
+
+      if (!variantId) {
+        alert('Variant ID not found. Please select a variant and try again.');
+
+        return;
+      }
+
+      var cartComponent = getCartComponent();
+
+      var cartAddUrl = window.routes && window.routes.cart_add_url ? window.routes.cart_add_url : '/cart/add.js';
+
+      var requestBody = {
+        id: variantId,
+
+        quantity: pending.quantity,
+
+        properties: properties || {},
+
+        sections: getSections(cartComponent),
+
+        sections_url: window.location.pathname,
+      };
+
+      if (pending.sellingPlan) {
+        requestBody.selling_plan = pending.sellingPlan;
+      }
+
+      setLoading(true);
+
+      fetch(cartAddUrl, {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+
+          Accept: 'application/json',
+
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+
+        body: JSON.stringify(requestBody),
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            if (!response.ok || data.status) {
+              throw new Error(data.description || data.message || 'Failed to add item to cart.');
+            }
+
+            return data;
+          });
+        })
+
+        .then(function (data) {
+          var activeTrigger = pending.trigger;
+
+          if (cartComponent && data.sections && typeof cartComponent.renderContents === 'function') {
+            if (typeof cartComponent.setActiveElement === 'function' && activeTrigger) {
+              cartComponent.setActiveElement(activeTrigger);
+            }
+
+            cartComponent.renderContents(data);
+
+            updateCartBubble().catch(function (error) {
+              console.error('Cart count refresh error:', error);
+            });
+          } else {
+            updateCartBubble().then(function () {
+              if (cartComponent && typeof cartComponent.open === 'function') {
+                cartComponent.open(activeTrigger || undefined);
+              }
+            });
+          }
+
+          completePending(data);
+        })
+
+        .catch(function (error) {
+          console.error('Swap add-to-cart error:', error);
+
+          alert(error.message || 'Unable to add this product to the cart.');
+        })
+
+        .finally(function () {
+          setLoading(false);
+        });
+    }
+
+    window.JoyBoxSwapPopup = {
+      open: function (options) {
+        return openPopup(options || {});
+      },
+
+      close: function () {
+        closePopup(true);
+      },
+    };
+
+    document.addEventListener(
+      'click',
+
+      function (event) {
+        var button = event.target.closest('button[name="add"], input[type="submit"][name="add"]');
+
+        if (!isCollectionSwapButton(button)) return;
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+        event.stopImmediatePropagation();
+
+        openPopup({
+          trigger: button,
+
+          variantId: getVariantIdFromButton(button),
+
+          quantity: getQuantityFromButton(button),
+
+          sellingPlan: getSellingPlanFromButton(button),
+        }).catch(function (error) {
+          if (!error || error.isSwapPopupCancelled !== true) {
+            console.error('Swap popup error:', error);
+          }
+        });
+      },
+
+      true
+    );
+
+    document.addEventListener('click', function (event) {
+      var saveButton = event.target.closest('.submit_swap');
+
+      if (!saveButton) return;
+
+      event.preventDefault();
+
+      var popup = getPopup();
+
+      var input = popup ? popup.querySelector('.swap-box') : null;
+
+      var swapValue = input ? input.value.trim() : '';
+
+      if (!swapValue) {
+        alert('Please enter your swap details before adding to cart.');
+
+        if (input) input.focus();
+
+        return;
+      }
+
+      addPendingProduct({ 'Swap Item': swapValue });
+    });
+
+    document.addEventListener('click', function (event) {
+      var noSwapButton = event.target.closest('.addToCart-no-swap-os');
+
+      if (!noSwapButton) return;
+
+      event.preventDefault();
+
+      addPendingProduct({});
+    });
+
+    document.addEventListener('click', function (event) {
+      if (event.target.closest('.swap-popup svg.cross-icon')) {
+        event.preventDefault();
+
+        closePopup(true);
+      }
+    });
+
+    document.addEventListener('mouseup', function (event) {
+      var popup = getPopup();
+
+      if (popup && popup.style.display !== 'none' && !popup.contains(event.target)) {
+        closePopup(true);
+      }
+    });
+  })();
+</script>
+
+<!-- --- Swap-Popup End --- -->

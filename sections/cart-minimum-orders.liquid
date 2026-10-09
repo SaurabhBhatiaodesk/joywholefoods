@@ -1,0 +1,499 @@
+{%- comment -%}
+  Minimum Orders & Delivery Costs — standalone section
+  Heading + 3 stat pills + 2-column info text + notice banners (fuel levy /
+  packaging return). Fully independent section, add/remove/reorder anywhere
+  via the theme editor.
+{%- endcomment -%}
+
+{%- liquid
+  assign stat_blocks = section.blocks | where: 'type', 'stat'
+  assign column_blocks = section.blocks | where: 'type', 'column'
+  assign notice_blocks = section.blocks | where: 'type', 'notice'
+-%}
+
+<div
+  class="min-orders-section"
+  style="--mo-pad-top: {{ section.settings.padding_top }}px; --mo-pad-bottom: {{ section.settings.padding_bottom }}px; --mo-pad-top-mobile: {{ section.settings.padding_top_mobile }}px; --mo-pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px; background: {{ section.settings.section_background }};"
+>
+  <div
+    class="min-orders"
+    style="--mo-heading: {{ section.settings.heading_color }}; --mo-text: {{ section.settings.text_color }}; --mo-stat-bg: {{ section.settings.stat_background }}; --mo-stat-amount: {{ section.settings.stat_amount_color }}; --mo-stat-label: {{ section.settings.stat_label_color }};"
+  >
+    {%- if section.settings.heading != blank -%}
+      <h2 class="min-orders__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if stat_blocks.size > 0 -%}
+      <div class="min-orders__stats">
+        {%- for block in stat_blocks -%}
+          <div class="min-orders__stat" {{ block.shopify_attributes }}>
+            <h3 class="min-orders__stat-amount">{{ block.settings.amount }}</h3>
+            <div class="min-orders__stat-label">{{ block.settings.label }}</div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if column_blocks.size > 0 -%}
+      <div class="min-orders__columns">
+        {%- for block in column_blocks -%}
+          <div class="min-orders__column" {{ block.shopify_attributes }}>
+            {%- if block.settings.heading != blank -%}
+              <h3 class="min-orders__column-heading">{{ block.settings.heading }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="min-orders__column-text">{{ block.settings.text }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if notice_blocks.size > 0 -%}
+      <div class="min-orders__notices">
+        {%- for block in notice_blocks -%}
+          <div
+            class="min-orders__notice"
+            style="--mo-notice-bg: {{ block.settings.background_color }}; --mo-notice-icon: {{ block.settings.icon_color }}; --mo-notice-heading: {{ block.settings.heading_color }};"
+            {{ block.shopify_attributes }}
+          >
+            <span class="min-orders__notice-icon" aria-hidden="true">
+              {%- case block.settings.icon -%}
+                {%- when 'recycle' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"></path>
+                    <path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"></path>
+                    <path d="m14 16-3 3 3 3"></path>
+                    <path d="M8.293 13.596 7.196 9.5 3.1 10.598"></path>
+                    <path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 12 3a1.784 1.784 0 0 1 1.559.9l3.519 6.098"></path>
+                    <path d="m13.378 9.633 4.096 1.098 1.097-4.096"></path>
+                  </svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 22V9a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13"></path>
+                    <path d="M14 10h2a2 2 0 0 1 2 2v2.5a1.5 1.5 0 0 0 1.5 1.5v0a1.5 1.5 0 0 0 1.5-1.5V8.5a1 1 0 0 0-.3-.7l-2.5-2.5"></path>
+                    <path d="M3 22h13"></path>
+                    <path d="M7 9V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4"></path>
+                  </svg>
+              {%- endcase -%}
+            </span>
+            <div class="min-orders__notice-content">
+              {%- if block.settings.heading != blank -%}
+                <h3 class="min-orders__notice-heading">{{ block.settings.heading }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="min-orders__notice-text">{{ block.settings.text }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.min-orders-section {
+  padding-top: var(--mo-pad-top, 40px);
+  padding-bottom: var(--mo-pad-bottom, 40px);
+  padding-left: clamp(16px, 5vw, 56px);
+  padding-right: clamp(16px, 5vw, 56px);
+}
+.min-orders-section *, .min-orders-section *::before, .min-orders-section *::after { box-sizing: border-box; }
+
+.min-orders {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.min-orders__heading {
+  margin: 0 0 20px;
+  color: var(--mo-heading, #1f4a37);
+  font-size: 59px;
+  font-weight:400;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.min-orders__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.min-orders__stat {
+  padding: 20px;
+  background: var(--mo-stat-bg, #faf3e6);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.min-orders__stat-amount {
+  color: var(--mo-stat-amount, #1f4a37);
+  font-size: 50px;
+  font-weight:500;
+  margin:0;
+  line-height: 1.1;
+}
+
+.min-orders__stat-label {
+  margin-top: 4px;
+  color: var(--mo-stat-label, #233b2f);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.min-orders__columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  margin-bottom: 28px;
+}
+
+.min-orders__column-heading {
+  margin: 0;
+  color: var(--mo-heading, #1f4a37);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.min-orders__column-text {
+  margin: 10px 0 0;
+  color: var(--mo-text, #4b5b52);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.min-orders__notices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.min-orders__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  background: var(--mo-notice-bg, #faf3e6);
+  border-radius: 10px;
+}
+
+.min-orders__notice-icon {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  margin-top: 2px;
+  color: var(--mo-notice-icon, #1f4a37);
+}
+
+.min-orders__notice-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.min-orders__notice-content {
+  min-width: 0;
+}
+
+.min-orders__notice-heading {
+  margin: 0;
+  color: var(--mo-notice-heading, #1f4a37);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.min-orders__notice-text {
+  margin: 4px 0 0;
+  color: var(--mo-text, #4b5b52);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+@media screen and (max-width: 749px) {
+  .min-orders-section {
+    padding-top: var(--mo-pad-top-mobile, 28px);
+    padding-bottom: var(--mo-pad-bottom-mobile, 28px);
+  }
+
+  .min-orders__heading {
+    font-size:30px;
+    margin-bottom: 16px;
+  }
+
+  .min-orders__stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .min-orders__stat {
+    padding: 16px;
+  }
+
+  .min-orders__stat-amount {
+    font-size: 24px;
+  }
+
+  .min-orders__columns {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+  }
+
+  .min-orders__column-heading {
+    font-size: 17px;
+  }
+
+  .min-orders__notice {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .min-orders__notice-heading {
+    font-size: 15px;
+  }
+
+  .min-orders__notice-text {
+    font-size: 13px;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Minimum orders & delivery",
+  "settings": [
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Desktop padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Mobile padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Minimum Orders & Delivery Costs"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text color",
+      "default": "#4b5b52"
+    },
+    {
+      "type": "color",
+      "id": "stat_background",
+      "label": "Stat pill background",
+      "default": "#faf3e6"
+    },
+    {
+      "type": "color",
+      "id": "stat_amount_color",
+      "label": "Stat amount color",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "stat_label_color",
+      "label": "Stat label color",
+      "default": "#233b2f"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat pill",
+      "settings": [
+        {
+          "type": "text",
+          "id": "amount",
+          "label": "Amount",
+          "default": "$50"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Local areas"
+        }
+      ]
+    },
+    {
+      "type": "column",
+      "name": "Info column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Why a minimum order?"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Every order takes time and care to pack. We reuse boxes and keep costs as low as possible, but minimum orders help cover packing costs so we can keep our grocery prices affordable without losing money on orders."
+        }
+      ]
+    },
+    {
+      "type": "notice",
+      "name": "Notice banner",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "fuel", "label": "Fuel" },
+            { "value": "recycle", "label": "Recycle" }
+          ],
+          "default": "fuel"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Our temporary fuel levy"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "The levy helps cover the current cost of diesel. It's temporary, and we hope to remove it as diesel prices come back down."
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Banner background",
+          "default": "#faf3e6"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon color",
+          "default": "#1f4a37"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color",
+          "default": "#1f4a37"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Minimum orders & delivery costs",
+      "blocks": [
+        { "type": "stat", "settings": { "amount": "$50", "label": "Local areas" } },
+        { "type": "stat", "settings": { "amount": "$100", "label": "Southern Gold Coast" } },
+        { "type": "stat", "settings": { "amount": "$150", "label": "Courier delivery" } },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "Why a minimum order?",
+            "text": "Every order takes time and care to pack. We reuse boxes and keep costs as low as possible, but minimum orders help cover packing costs so we can keep our grocery prices affordable without losing money on orders."
+          }
+        },
+        {
+          "type": "column",
+          "settings": {
+            "heading": "How delivery costs work",
+            "text": "Our delivery fees help cover drivers, vehicle maintenance and getting your groceries to you. Southern Gold Coast deliveries travel further from our warehouse. For areas our vans can't reach, we use a refrigerated courier, with higher transport costs and packaging we can't collect and reuse."
+          }
+        },
+        {
+          "type": "notice",
+          "settings": {
+            "icon": "fuel",
+            "heading": "Our temporary fuel levy",
+            "text": "The levy helps cover the current cost of diesel. It's temporary, and we hope to remove it as diesel prices come back down.",
+            "background_color": "#faf3e6"
+          }
+        },
+        {
+          "type": "notice",
+          "settings": {
+            "icon": "recycle",
+            "heading": "Please return your packaging",
+            "text": "For all local deliveries, please return your box and packaging so we can reuse them. This helps reduce waste and keep costs down. Thank you!",
+            "background_color": "#eaf3ea"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,277 @@
+<div class="sticky-bar hidden">
+    <div class="sticky__container">
+{% comment %}     
+        <div class="price__container">
+               {%- render 'price',
+            product: product,
+            use_variant: true,
+            show_badges: true,
+            price_class: 'price--large'
+          -%}
+
+          
+
+        </div> {% endcomment %}
+    
+            <quantity-input hhh class="quantity" data-url="{{ product.url }}" data-section="{{ section.id }}">
+                <button class="quantity__button no-js-hidden" name="sticky_minus" type="button">
+                  <span class="visually-hidden">
+                    {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+                  </span>
+                  {% render 'icon-minus' %}
+                </button>
+                <input
+                  class="quantity__input"
+                  type="number"
+                  name="quantity"
+                  id="sticky_quantity"
+                  data-cart-quantity="{{ cart_qty }}"
+                  data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                  min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                  {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                    data-max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                    max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                  {% endif %}
+                  step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                  value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                  form="{{ product_form_id }}"
+                />
+                <button class="quantity__button no-js-hidden" name="sticky_plus" type="button">
+                  <span class="visually-hidden">
+                    {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+                  </span>
+                  {% render 'icon-plus' %}
+                </button>
+              </quantity-input>
+              <div class="button__container">
+                <button id="sticky_button"   class="product-form__submits button button--full-width button--primary">
+                <span>Add to cart
+            </span>
+                <div class="loading-overlay__spinner hidden">
+                  <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                  </svg>
+                </div>
+              </button>
+            </div>
+        </div>
+</div>
+<style>
+    
+    .sticky-bar {
+        height: auto;
+        position: fixed;
+        display: none ;
+        width: 100%;
+        background-color: #ffffff;
+        color: green;
+        box-shadow: 0px 0px 54px 19px rgba(0,0,0,0.22);
+-webkit-box-shadow: 0px 0px 54px 19px rgba(0,0,0,0.22);
+-moz-box-shadow: 0px 0px 54px 19px rgba(0,0,0,0.22);
+        bottom: 25px;
+        z-index: 999999;
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+    }
+    .sticky__container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        padding-left: 22px;
+        padding-right: 22px;
+        column-gap: 1rem;
+    }
+    .title__container {
+        display: flex;
+        justify-content: space-between;
+    }
+    .button__container {
+        display: flex;
+        align-items: center;
+
+    }
+    .sticky-bar .title__container {
+        color: #fff !important;
+    }
+    .sticky-bar .product-form__submit {
+        margin-bottom: 0 !important;
+    }
+    .sticky-bar .price__regular .price-item--regular {
+        color: #fff !important;
+    }
+    @media screen and (max-width: 600px) {
+        .price__container{
+            display: none;
+        }
+        .title__container {
+            display: none;
+        }
+        .button__container {
+            width: 100% !important;
+        }
+    }
+    @media screen and (max-width: 768px) {
+
+        {% comment %} .sticky-bar {
+            display: block ;
+        } {% endcomment %}
+    }
+
+    .sticky-bar  .quantity:before {
+        background: #fff;
+        pointer-events: none;
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: var(--inputs-radius-outset);
+        box-shadow: var(--inputs-shadow-horizontal-offset) var(--inputs-shadow-vertical-offset)
+            var(--inputs-shadow-blur-radius) rgba(var(--color-shadow), var(--inputs-shadow-opacity));
+        z-index: -1;
+        border-radius: 6px !important;
+    }
+    button#sticky_button {
+        font-size: 20px;
+        min-width: 30%;
+    }
+
+    .sticky__container quantity-input.quantity{
+        width: 85px !important;
+        min-width: 30%;
+        max-width: 10%;
+        min-height: calc(4.5rem + var(--buttons-border-width) * 2);
+    }
+    @media screen and (max-width: 425px) {
+    button#sticky_button {
+        font-size: 15px;
+        min-width: 60%;
+    }
+        .sticky__container quantity-input.quantity{
+        width: 85px !important;
+        min-width: 40%;
+        max-width: 10%;
+        min-height: calc(4.5rem + var(--buttons-border-width) * 2);
+    }
+    }
+</style>
+
+<script>
+    $('#sticky_button').click(function() {
+        $('.product-form__submit').click()
+    })
+   
+   $(window).scroll(function() {
+    if($(window).scrollTop() > 670) {
+      $('.sticky-bar').removeClass('hidden')
+    } else {
+      $('.sticky-bar').addClass('hidden')
+    }
+   })
+   $(".quantity__button[name='sticky_minus']").click(function(){
+    $(".quantity__button[name='minus']").click();
+    console.log($("#Quantity-template--17405766172887__main").val())
+    document.getElementById("sticky_quantity").value  = $(".sticky__mainquantity").val();
+   })
+   $(".quantity__button[name='sticky_plus']").click(function(){
+    console.log($("#Quantity-template--17405766172887__main").val())
+    $(".quantity__button[name='plus']").click();
+    document.getElementById("sticky_quantity").value  = $(".sticky__mainquantity").val();
+   })
+
+
+setInterval(displayHello, 1000);
+function displayHello() {
+ 
+  document.getElementById("sticky_quantity").value  = $(".sticky__mainquantity").val();
+}
+
+$(document).ready(function() {
+  $('.quantity__button').on('click', function() {
+    var action = $(this).attr('name');
+
+    if (action === 'plus') {
+      addInputFields();
+    } else if (action === 'minus') {
+      removeInputFields();
+    }
+  });
+var count = 2;
+  function addInputFields() {
+    
+    var container = $('#container_dietary');
+    var parentDiv = $('<div>').addClass('parent_dietary');
+    
+    var htmlContent = `
+    <hr class="divider_container">
+    <div class="line-item-property__field">
+                    <label class="label_dietary" for="your-name">Name ${count}</label><br>
+                    <input required class="required input_dietary" id="your-name" type="text" name="properties[Name]">
+                    <p class="error__message hidden">This field is required.</p>
+                  </div>
+
+                  <div class="info__container">
+                    <div class="line-item-property__field">
+                      <label class="label_dietary" for="email">Email ${count}</label><br>
+                      <input required class="required input_dietary email_field" id="email_dietary" type="email" oninput="validateEmail(this)"name="properties[Email]">
+                      <p class="error__message error-0 erroremail hidden">This field is required.</p>
+                    </div>
+                    <div class="line-item-property__field">
+                      <label class="label_dietary" for="email">Phone number ${count}</label><br>
+                      <input required class="required input_dietary" id="phone_dietary" type="text" oninput="validatePhone(this)"name="properties[Email]">
+                      <p class="error__message error-0 hidden">This field is required.</p>
+                    </div>
+                  </div>
+                  <div class="line-item-property__field">
+                    <label class="label_dietary" for="dietary">Dietary ${count}</label><br>
+                    <select required class="required input_dietary select_dietary" id="dietary-${count}" data-value="text-area-${count}" onchange="checkDietary(this)"name="properties[Dietary]">
+                      <option  value="" selected disabled hidden>Select Dietary</option>
+                      <option  value="Gluten-free">Gluten-free</option>
+                      <option value="Dairy-free">Dairy-free</option>
+                      <option value="Vegan">Vegan</option>
+                      <option value="Vegetarian">Vegetarian</option>
+                      <option value="No red meat">No red meat</option>
+                      <option value="No Dietary">No Dietary Requirements</option>
+                      <option value="other">Other</option>
+                    </select>
+                    <p class="error__messages hidden">This field is required.</p>
+                  </div>
+
+                  <div class="line-item-property__field text_field hidden" id="text-area-${count}">
+                    <label class="label_dietary" for="dietary_other-${count}">Other Dietary ${count}</label><br>
+                    <textarea style="resize: vertical;" id="dietary_other-${count}" required class="required input_dietary select_dietary ">
+
+                    </textarea>
+                    <p class="error__messagetext hidden">This field is required.</p>
+                  </div>
+
+                 `;
+                  count++;
+    parentDiv.html(htmlContent);
+    container.append(parentDiv);
+  }
+
+  function removeInputFields() {
+    var container = $('#container_dietary');
+    var children = container.find('.parent_dietary');
+    
+    // Check if there is any set to remove
+    if (children.length > 1) {
+      children.last().remove();
+    }
+  }
+});
+// <div class="line-item-property__field text_field hidden" id="parent_text-area-${count}">
+//                     <label class="label_dietary" for="no_dietary_other-${count}">No Dietary</label><br>
+//                     <textarea style="resize: vertical;" id="no_dietary_other-${count}" required class="required input_dietary select_dietary">
+
+//                     </textarea>
+//                     <p class="error__message_text hidden">This field is required.</p>
+//                   </div>
+                 
+</script>

@@ -1,0 +1,358 @@
+{%- comment -%}
+  Cart Delivery Schedule — standalone section
+  "Delivery Days & Order Deadlines" table. Fully independent section so it
+  can be added/removed/reordered on its own (e.g. above the cart footer on
+  the cart page, or anywhere else) via the theme editor.
+{%- endcomment -%}
+
+<div
+  class="cart-delivery-schedule-section"
+  style="--cds-pad-top: {{ section.settings.padding_top }}px; --cds-pad-bottom: {{ section.settings.padding_bottom }}px; --cds-pad-top-mobile: {{ section.settings.padding_top_mobile }}px; --cds-pad-bottom-mobile: {{ section.settings.padding_bottom_mobile }}px; background: {{ section.settings.background_color }};"
+>
+  <div
+    class="cart-delivery-schedule"
+    style="--cds-header-bg: {{ section.settings.schedule_header_bg }}; --cds-header-text: {{ section.settings.schedule_header_text }}; --cds-border: {{ section.settings.schedule_border }}; --cds-text: {{ section.settings.schedule_text_color }}; --cds-heading: {{ section.settings.schedule_heading_color }};"
+  >
+    {%- if section.settings.schedule_heading != blank -%}
+      <h2 class="cart-delivery-schedule__heading">{{ section.settings.schedule_heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.schedule_subtext != blank -%}
+      <p class="cart-delivery-schedule__subtext">{{ section.settings.schedule_subtext }}</p>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="cart-delivery-schedule__table-wrap">
+        <table class="cart-delivery-schedule__table">
+          <thead>
+            <tr>
+              <th>{{ section.settings.col_day_label }}</th>
+              <th>{{ section.settings.col_cutoff_label }}</th>
+              <th>{{ section.settings.col_late_label }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'delivery_row' -%}
+                <tr {{ block.shopify_attributes }}>
+                  <td data-label="{{ section.settings.col_day_label }}">{{ block.settings.day }}</td>
+                  <td data-label="{{ section.settings.col_cutoff_label }}">{{ block.settings.cutoff }}</td>
+                  <td data-label="{{ section.settings.col_late_label }}">{{ block.settings.late_until }}</td>
+                </tr>
+              {%- endif -%}
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.schedule_footnote != blank -%}
+      <p class="cart-delivery-schedule__footnote">{{ section.settings.schedule_footnote }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.cart-delivery-schedule-section {
+  padding-top: var(--cds-pad-top, 40px);
+  padding-bottom: var(--cds-pad-bottom, 40px);
+  padding-left: clamp(20px, 5vw, 56px);
+  padding-right: clamp(20px, 5vw, 56px);
+}
+.cart-delivery-schedule-section *, .cart-delivery-schedule-section *::before, .cart-delivery-schedule-section *::after { box-sizing: border-box; }
+
+.cart-delivery-schedule {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+}
+
+.cart-delivery-schedule__heading {
+  margin: 0;
+  color: var(--cds-heading, #1f4a37);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.cart-delivery-schedule__subtext {
+  margin: 8px 0 0;
+  color: var(--cds-text, #4b5b52);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.cart-delivery-schedule__table-wrap {
+  margin-top: 22px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--cds-border, #d8e2dc);
+  border-radius: 8px;
+}
+
+.cart-delivery-schedule__table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.cart-delivery-schedule__table thead th {
+  background: var(--cds-header-bg, #1f4a37);
+  color: var(--cds-header-text, #ffffff);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 12px 18px;
+  text-align: center;
+}
+
+.cart-delivery-schedule__table tbody td {
+  padding: 12px 18px;
+  color: var(--cds-text, #233b2f);
+  font-size: 14px;
+  text-align: center;
+  border-top: 1px solid var(--cds-border, #e4ede8);
+}
+
+.cart-delivery-schedule__table tbody tr:first-child td {
+  border-top: 0;
+}
+
+.cart-delivery-schedule__footnote {
+  margin: 14px 0 0;
+  color: var(--cds-text, #4b5b52);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Mobile: fit all 3 columns on screen with NO horizontal scroll. The
+   table-wrap's overflow-x only kicks in as a last-resort safety net (it
+   should never actually need to scroll at these sizes) — columns become
+   equal width (table-layout: fixed) and headers/cells are allowed to wrap
+   onto two lines (e.g. "Late Orders" / "Accepted Until") instead of
+   staying on one line and forcing the table wider than the screen. */
+@media screen and (max-width: 749px) {
+  .cart-delivery-schedule-section {
+    padding-top: var(--cds-pad-top-mobile, 32px);
+    padding-bottom: var(--cds-pad-bottom-mobile, 32px);
+  }
+
+  .cart-delivery-schedule__heading {
+    font-size: 30px;
+  }
+
+  .cart-delivery-schedule__table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .cart-delivery-schedule__table thead th {
+    padding: 8px 4px;
+    font-size: 10.5px;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .cart-delivery-schedule__table tbody td {
+    padding: 8px 4px;
+    font-size: 11.5px;
+    line-height: 1.3;
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .cart-delivery-schedule__heading {
+    font-size: 24px;
+  }
+
+  .cart-delivery-schedule__table thead th {
+    padding: 7px 3px;
+    font-size: 9.5px;
+  }
+
+  .cart-delivery-schedule__table tbody td {
+    padding: 7px 3px;
+    font-size: 10.5px;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Delivery schedule table",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Desktop padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Mobile padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "schedule_heading",
+      "label": "Heading",
+      "default": "Delivery Days & Order Deadlines"
+    },
+    {
+      "type": "text",
+      "id": "schedule_subtext",
+      "label": "Subtext",
+      "default": "Enter your postcode above to see which delivery days are available in your area."
+    },
+    {
+      "type": "text",
+      "id": "col_day_label",
+      "label": "Column 1 label",
+      "default": "Delivery Day"
+    },
+    {
+      "type": "text",
+      "id": "col_cutoff_label",
+      "label": "Column 2 label",
+      "default": "Usual Cutoff"
+    },
+    {
+      "type": "text",
+      "id": "col_late_label",
+      "label": "Column 3 label",
+      "default": "Late Orders Accepted Until"
+    },
+    {
+      "type": "textarea",
+      "id": "schedule_footnote",
+      "label": "Footnote text",
+      "default": "All times are Brisbane time. Delivery days depend on your postcode."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "schedule_heading_color",
+      "label": "Heading color",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "schedule_text_color",
+      "label": "Text color",
+      "default": "#233b2f"
+    },
+    {
+      "type": "color",
+      "id": "schedule_header_bg",
+      "label": "Table header background",
+      "default": "#1f4a37"
+    },
+    {
+      "type": "color",
+      "id": "schedule_header_text",
+      "label": "Table header text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "schedule_border",
+      "label": "Table border color",
+      "default": "#d8e2dc"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "delivery_row",
+      "name": "Delivery schedule row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "day",
+          "label": "Delivery day",
+          "default": "Wednesday"
+        },
+        {
+          "type": "text",
+          "id": "cutoff",
+          "label": "Usual cutoff",
+          "default": "Monday at 10am"
+        },
+        {
+          "type": "text",
+          "id": "late_until",
+          "label": "Late orders accepted until",
+          "default": "Tuesday at 7am"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Delivery schedule table",
+      "blocks": [
+        { "type": "delivery_row", "settings": { "day": "Wednesday", "cutoff": "Monday at 10am", "late_until": "Tuesday at 7am" } },
+        { "type": "delivery_row", "settings": { "day": "Thursday", "cutoff": "Tuesday at 10am", "late_until": "Wednesday at 7am" } },
+        { "type": "delivery_row", "settings": { "day": "Friday", "cutoff": "Wednesday at 10am", "late_until": "Thursday at 7am" } },
+        { "type": "delivery_row", "settings": { "day": "Saturday", "cutoff": "Wednesday at 10am", "late_until": "Thursday at 7am" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

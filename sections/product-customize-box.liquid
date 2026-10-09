@@ -1,0 +1,235 @@
+{{ 'product-customize-box.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.mobile_padding_top }}px;
+      padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+
+  {% assign max_items = 0 %}
+  {% for tag in product.tags %}
+      {% if tag contains 'MAX-ITEMS-' %}
+          {% assign max_items = tag | remove: 'MAX-ITEMS-' | plus: 0 %}
+      {% endif %}
+  {% endfor %}
+  
+  {% assign box_collection = collections[product.handle] %}
+
+<script>
+   var custom_boxes_max_items = {{ max_items }};
+</script>  
+<script src="{{ 'product-customize-box.js' | asset_url }}" defer="defer"></script>  
+ 
+<section id="customizeBox" class="color-{{ section.settings.color_scheme }} {% if section.settings.secondary_background %}background-secondary{% endif %}">
+  <div class="page-width section-{{ section.id }}-padding{% if section.settings.secondary_background %} isolate{% endif %}">
+    <div class="customize-box__product" data-main-product-title="{{product.title}}" data-main-variant-handle="{{product.handle}}" data-main-variant-id="{{product.selected_or_first_available_variant.id}}">
+      
+      <div class="customize-box__summary">
+        <h3 class="customize-box__heading">{{ section.settings.customize_box_heading }}</h3>
+        <p class="customize-box__description">{{ section.settings['customise-box-description'] | replace: "[MAX_ITEMS]", max_items | replace: "[PRODUCT_TITLE]", product.title }}</p>
+      </div>
+
+      <div class="customize-box__clear">
+          <div class="customize-box__line"><hr></div>
+          <button type="button" class="customize-box__reset">{% render 'icon-trash-can' %} {{ section.settings.clear_selection_label }}</button>
+      </div>
+      
+      <div class="customize-box__options">
+        
+          <h3 class="customize-box__heading">{{ section.settings.seasonal_selection_label }}</h3>
+          <div class="customize-box__summary">
+            <p class="customize-box__count">You have selected <span class="items--selected"></span> of {{ max_items }} items </p>
+          </div>
+
+          <div class="customize-box__grid">
+            {% assign count = 0 %}
+              {% for product in box_collection.products  limit: max_items %}
+                {% assign count = count | plus: 1 %}
+                  {% render 'customize-box-product-card',
+                    card_product: product,
+                    qty: 1,
+                    selected: true
+                  %}
+            {% endfor %}
+          </div>
+
+          {% if  max_items %}
+            <h3 class="customize-box__heading customize-box__substitution-heading">{{ section.settings.substitution_label }}</h3>
+          {% endif %}
+          
+          <div class="customize-box__grid">
+            {% assign start_index = max_items | plus: 1 %}
+            {% for product in box_collection.products %}
+              {% if forloop.index >= start_index %}
+                 {% render 'customize-box-product-card',
+                    card_product: product,
+                    qty: 0
+                  %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="customize-box__btn-wrapper"> 
+              {%- form 'product',
+                      product,
+                      id: product_form_id,
+                      class: 'form',
+                      novalidate: 'novalidate',
+                      data-type: 'add-to-cart-form'
+                    -%}
+                        <input
+                        type="hidden"
+                        name="id" data-productid="{{ product.id }}"
+                        value="{{ product.selected_or_first_available_variant.id }}"
+                        disabled
+                        class="product-variant-id"
+                        >
+                      <div class="product-form__buttons">
+                        <button
+                          id="ProductSubmitButton-{{ section_id }}"
+                          type="submit"
+                          name="add"
+                          class="product-form__submit button button--full-width button--primary"
+                          {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                            disabled
+                          {% endif %}
+                        >
+                          <span>
+                            {%- if product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+                              {{ 'products.product.sold_out' | t }}
+                            {%- else -%}
+                              {{ 'products.product.add_to_cart' | t }}
+                            {%- endif -%}
+                          </span>
+                          <div class="loading-overlay__spinner hidden">
+                            <svg
+                              aria-hidden="true"
+                              focusable="false"
+                              class="spinner"
+                              viewBox="0 0 66 66"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                            </svg>
+                          </div>
+                        </button>
+                      </div>
+               {%- endform -%}
+              <div class="error-messages--container">
+                <span class="error-message message--add-items">{{ section.settings.add_items_error_msg }}</span>
+              </div>
+          </div> 
+      </div>
+    </div>
+  </div>
+</section>
+
+{% javascript %}
+{% endjavascript %}
+
+{% schema %}
+  {
+    "name": "Product Customize Box",
+     "settings": [
+        {
+          "type": "header",
+          "content": "Boxes"
+    	},
+        {
+          "type": "text",
+          "id": "customize_box_heading",
+          "label": "Customize Box Heading",
+          "default": "Customise Your Box"
+        },
+        {
+          "type": "text",
+          "id": "clear_selection_label",
+          "label": "Clear Selection Label",
+          "default": "Clear Selection"
+        },
+        {
+          "type": "text",
+          "id": "seasonal_selection_label",
+          "label": "Seasonal Selection Label",
+          "default": "This week's seasonal selection"
+        },
+        {
+          "type": "text",
+          "id": "substitution_label",
+          "label": "Substitution Label",
+          "default": "Available substitutions"
+        },
+    	{
+          "type": "html",
+          "id": "customise-box-description",
+          "label": "Customise Box Description",
+          "info": "To include the MAX-ITEMS-# dynamically in your description, use [MAX_ITEMS]. To include product-title, use [PRODUCT_TITLE] (include the brackets)",
+          "default": "Your [PRODUCT_TITLE] can have [MAX_ITEMS] items. Customise your box by selecting or deselecting the items below. We have preselected our picks for you, but you can remove items using the 'x' button or by reducing the quantity. If you would like more than one quantity of the same item, just click the '+' button."
+    	},
+        {
+          "type": "text",
+          "id": "add_items_error_msg",
+          "default": "Please add contents to box to continue",
+          "label": "Add items error message"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.all.padding.section_padding_heading"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "label": "t:sections.all.padding.padding_top",
+          "default": 36
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "label": "t:sections.all.padding.padding_bottom",
+          "default": 36
+        },
+        {
+          "type": "range",
+          "id": "mobile_padding_top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Mobile top padding",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "mobile_padding_bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Mobile bottom padding",
+          "default": 0
+        }
+      ],
+    "presets": [
+      {
+      "name": "Product Customize Box"
+      }
+    ]
+  }
+{% endschema %}
+
