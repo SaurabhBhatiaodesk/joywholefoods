@@ -646,13 +646,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const hasMax = maxAttr !== null && maxAttr !== undefined && maxAttr !== "";
         const max = hasMax ? Number(maxAttr) : Infinity;
 
-        console.log("input ::", input);
-        console.log("val ::", val);
-        console.log("min ::", min);
-        console.log("maxAttr ::", input);
-        console.log("hasMax ::", hasMax);
-        console.log("max ::", max);
-        
         // Custom quantity label
         if (card.customQtyTextEl) {
           card.customQtyTextEl.innerHTML = `Added: <span>${val}</span> ${val > 1 ? 'items' : 'item'}`;
