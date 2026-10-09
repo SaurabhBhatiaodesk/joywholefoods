@@ -91,36 +91,9 @@ if(session.customerId != null){
 
       console.log("Recharge SDK initialized successfully.");
 
-      // Prepare subscription data
-      const subscriptionData = {
-        address_id: 180093080,
-        charge_interval_frequency: 30,
-        next_charge_scheduled_at: '2025-10-18',
-        order_interval_frequency: 1,
-        order_interval_unit: 'day',
-        quantity: 1,
-        external_variant_id: {
-          ecommerce: '44796330836183',
-        },
-        external_product_id: {
-          ecommerce: '8356362715351',
-        },
-      };
-
-      // Try to create the subscription
-      try {
-        const createSubscriptionResponse = await recharge.subscription.createSubscription(session, subscriptionData);
-        console.log("Subscription created successfully:", createSubscriptionResponse);
-      } catch (error) {
-        if (error.response) {
-          console.error("API Error Response:", error.response.status, error.response.data);
-        } else if (error.request) {
-          console.error("Request Error:", error.request);
-        } else {
-          console.error("Error Message:", error.message);
-        }
-        console.error("Subscription creation failed:", error);
-      }
+      // Removed: leftover test call to recharge.subscription.createSubscription() with a hard-coded
+      // address / product / next charge date (2025-10-18). The session login above is kept because
+      // sections/main-product.liquid reads localStorage 'rechargeSession'.
 
     } catch (error) {
       console.error("Recharge SDK initialization failed:", error);
