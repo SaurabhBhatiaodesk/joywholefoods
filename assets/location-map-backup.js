@@ -15,7 +15,6 @@
 // };
 
 // var LOCATIONS_MAP = {
-//     MAP_API_KEY: 'AIzaSyCdj92JVDyKda9MkRc6IiN8ZUrAdMBnF0k',
 //     icons: {},
 //     locations: [ ],
 //     api: {

@@ -332,9 +332,6 @@ if(session.customerId != null){
     
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-     {% comment %}
-    <script defer src="//maps.googleapis.com/maps/api/js?key=AIzaSyBj-VkJNO4GASWntKpqhfppsTcyswln4MI&v=3.exp&libraries=places&callback=LOCATIONS_MAP.init"></script>
-    {% endcomment %}
     {%- comment -%} Google Maps + location-map.js now load inside sections/map-section.liquid (the only place they are used) {%- endcomment -%}
     {%- comment -%} Slick is only used by the warranty / warranty_slider blocks in main-product {%- endcomment -%}
     {%- if template.name == 'product' -%}
