@@ -26,6 +26,7 @@ class CartItems extends HTMLElement {
     this.swapNoteSyncTimer = null;
     this.swapSyncInProgress = false;
     this.checkoutCleanupInProgress = false;
+    this.checkoutSubmitting = false;
   }
 
   cartUpdateUnsubscriber = undefined;
@@ -433,6 +434,19 @@ class CartItems extends HTMLElement {
     if (document.body.dataset.swapCheckoutBound === 'true') return;
     document.body.dataset.swapCheckoutBound = 'true';
 
+    let submitResetTimer = null;
+    const resetCheckoutSubmitting = () => {
+      clearTimeout(submitResetTimer);
+      this.checkoutSubmitting = false;
+    };
+
+    // Coming back from checkout with the Back button can restore this page from the
+    // back/forward cache with checkoutSubmitting still true, so reset it.
+    window.addEventListener('pageshow', () => {
+      resetCheckoutSubmitting();
+      document.querySelectorAll('input[data-cart-checkout-fallback]').forEach((input) => input.remove());
+    });
+
     document.addEventListener('click', async (event) => {
       const checkoutTrigger = event.target.closest(
         'button[name="checkout"], input[name="checkout"], a[href="/checkout"], button[data-checkout], .cart__checkout-button'
@@ -443,9 +457,21 @@ class CartItems extends HTMLElement {
       event.preventDefault();
       event.stopPropagation();
 
+      // Ignore repeated taps while checkout is already being prepared / submitted.
+      if (this.checkoutSubmitting) return;
+      this.checkoutSubmitting = true;
+
+      // Safety net: if the submit is blocked for any reason and the page doesn't navigate,
+      // let the customer try again instead of leaving the button dead.
+      clearTimeout(submitResetTimer);
+      submitResetTimer = setTimeout(resetCheckoutSubmitting, 5000);
+
       const cleaned = await this.cleanupSwapPropertiesBeforeCheckout();
 
-      if (!cleaned) return;
+      if (!cleaned) {
+        resetCheckoutSubmitting();
+        return;
+      }
 
       const linkedFormId = checkoutTrigger.getAttribute('form');
       const cartForm =
@@ -456,6 +482,7 @@ class CartItems extends HTMLElement {
 
       if (!cartForm) {
         console.error('Cart form could not be found.');
+        resetCheckoutSubmitting();
         return;
       }
 
@@ -472,7 +499,29 @@ class CartItems extends HTMLElement {
         cartForm.appendChild(submitButton);
       }
 
-      cartForm.requestSubmit(submitButton);
+      if (typeof cartForm.requestSubmit === 'function') {
+        cartForm.requestSubmit(submitButton);
+        return;
+      }
+
+      // Safari before iOS 16 has no requestSubmit(). form.submit() skips validation and
+      // doesn't send the clicked button, so validate first and add the checkout field by hand.
+      if (typeof cartForm.reportValidity === 'function' && !cartForm.reportValidity()) {
+        resetCheckoutSubmitting();
+        return;
+      }
+
+      let checkoutField = cartForm.querySelector('input[data-cart-checkout-fallback]');
+      if (!checkoutField) {
+        checkoutField = document.createElement('input');
+        checkoutField.type = 'hidden';
+        checkoutField.name = 'checkout';
+        checkoutField.dataset.cartCheckoutFallback = '';
+        cartForm.appendChild(checkoutField);
+      }
+      checkoutField.value = submitButton.value || 'checkout';
+
+      cartForm.submit();
     }, true);
   }
 
