@@ -9,12 +9,15 @@
   assign current_meals = product.metafields.custom.option_meals.value
   assign current_diet = product.metafields.custom.option_diet.value
 -%}
-{%- if group != blank and members != blank -%}
+{%- if group != blank and current_meals != blank and current_diet != blank -%}
   <div class="group-options" {{ block.shopify_attributes }}>
     <fieldset class="product-form__input">
       <legend class="form__label">{{ 'products.product.group_meals' | t }}</legend>
       {%- for value in group.meals_values.value -%}
         {%- assign target = nil -%}
+        {%- if value == current_meals -%}
+          {%- assign target = product -%}
+        {%- endif -%}
         {%- for member in members -%}
           {%- if member.metafields.custom.option_meals.value == value and member.metafields.custom.option_diet.value == current_diet -%}
             {%- assign target = member -%}
@@ -33,6 +36,9 @@
       <legend class="form__label">{{ 'products.product.group_diet' | t }}</legend>
       {%- for value in group.diet_values.value -%}
         {%- assign target = nil -%}
+        {%- if value == current_diet -%}
+          {%- assign target = product -%}
+        {%- endif -%}
         {%- for member in members -%}
           {%- if member.metafields.custom.option_diet.value == value and member.metafields.custom.option_meals.value == current_meals -%}
             {%- assign target = member -%}
