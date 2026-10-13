@@ -11,6 +11,7 @@
   "sections": {
     "banner": {
       "type": "main-collection-banner",
+      "disabled": true,
       "settings": {
         "show_collection_description": true,
         "show_collection_image": false,
@@ -18,10 +19,41 @@
         "color_scheme": "scheme-d373b410-820e-478c-b1df-365d750fb989"
       }
     },
+    "seasonal_boxes_header_aVBQKD": {
+      "type": "seasonal-boxes-header",
+      "name": "Seasonal boxes header",
+      "settings": {
+        "background_color": "#ffffff",
+        "padding_top": 52,
+        "padding_bottom": 52,
+        "padding_top_mobile": 52,
+        "padding_bottom_mobile": 52,
+        "heading": "Organic Seasonal Boxes",
+        "subtext_1": "Fresh, seasonal produce picked for variety and value.",
+        "subtext_2": "Choose a box below for a one time order.",
+        "strip_heading": "Put Your Order on Autopilot",
+        "strip_text": "Choose a seasonal box, your favourite staples, or both. Delivered every week, fortnight or month.",
+        "button_text": "Build your subscription",
+        "button_link": "/pages/build-your-subscription?bundle=organic-staples-box",
+        "button_caption": "Set one up today",
+        "footnote": "Want to make swaps? Add your requests when you add your box to cart. Swaps are made to equal value.",
+        "heading_color": "#086C3F",
+        "text_color": "#000000",
+        "strip_background": "#e4ece0",
+        "strip_heading_color": "#086C3F",
+        "strip_text_color": "#000000",
+        "button_background": "#086C3F",
+        "button_text_color": "#ffffff"
+      }
+    },
     "product-grid": {
       "type": "main-collection-product-grid-filter",
       "custom_css": [],
       "settings": {
+        "enable_collection_tabs": true,
+        "show_shop_all_tab": true,
+        "shop_all_collection": "",
+        "shop_all_label": "Shop All",
         "products_per_page": 36,
         "columns_desktop": 4,
         "columns_mobile": "2",
@@ -42,6 +74,7 @@
   },
   "order": [
     "banner",
+    "seasonal_boxes_header_aVBQKD",
     "product-grid"
   ]
 }
