@@ -1,1 +1,192 @@
-{"sections":{"banner":{"type":"main-collection-banner","disabled":true,"settings":{"show_collection_description":true,"show_collection_image":false,"show_custom_description":true,"color_scheme":"scheme-d373b410-820e-478c-b1df-365d750fb989"}},"seasonal_boxes_header_6QT4Dw":{"type":"seasonal-boxes-header","name":"Seasonal boxes header","settings":{"background_color":"#ffffff","padding_top":52,"padding_bottom":52,"padding_top_mobile":52,"padding_bottom_mobile":52,"heading":"Organic Seasonal Boxes","subtext_1":"Fresh, seasonal produce picked for variety and value.","subtext_2":"Choose a box below for a one time order.","strip_heading":"Put Your Order on Autopilot","strip_text":"Choose a seasonal box, your favourite staples, or both. Delivered every week, fortnight or month.","button_text":"Build your subscription","button_link":"\/pages\/build-your-subscription?bundle=organic-staples-box","button_caption":"Set one up today","footnote":"Want to make swaps? Add your requests when you add your box to cart. Swaps are made to equal value.","heading_color":"#086C3F","text_color":"#000000","strip_background":"#e4ece0","strip_heading_color":"#086C3F","strip_text_color":"#000000","button_background":"#086C3F","button_text_color":"#ffffff"}},"product-grid":{"type":"main-collection-product-grid-filter","blocks":{"collection_tab_4yaTnE":{"type":"collection_tab","settings":{"tab_collection":"farm-fresh-organics-spray-free-fruit-and-vegetables-delivered-brisbane-gold-coast","tab_icon":"shopify:\/\/shop_images\/Fruit_Veg_cd0e8bc6-fd1b-4cb7-8a4c-e67014808bb3.png","tab_label":""}},"collection_tab_yHMJpW":{"type":"collection_tab","settings":{"tab_collection":"local-organic-bakery-bread-delivery","tab_icon":"shopify:\/\/shop_images\/Bakery.png","tab_label":""}},"collection_tab_URLWeg":{"type":"collection_tab","settings":{"tab_collection":"pantry-preservative-free-fresh-made-healthy-natural-ingredients","tab_icon":"shopify:\/\/shop_images\/Pantry.png","tab_label":"Pantry"}},"collection_tab_MApGxp":{"type":"collection_tab","settings":{"tab_collection":"local-organic-fridge-food-delivery","tab_icon":"shopify:\/\/shop_images\/Fridge_Freezer.png","tab_label":"Fridge & Freezer"}},"collection_tab_ErBw4T":{"type":"collection_tab","settings":{"tab_collection":"local-organic-meat-delivery","tab_icon":"shopify:\/\/shop_images\/Butcher.png","tab_label":"Butcher"}},"collection_tab_eHkAR6":{"type":"collection_tab","settings":{"tab_collection":"local-organic-drinks-beverages-delivery","tab_icon":"shopify:\/\/shop_images\/Beverages.png","tab_label":"Beverages"}},"collection_tab_P9pKCD":{"type":"collection_tab","settings":{"tab_collection":"organic-household-personal-care-delivery","tab_icon":"shopify:\/\/shop_images\/Household_Personal_Care.png","tab_label":"Home & Body"}}},"block_order":["collection_tab_4yaTnE","collection_tab_yHMJpW","collection_tab_URLWeg","collection_tab_MApGxp","collection_tab_ErBw4T","collection_tab_eHkAR6","collection_tab_P9pKCD"],"custom_css":[".custom-add-to-cart-btn-os,.swap-product-btn-os {background-color: #086c3f !important; border-color: #086c3f !important; color: #ffffff !important;}",".custom-add-to-cart-btn-os:hover,.swap-product-btn-os:hover {background-color: #086c3f !important; border-color: #086c3f !important; color: #ffffff !important;}"],"settings":{"enable_collection_tabs":true,"show_shop_all_tab":true,"shop_all_collection":"","shop_all_label":"Shop All","products_per_page":36,"columns_desktop":4,"columns_mobile":"2","color_scheme":"","image_ratio":"adapt","image_shape":"default","show_secondary_image":false,"show_vendor":true,"show_rating":false,"quick_add":"none","enable_filtering":true,"filter_type":"vertical","enable_sorting":false,"padding_top":36,"padding_bottom":36}},"image_with_text_mrJiyp":{"type":"image-with-text","blocks":{"heading_p9z6zi":{"type":"heading","settings":{"heading":"{{ collection.metafields.custom.storytelling_heading.value }}","heading_size":"h1"}},"text_a6wRwA":{"type":"text","settings":{"text":"{{ collection.metafields.custom.storytelling_main_content | metafield_tag }}","text_style":"body"}}},"block_order":["heading_p9z6zi","text_a6wRwA"],"name":"t:sections.image-with-text.presets.name","settings":{"image":"{{ collection.metafields.custom.storytelling_image.value }}","height":"adapt","desktop_image_width":"medium","layout":"image_first","desktop_content_position":"middle","desktop_content_alignment":"left","content_layout":"no-overlap","color_scheme":"","image_behavior":"none","mobile_content_alignment":"left","padding_top":36,"padding_bottom":36,"mobile_padding_top":40,"mobile_padding_bottom":0}}},"order":["banner","seasonal_boxes_header_6QT4Dw","product-grid","image_with_text_mrJiyp"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "show_custom_description": true,
+        "color_scheme": "scheme-d373b410-820e-478c-b1df-365d750fb989"
+      }
+    },
+    "seasonal_boxes_header_6QT4Dw": {
+      "type": "seasonal-boxes-header",
+      "disabled": true,
+      "name": "Seasonal boxes header",
+      "settings": {
+        "background_color": "#ffffff",
+        "padding_top": 52,
+        "padding_bottom": 52,
+        "padding_top_mobile": 52,
+        "padding_bottom_mobile": 52,
+        "heading": "Organic Seasonal Boxes",
+        "subtext_1": "Fresh, seasonal produce picked for variety and value.",
+        "subtext_2": "Choose a box below for a one time order.",
+        "strip_heading": "Put Your Order on Autopilot",
+        "strip_text": "Choose a seasonal box, your favourite staples, or both. Delivered every week, fortnight or month.",
+        "button_text": "Build your subscription",
+        "button_link": "/pages/build-your-subscription?bundle=organic-staples-box",
+        "button_caption": "Set one up today",
+        "footnote": "Want to make swaps? Add your requests when you add your box to cart. Swaps are made to equal value.",
+        "heading_color": "#086c3f",
+        "text_color": "#000000",
+        "strip_background": "#e4ece0",
+        "strip_heading_color": "#086c3f",
+        "strip_text_color": "#000000",
+        "button_background": "#086c3f",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid-filter",
+      "blocks": {
+        "collection_tab_4yaTnE": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "farm-fresh-organics-spray-free-fruit-and-vegetables-delivered-brisbane-gold-coast",
+            "tab_icon": "shopify://shop_images/Fruit_Veg_cd0e8bc6-fd1b-4cb7-8a4c-e67014808bb3.png",
+            "tab_label": ""
+          }
+        },
+        "collection_tab_yHMJpW": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "local-organic-bakery-bread-delivery",
+            "tab_icon": "shopify://shop_images/Bakery.png",
+            "tab_label": ""
+          }
+        },
+        "collection_tab_URLWeg": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "pantry-preservative-free-fresh-made-healthy-natural-ingredients",
+            "tab_icon": "shopify://shop_images/Pantry.png",
+            "tab_label": "Pantry"
+          }
+        },
+        "collection_tab_MApGxp": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "local-organic-fridge-food-delivery",
+            "tab_icon": "shopify://shop_images/Fridge_Freezer.png",
+            "tab_label": "Fridge & Freezer"
+          }
+        },
+        "collection_tab_ErBw4T": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "local-organic-meat-delivery",
+            "tab_icon": "shopify://shop_images/Butcher.png",
+            "tab_label": "Butcher"
+          }
+        },
+        "collection_tab_eHkAR6": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "local-organic-drinks-beverages-delivery",
+            "tab_icon": "shopify://shop_images/Beverages.png",
+            "tab_label": "Beverages"
+          }
+        },
+        "collection_tab_P9pKCD": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "organic-household-personal-care-delivery",
+            "tab_icon": "shopify://shop_images/Household_Personal_Care.png",
+            "tab_label": "Home & Body"
+          }
+        }
+      },
+      "block_order": [
+        "collection_tab_4yaTnE",
+        "collection_tab_yHMJpW",
+        "collection_tab_URLWeg",
+        "collection_tab_MApGxp",
+        "collection_tab_ErBw4T",
+        "collection_tab_eHkAR6",
+        "collection_tab_P9pKCD"
+      ],
+      "custom_css": [
+        ".custom-add-to-cart-btn-os,.swap-product-btn-os {background-color: #086c3f !important; border-color: #086c3f !important; color: #ffffff !important;}",
+        ".custom-add-to-cart-btn-os:hover,.swap-product-btn-os:hover {background-color: #086c3f !important; border-color: #086c3f !important; color: #ffffff !important;}"
+      ],
+      "settings": {
+        "enable_collection_tabs": true,
+        "show_shop_all_tab": true,
+        "shop_all_collection": "",
+        "shop_all_label": "Shop All",
+        "products_per_page": 36,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": true,
+        "show_rating": false,
+        "quick_add": "none",
+        "enable_filtering": true,
+        "filter_type": "vertical",
+        "enable_sorting": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image_with_text_mrJiyp": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_p9z6zi": {
+          "type": "heading",
+          "settings": {
+            "heading": "{{ collection.metafields.custom.storytelling_heading.value }}",
+            "heading_size": "h1"
+          }
+        },
+        "text_a6wRwA": {
+          "type": "text",
+          "settings": {
+            "text": "{{ collection.metafields.custom.storytelling_main_content | metafield_tag }}",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_p9z6zi",
+        "text_a6wRwA"
+      ],
+      "disabled": true,
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "{{ collection.metafields.custom.storytelling_image.value }}",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "seasonal_boxes_header_6QT4Dw",
+    "product-grid",
+    "image_with_text_mrJiyp"
+  ]
+}
