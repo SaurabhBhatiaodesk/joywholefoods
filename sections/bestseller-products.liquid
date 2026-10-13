@@ -35,6 +35,7 @@
         role="list"
       >
       {%- for product in collections[section.settings.collection].products limit:4 -%}
+                  {%- if product.metafields.custom.hide_from_listings.value == true -%}{%- continue -%}{%- endif -%}
       {% unless product.tags contains 'hide-everywhere' %}
         <li class="grid__item">
           {% render 'card-product-related',

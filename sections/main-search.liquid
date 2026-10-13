@@ -775,6 +775,7 @@
                 {% assign page_items = search.results | where: 'object_type', 'page' %}
 
                 {%- for item in product_items -%}
+                  {%- if item.metafields.custom.hide_from_listings.value == true -%}{%- continue -%}{%- endif -%}
                   {%- if item != blank and item.object_type == 'product' and item.title != blank and item.url != blank -%}
                     {% assign lazy_load = false %}
                     {%- if forloop.index > 2 -%}

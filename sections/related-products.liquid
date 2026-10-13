@@ -284,6 +284,7 @@ button.custom-add-to-cart-btn-os {
         role="list"
       >
         {% for recommendation in recommendations.products %}
+                  {%- if recommendation.metafields.custom.hide_from_listings.value == true -%}{%- continue -%}{%- endif -%}
           <li class="grid__item">
             {% render 'card-product',
               card_product: recommendation,

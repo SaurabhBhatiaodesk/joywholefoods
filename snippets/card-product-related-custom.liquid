@@ -1,3 +1,4 @@
+{%- unless card_product.metafields.custom.hide_from_listings.value == true -%}
 {% assign current_variant = card_product.selected_or_first_available_variant %}
 {% assign featured_media = card_product.featured_media %}
 
@@ -97,3 +98,4 @@
     </div>
   </div>
 </div>
+{%- endunless -%}

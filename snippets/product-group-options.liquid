@@ -1,0 +1,95 @@
+{% doc %}
+  Renders meal and diet links for products in a shared product group.
+  @param {product} product - Current product.
+  @param {object} [block] - Variant picker block.
+{% enddoc %}
+{%- liquid
+  assign group = product.metafields.custom.product_group.value
+  assign members = group.products.value
+  assign current_meals = product.metafields.custom.option_meals.value
+  assign current_diet = product.metafields.custom.option_diet.value
+-%}
+{%- if group != blank and members != blank -%}
+  <div class="group-options" {{ block.shopify_attributes }}>
+    <fieldset class="product-form__input">
+      <legend class="form__label">{{ 'products.product.group_meals' | t }}</legend>
+      {%- for value in group.meals_values.value -%}
+        {%- assign target = nil -%}
+        {%- for member in members -%}
+          {%- if member.metafields.custom.option_meals.value == value and member.metafields.custom.option_diet.value == current_diet -%}
+            {%- assign target = member -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if target != blank -%}
+          <a href="{{ target.url | escape }}" class="group-options__option{% if value == current_meals %} is-active{% endif %}{% unless target.available %} is-soldout{% endunless %}"{% if value == current_meals %} aria-current="true"{% endif %}>
+            {{- value | escape -}}
+            {%- unless target.available %}<span class="visually-hidden"> — {{ 'products.product.group_sold_out' | t }}</span>{% endunless -%}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </fieldset>
+    <fieldset class="product-form__input">
+      <legend class="form__label">{{ 'products.product.group_diet' | t }}</legend>
+      {%- for value in group.diet_values.value -%}
+        {%- assign target = nil -%}
+        {%- for member in members -%}
+          {%- if member.metafields.custom.option_diet.value == value and member.metafields.custom.option_meals.value == current_meals -%}
+            {%- assign target = member -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if target != blank -%}
+          <a href="{{ target.url | escape }}" class="group-options__option{% if value == current_diet %} is-active{% endif %}{% unless target.available %} is-soldout{% endunless %}"{% if value == current_diet %} aria-current="true"{% endif %}>
+            {{- value | escape -}}
+            {%- unless target.available %}<span class="visually-hidden"> — {{ 'products.product.group_sold_out' | t }}</span>{% endunless -%}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </fieldset>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .group-options .product-form__input {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.2rem;
+    min-width: 0;
+  }
+  .group-options__option {
+    border: var(--variant-pills-border-width, 1px) solid rgba(var(--color-foreground), var(--variant-pills-border-opacity, 0.55));
+    border-radius: var(--variant-pills-radius, 0);
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+    display: inline-block;
+    margin: 0.7rem 0.5rem 0.2rem 0;
+    padding: 1rem 2rem;
+    font-size: 1.4rem;
+    letter-spacing: 0.1rem;
+    line-height: 1.4;
+    text-align: center;
+    text-decoration: none;
+  }
+  .group-options__option:hover {
+    border-color: rgb(var(--color-foreground));
+  }
+  .group-options__option.is-active {
+    background: rgb(var(--color-foreground));
+    color: rgb(var(--color-background));
+  }
+  .group-options__option.is-soldout {
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+  .group-options__option:focus-visible {
+    outline: 2px solid rgb(var(--color-foreground));
+    outline-offset: 3px;
+  }
+  @media (forced-colors: active) {
+    .group-options__option.is-active {
+      outline: 2px solid Highlight;
+      text-decoration: underline;
+    }
+  }
+{% endstylesheet %}

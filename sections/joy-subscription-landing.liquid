@@ -367,6 +367,7 @@
                   {%- endcomment -%}
                   {%- if eager_limit > 0 and c.products_count <= eager_limit and c.products_count <= 50 -%}
                     {%- for product in c.products -%}
+                  {%- if product.metafields.custom.hide_from_listings.value == true -%}{%- continue -%}{%- endif -%}
                       {%- if forloop.index0 > 0 -%},{%- endif -%}
                       {
                         "id": {{ product.id | json }},
@@ -413,6 +414,7 @@
                 {%- endcomment -%}
                 "step_images": [
                   {%- for product in c.products limit: 4 -%}
+                  {%- if product.metafields.custom.hide_from_listings.value == true -%}{%- continue -%}{%- endif -%}
                     {%- if forloop.index0 > 0 -%},{%- endif -%}
                     {{ product.featured_image | json }}
                   {%- endfor -%}

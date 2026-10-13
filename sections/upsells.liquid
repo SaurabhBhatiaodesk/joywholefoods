@@ -34,6 +34,7 @@
       aria-label="{{ 'general.slider.name' | t }}"
     >
       {%- for product in section.settings.upsells.products -%}
+                  {%- if product.metafields.custom.hide_from_listings.value == true -%}{%- continue -%}{%- endif -%}
         <li
           id="Slide-{{ section.id }}-{{ forloop.index }}"
           class="grid__item {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"

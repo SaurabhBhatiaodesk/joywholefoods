@@ -7,6 +7,10 @@
   - update_url: {Boolean} whether or not to update url when changing variants. Default: true.
 {% endcomment %}
 
+{%- assign product_group = product.metafields.custom.product_group.value -%}
+{%- if product_group != blank and product_group.products.value != blank -%}
+  {% render 'product-group-options', product: product, block: block %}
+{%- else -%}
 {%- unless product.has_only_default_variant -%}
   {% if block.settings.picker_type == 'button' %}
     <variant-radios
@@ -89,3 +93,4 @@
     </div>
   </div>
 </noscript>
+{%- endif -%}
