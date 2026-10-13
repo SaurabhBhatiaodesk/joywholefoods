@@ -87,20 +87,11 @@
             "text": "{{ collection.metafields.custom.storytelling_main_content | metafield_tag }}",
             "text_style": "body"
           }
-        },
-        "button_nrH8GM": {
-          "type": "button",
-          "settings": {
-            "button_label": "Button label",
-            "button_link": "",
-            "button_style_secondary": false
-          }
         }
       },
       "block_order": [
         "heading_JQKDMY",
-        "text_T8ij6q",
-        "button_nrH8GM"
+        "text_T8ij6q"
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
