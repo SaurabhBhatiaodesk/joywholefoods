@@ -18,34 +18,6 @@
         "color_scheme": "scheme-d373b410-820e-478c-b1df-365d750fb989"
       }
     },
-    "seasonal_boxes_header_6QT4Dw": {
-      "type": "seasonal-boxes-header",
-      "disabled": true,
-      "name": "Seasonal boxes header",
-      "settings": {
-        "background_color": "#ffffff",
-        "padding_top": 52,
-        "padding_bottom": 52,
-        "padding_top_mobile": 52,
-        "padding_bottom_mobile": 52,
-        "heading": "Organic Seasonal Boxes",
-        "subtext_1": "Fresh, seasonal produce picked for variety and value.",
-        "subtext_2": "Choose a box below for a one time order.",
-        "strip_heading": "Put Your Order on Autopilot",
-        "strip_text": "Choose a seasonal box, your favourite staples, or both. Delivered every week, fortnight or month.",
-        "button_text": "Build your subscription",
-        "button_link": "/pages/build-your-subscription?bundle=organic-staples-box",
-        "button_caption": "Set one up today",
-        "footnote": "Want to make swaps? Add your requests when you add your box to cart. Swaps are made to equal value.",
-        "heading_color": "#086c3f",
-        "text_color": "#000000",
-        "strip_background": "#e4ece0",
-        "strip_heading_color": "#086c3f",
-        "strip_text_color": "#000000",
-        "button_background": "#086c3f",
-        "button_text_color": "#ffffff"
-      }
-    },
     "product-grid": {
       "type": "main-collection-product-grid-filter",
       "blocks": {
@@ -185,7 +157,6 @@
   },
   "order": [
     "banner",
-    "seasonal_boxes_header_6QT4Dw",
     "product-grid",
     "image_with_text_mrJiyp"
   ]
