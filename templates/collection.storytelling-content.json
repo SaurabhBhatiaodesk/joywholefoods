@@ -135,7 +135,6 @@
         "heading_p9z6zi",
         "text_a6wRwA"
       ],
-      "disabled": true,
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
         "image": "{{ collection.metafields.custom.storytelling_image.value }}",

@@ -93,6 +93,7 @@
         "heading_JQKDMY",
         "text_T8ij6q"
       ],
+      "disabled": true,
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
         "image": "{{ collection.metafields.custom.storytelling_image.value }}",
