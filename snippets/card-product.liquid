@@ -1,4 +1,5 @@
 {%- unless card_product.metafields.custom.hide_from_listings.value == true -%}
+{%- capture card_display_title -%}{%- render 'product-display-title', product: card_product -%}{%- endcapture -%}
 {% comment %}
   Renders a product card
 
@@ -401,7 +402,7 @@
                 class="full-unstyled-link"
                 aria-labelledby="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }} NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
               >
-                {{ card_product.title | escape }}
+                {{ card_display_title | escape }}
               </a>
             </h3>
           </div>
@@ -471,7 +472,7 @@
             <quick-add-modal id="QuickAdd-{{ card_product.id }}" class="11 quick-add-modal thisOne">
               <div
                 role="dialog"
-                aria-label="{{ 'products.product.choose_product_options' | t: product_name: card_product.title | escape }}"
+                aria-label="{{ 'products.product.choose_product_options' | t: product_name: card_display_title | escape }}"
                 aria-modal="true"
                 class="quick-add-modal__content global-settings-popup"
                 tabindex="-1"
@@ -524,7 +525,7 @@
               class="full-unstyled-link"
               aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}"
             >
-              {{ card_product.title | escape }}
+              {{ card_display_title | escape }}
             </a>
           </h3>
           <div class="card-information">
@@ -719,7 +720,7 @@
                       <quantity-input bbb class="quantity" data-url="{{ card_product.url }}" data-section="{{ section.id }}">
                         <button class="quantity__button no-js-hidden" name="minus" type="button">
                           <span class="visually-hidden">
-                            {{- 'products.product.quantity.decrease' | t: product: card_product.title | escape -}}
+                            {{- 'products.product.quantity.decrease' | t: product: card_display_title | escape -}}
                           </span>
                           {% render 'icon-minus' %}
                         </button>
@@ -742,7 +743,7 @@
                         />
                         <button class="quantity__button no-js-hidden" name="plus" type="button">
                           <span class="visually-hidden">
-                            {{- 'products.product.quantity.increase' | t: product: card_product.title | escape -}}
+                            {{- 'products.product.quantity.increase' | t: product: card_display_title | escape -}}
                           </span>
                           {% render 'icon-plus' %}
                         </button>
@@ -935,7 +936,7 @@
                             class="joy-card-quantity-button-os joy-card-quantity-minus-os"
                             type="button"
                             data-joy-card-quantity-minus
-                            aria-label="{{ 'products.product.quantity.decrease' | t: product: card_product.title | escape }}"
+                            aria-label="{{ 'products.product.quantity.decrease' | t: product: card_display_title | escape }}"
                           >
                             {% render 'icon-minus' %}
                           </button>
@@ -956,7 +957,7 @@
                             class="joy-card-quantity-button-os joy-card-quantity-plus-os"
                             type="button"
                             data-joy-card-quantity-plus
-                            aria-label="{{ 'products.product.quantity.increase' | t: product: card_product.title | escape }}"
+                            aria-label="{{ 'products.product.quantity.increase' | t: product: card_display_title | escape }}"
                           >
                             {% render 'icon-plus' %}
                           </button>

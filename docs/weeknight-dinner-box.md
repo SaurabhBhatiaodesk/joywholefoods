@@ -108,4 +108,33 @@ has been changed by the local theme implementation.
 
 Target supplied by the user: preview theme `186455818455` at
 https://joywholefoods.com.au/?preview_theme_id=186455818455.
-The Shopify connection requires reauthentication to the Joy Wholefoods store.
+The connected duplicate is `joywholefoods/main`; the live theme is a separate
+theme (`186590298327`). Do not publish either theme as part of this task.
+
+## Store setup status (14 October 2026)
+
+- All six existing products reference the active Weeknight Dinner Box entry.
+  Meal/diet values and listing visibility are populated; the five non-default
+  products have `seo.hidden = 1`.
+- All six have a temporary default image copied from 5 Meals, Meat. This image
+  contains the 5 Meals, Meat label, so it is a placeholder rather than final
+  combination-specific photography.
+- Shared storefront headings, sticky product titles, cards and predictive
+  search display `Weeknight Dinner Box`. Other products keep their own titles.
+- Featured product sections also skip products marked `hide_from_listings`.
+- Products remain Draft. The editor can preview an individual Draft product,
+  but sibling references do not resolve for complete option navigation.
+  Product activation is separate from theme publication and can expose products
+  on the live store; do not activate them without approval for that visibility.
+- The user identified 5 Meals, Meat as the base. Its description is empty and
+  it has no attached subscription selling plans to copy. Final copy and selling
+  plan associations are still required; Joy bundle configuration is unchanged.
+- Full navigation, checkout, subscription orders, reviews grouping and Box
+  Label/pick-list verification are pending. Preview stars marked as sample
+  reviews are not evidence of review grouping.
+
+The shared title change passed Shopify's local Liquid parser and locale JSON
+validation. The local theme checker reported only existing errors in
+`main-product.liquid` (two parser-blocking scripts); unrelated legacy issues
+were not changed. The external toolkit validator was blocked by automatic
+approval review because it can transmit private code and the prompt.

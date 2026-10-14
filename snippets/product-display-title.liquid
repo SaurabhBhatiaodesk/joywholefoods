@@ -1,0 +1,10 @@
+{% doc %}
+  Returns the shared storefront title for the Weeknight Dinner Box group.
+  @param {product} product - Product whose display title is needed.
+{% enddoc %}
+{%- assign title_group = product.metafields.custom.product_group.value -%}
+{%- if title_group.system.type == 'product_group' and title_group.system.handle == 'weeknight-dinner-box' -%}
+  {{- 'products.product.group_title' | t -}}
+{%- else -%}
+  {{- product.title -}}
+{%- endif -%}
