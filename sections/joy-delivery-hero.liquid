@@ -11,6 +11,27 @@
         <button type="submit">{{ section.settings.postcode_button | escape }} <span aria-hidden="true">→</span></button>
       </form>
       <p class="jd-check-feedback" data-postcode-feedback role="status" aria-live="polite" hidden></p>
+      <div class="jd-postcode-results" data-postcode-results hidden aria-live="polite">
+        <div class="jd-result-card" data-result-match hidden>
+          <h2 data-result-heading></h2>
+          <p class="jd-result-postcodes" data-result-postcodes></p>
+          <div class="jd-result-message" data-result-message></div>
+        </div>
+        <div class="jd-result-card" data-result-fallback hidden>
+          <h2>{{ section.settings.pickup_label | escape }}</h2>
+          <p class="jd-fallback-warning">{{ section.settings.pickup_message | escape }}</p>
+          <div class="jd-result-message">{{ section.settings.pickup_text }}</div>
+        </div>
+      </div>
+      <div data-postcode-data hidden>
+        {% for block in section.blocks %}
+          {% if block.type == 'postcode_area' and block.settings.postcodes != blank %}
+            <div data-postcode-area data-codes="{{ block.settings.postcodes | escape }}" data-name="{{ block.settings.location_name | escape }}" {{ block.shopify_attributes }}>
+              <div data-area-description>{% assign current_date = 'now' | date: '%d/%m/%Y' %}{{ block.settings.postcode_text | replace: '[date]', current_date }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
     </header>
 
 
@@ -100,27 +121,64 @@
 @media(max-width:749px){#joy-delivery-{{ section.id }}{padding:{{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px}#joy-delivery-{{ section.id }} .jd-hero h1{font-size:39px}#joy-delivery-{{ section.id }} .jd-postcode{flex-direction:column}#joy-delivery-{{ section.id }} .jd-postcode input,#joy-delivery-{{ section.id }} .jd-postcode button{width:100%;flex:none}#joy-delivery-{{ section.id }} .jd-service-grid,#joy-delivery-{{ section.id }} .jd-packaging-grid,#joy-delivery-{{ section.id }} .jd-faq{grid-template-columns:1fr}#joy-delivery-{{ section.id }} .jd-service-card{padding:22px}#joy-delivery-{{ section.id }} .jd-packaging-item{flex-direction:row;border:0;border-bottom:1px solid #ddd8ce;padding:15px 0}#joy-delivery-{{ section.id }} .jd-packaging-item:last-child{border:0}#joy-delivery-{{ section.id }} .jd-cutoffs{grid-template-columns:repeat(3,minmax(0,1fr))}#joy-delivery-{{ section.id }} .jd-cutoff strong{font-size:13px}#joy-delivery-{{ section.id }} .jd-cutoff{font-size:12px}#joy-delivery-{{ section.id }} .jd-filter-days button{padding:0 12px}#joy-delivery-{{ section.id }} .jd-interest{flex-wrap:wrap}#joy-delivery-{{ section.id }} .jd-interest>a{width:100%}}
 @media(max-width:390px){#joy-delivery-{{ section.id }} .jd-cutoffs{grid-template-columns:1fr}#joy-delivery-{{ section.id }} .jd-cutoff{border-left:0;border-bottom:1px solid #ddd8ce}#joy-delivery-{{ section.id }} .jd-pickup-item{align-items:flex-start;flex-direction:column;gap:7px}}
 
+
+/* Postcode results use the existing Joy hero visual language */
+#joy-delivery-{{ section.id }} .jd-postcode-results{max-width:740px;margin:20px auto 0;text-align:left}
+#joy-delivery-{{ section.id }} .jd-result-card{background:var(--jd-cream);border:1px solid #dfe3e0;border-radius:12px;padding:20px 24px}
+#joy-delivery-{{ section.id }} .jd-result-card h2{font-size:clamp(22px,2.3vw,29px);margin:0 0 6px}
+#joy-delivery-{{ section.id }} .jd-result-postcodes{font-size:13px;color:#516157;margin:0 0 13px}
+#joy-delivery-{{ section.id }} .jd-result-message{font-size:15px;line-height:1.65;color:var(--jd-text)}
+#joy-delivery-{{ section.id }} .jd-result-message p{margin:0 0 10px}
+#joy-delivery-{{ section.id }} .jd-fallback-warning{color:#a72d27;font-weight:700;margin:5px 0 9px!important}
+#joy-delivery-{{ section.id }} .jd-check-feedback{color:#aa3028;text-align:center}
+#joy-delivery-{{ section.id }} .jd-postcode input[aria-invalid="true"]{border-color:#be3029}
+@media(max-width:749px){#joy-delivery-{{ section.id }} .jd-result-card{padding:17px}}
 </style>
 
 <script>
 (function(){
- const root=document.getElementById('joy-delivery-{{ section.id }}');
- if(!root || root.dataset.jdInitialized==='true') return;
- root.dataset.jdInitialized='true';
- const form=root.querySelector('[data-postcode-form]');
- const input=form.querySelector('[name="postcode"]');
- const feedback=root.querySelector('[data-postcode-feedback]');
- form.addEventListener('submit', function(event){
-   event.preventDefault();
-   const code=input.value.trim();
-   if(!/^\d{4}$/.test(code)){input.setCustomValidity('Please enter a 4-digit Australian postcode.');input.reportValidity();return;}
-   input.setCustomValidity('');
-   const checker={{ section.settings.delivery_checker_url | json }};
-   if(checker){const url=new URL(checker,location.href);url.searchParams.set('postcode',code);location.href=url.href;return;}
-   feedback.hidden=false;
-   feedback.textContent='Live delivery checking is not connected yet. Please configure the Delivery checker URL in the theme editor.';
- });
- input.addEventListener('input',function(){input.setCustomValidity('');});
+  const root=document.getElementById('joy-delivery-{{ section.id }}');
+  if (!root || root.dataset.jdInitialized === 'true') return;
+  root.dataset.jdInitialized='true';
+  const form=root.querySelector('[data-postcode-form]');
+  const input=form.querySelector('[name="postcode"]');
+  const feedback=root.querySelector('[data-postcode-feedback]');
+  const results=root.querySelector('[data-postcode-results]');
+  const matched=root.querySelector('[data-result-match]');
+  const fallback=root.querySelector('[data-result-fallback]');
+  const areas=Array.from(root.querySelectorAll('[data-postcode-area]'));
+  function reset(){
+    feedback.hidden=true; feedback.textContent='';
+    results.hidden=true; matched.hidden=true; fallback.hidden=true;
+    input.setCustomValidity('');input.removeAttribute('aria-invalid');
+  }
+  input.addEventListener('input',reset);
+  form.addEventListener('submit',function(event){
+    event.preventDefault();
+    const code=input.value.trim();
+    reset();
+    if (!/^\d{4}$/.test(code)) {
+      input.setCustomValidity('Please enter a valid 4-digit Australian postcode.');
+      input.setAttribute('aria-invalid','true');
+      input.reportValidity();
+      feedback.textContent='Please enter a valid four-digit postcode.';
+      feedback.hidden=false;
+      return;
+    }
+    const area=areas.find(function(el){
+      return (el.dataset.codes || '').split(/[,;\s]+/).some(function(token){return token.trim()===code});
+    });
+    results.hidden=false;
+    if(area){
+      matched.hidden=false;
+      matched.querySelector('[data-result-heading]').textContent=area.dataset.name || 'Delivery options';
+      matched.querySelector('[data-result-postcodes]').textContent='Postcodes: '+area.dataset.codes;
+      const message=area.querySelector('[data-area-description]');
+      matched.querySelector('[data-result-message]').innerHTML=message ? message.innerHTML : '';
+    }else{
+      fallback.hidden=false;
+    }
+  });
 })();
 </script>
 {% schema %}
@@ -145,12 +203,10 @@
       "label": "Postcode button",
       "default": "Check your delivery options"
     },
-    {
-      "type": "url",
-      "id": "delivery_checker_url",
-      "label": "Live delivery checker URL",
-      "info": "Optional: link to your real delivery checker. Submitted postcode is appended as ?postcode=XXXX. Without this, form only searches displayed pickup points."
-    },
+    {"type":"header","content":"No postcode match"},
+    {"type":"text","id":"pickup_label","label":"Fallback heading","default":"Community pick up"},
+    {"type":"text","id":"pickup_message","label":"Fallback message","default":"There are currently no delivery schedules available for your postcode."},
+    {"type":"richtext","id":"pickup_text","label":"Pickup details","default":"<p>You may still be able to collect an order from a community pick up point. Please contact us to confirm availability.</p>"},
     {
       "type": "color",
       "id": "green",
@@ -222,7 +278,17 @@
       "default": 28
     }
   ],
-  "blocks": [],
+  "blocks": [
+    {
+      "type": "postcode_area",
+      "name": "Postcode delivery area",
+      "settings": [
+        {"type":"textarea","id":"postcodes","label":"Postcodes (comma separated)","info":"Example: 4350, 4358. Exact 4-digit matches only."},
+        {"type":"text","id":"location_name","label":"Area name","default":"Delivery area"},
+        {"type":"richtext","id":"postcode_text","label":"Delivery schedule / details","info":"You may use [date] for today's date."}
+      ]
+    }
+  ],
   "presets": [
     {
       "name": "Joy delivery hero"
