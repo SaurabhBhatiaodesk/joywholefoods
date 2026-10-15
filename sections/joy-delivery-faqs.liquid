@@ -3,7 +3,7 @@
 <div class="jd-container">
     <div class="jd-faq"><h2>{{ section.settings.faq_title | escape }}</h2><div class="jd-faq-list">
       {% for block in section.blocks %}{% if block.type == 'faq' %}
-        <details {{ block.shopify_attributes }}><summary>{{ block.settings.question | escape }} <span aria-hidden="true">⌄</span></summary><div>{{ block.settings.answer }}</div></details>
+        <details {{ block.shopify_attributes }}><summary>{{ block.settings.question | escape }} <span class="jd-faq-chevron" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m5 9 7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><div>{{ block.settings.answer }}</div></details>
       {% endif %}{% endfor %}
     </div></div>
 
@@ -363,7 +363,7 @@
   justify-content:space-between;
   padding:12px 0;
   font-size:14px;
-  font-family:var(--font-body-family);
+  font-family:var(--font-heading-family);
 }
 #joy-delivery-{{ section.id }} .jd-faq summary::-webkit-details-marker {
   display:none
@@ -519,6 +519,47 @@
     gap:7px
   }
 }
+
+/* FAQ chevron: clear, consistently sized and rotates when expanded */
+#joy-delivery-{{ section.id }} .jd-faq summary {
+  gap: 16px;
+  position: relative;
+}
+#joy-delivery-{{ section.id }} .jd-faq summary::after {
+  content: none !important;
+  display: none !important;
+}
+#joy-delivery-{{ section.id }} .jd-faq summary .jd-faq-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  margin-left: auto;
+  color: var(--jd-green);
+  transform: rotate(0deg);
+  transition: transform 0.22s ease;
+}
+#joy-delivery-{{ section.id }} .jd-faq summary .jd-faq-chevron svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+#joy-delivery-{{ section.id }} .jd-faq details[open] summary .jd-faq-chevron {
+  transform: rotate(180deg);
+}
+#joy-delivery-{{ section.id }} .jd-faq summary:focus-visible {
+  outline: 2px solid var(--jd-green);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  #joy-delivery-{{ section.id }} .jd-faq summary .jd-faq-chevron {
+    transition: none;
+  }
+}
+
 </style>
 {% schema %}
 {
