@@ -46,8 +46,18 @@ function setup({ swap = false, addError = false, networkError = false, refreshEr
   document.querySelectorAll = selector => selector === '.custom-buy-buttons-wrapper'
     ? wrappers.map(item => item.wrapper) : [];
   let adds = 0;
+  let now = 0;
+  let nextTimerId = 0;
+  const timers = new Map();
   vm.runInNewContext(script, {
-    document, FormData, setTimeout() {}, console: { error() {}, warn() {} },
+    document, FormData,
+    setTimeout(fn, delay) {
+      const id = ++nextTimerId;
+      timers.set(id, { fn, due: now + delay });
+      return id;
+    },
+    clearTimeout(id) { timers.delete(id); },
+    console: { error() {}, warn() {} },
     CustomEvent: class { constructor(type, options = {}) { this.type = type; this.detail = options.detail; } },
     window: { JoyBoxSwapPopup: { async open() {} } },
     async fetch(url) {
@@ -64,6 +74,15 @@ function setup({ swap = false, addError = false, networkError = false, refreshEr
   });
   return {
     wrappers, quantity,
+    advance(ms) {
+      now += ms;
+      for (const [id, timer] of timers) {
+        if (timer.due <= now) {
+          timers.delete(id);
+          timer.fn();
+        }
+      }
+    },
     click(index = 0) {
       return wrappers[index].button.listeners.click[0]({ preventDefault() {}, stopPropagation() {} });
     },
@@ -89,6 +108,28 @@ test('quantity change resets both confirmation labels', async () => {
   page.quantity.value = '2';
   page.quantity.dispatchEvent({ type: 'change' });
   assert.ok(page.wrappers.every(item => item.label.textContent === 'Add to cart'));
+});
+
+test('both buttons reset after three seconds without adding or removing cart items', async () => {
+  const page = setup();
+  await page.click();
+  page.advance(2999);
+  assert.ok(page.wrappers.every(item => item.label.textContent === 'Added to cart'));
+  page.advance(1);
+  assert.ok(page.wrappers.every(item => item.label.textContent === 'Add to cart'));
+  assert.equal(page.adds, 1);
+});
+
+test('a repeat add restarts the confirmation duration', async () => {
+  const page = setup();
+  await page.click();
+  page.advance(2000);
+  await page.click(1);
+  page.advance(1000);
+  assert.ok(page.wrappers.every(item => item.label.textContent === 'Added to cart'));
+  page.advance(2000);
+  assert.ok(page.wrappers.every(item => item.label.textContent === 'Add to cart'));
+  assert.equal(page.adds, 2);
 });
 
 for (const failure of ['addError', 'networkError']) {

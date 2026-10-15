@@ -200,6 +200,7 @@
       const confirmationScope = wrapper.closest('.main-product-os');
       const confirmDirectAdd = !swapEnabled && !!confirmationScope;
       let addedVariantId = null;
+      let addConfirmationTimer = null;
       let isAdding = false;
 
       if (!form || !button || !variantInput) return;
@@ -215,8 +216,15 @@
       if (confirmDirectAdd) {
         confirmationScope.addEventListener('joy:pdp-add-confirmed', function(event) {
           if (event.detail.productId !== productId) return;
+          clearTimeout(addConfirmationTimer);
           addedVariantId = event.detail.variantId;
           syncButtonState();
+          if (addedVariantId !== null) {
+            addConfirmationTimer = setTimeout(function() {
+              addedVariantId = null;
+              syncButtonState();
+            }, 3000);
+          }
         });
       }
 
