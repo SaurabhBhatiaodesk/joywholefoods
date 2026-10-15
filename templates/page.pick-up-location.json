@@ -60,13 +60,49 @@
         "shop_link": "",
         "subscription_label": "Build a subscription",
         "subscription_link": "",
-        "green": "#086C3F",
+        "green": "#086c3f",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
         "text_color": "#18253a",
         "bg_color": "#ffffff",
         "padding_top": 0,
         "padding_bottom": 0,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
+    "joy_delivery_faqs_ypGTkQ": {
+      "type": "joy-delivery-faqs",
+      "blocks": {
+        "faq_4RpeqB": {
+          "type": "faq",
+          "settings": {
+            "question": "What if I'm not home for delivery?",
+            "answer": "<p>Contact us to arrange a suitable delivery option. Availability depends on your local delivery route.</p>"
+          }
+        },
+        "faq_QFaqPn": {
+          "type": "faq",
+          "settings": {
+            "question": "When can I collect my order?",
+            "answer": "<p>Please wait for your ready-to-collect SMS. Pickup times are estimated driver arrival times.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_4RpeqB",
+        "faq_QFaqPn"
+      ],
+      "name": "Joy delivery FAQs",
+      "settings": {
+        "faq_title": "Frequently asked questions",
+        "green": "#064633",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#18253a",
+        "bg_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 40,
         "mobile_padding_top": 24,
         "mobile_padding_bottom": 28
       }
@@ -599,6 +635,7 @@
   "order": [
     "main",
     "rich_text_dTaFeB",
+    "joy_delivery_faqs_ypGTkQ",
     "joy_delivery_cta_pmqDW3",
     "image_with_text_jV7zEV",
     "3f91bc16-16e6-434a-8427-9cd5fc389355",
