@@ -758,7 +758,7 @@
 </script>
 
 {% stylesheet %}
-  .main-product-os .custom-buy-buttons-wrapper[data-swap-enabled="false"] .direct-add-to-cart-btn:not(.joy-pdp-notify-state) {
+  .main-product-os .custom-buy-buttons-wrapper[data-swap-enabled="false"] .direct-add-to-cart-btn.joy-pdp-added-state {
     background-color: #fff;
     color: #0b6b41;
     border: 1px solid #0b6b41;
@@ -766,8 +766,8 @@
     --color-button-text: 11, 107, 65;
   }
 
-  .main-product-os .custom-buy-buttons-wrapper[data-swap-enabled="false"] .direct-add-to-cart-btn:not(.joy-pdp-notify-state)::before,
-  .main-product-os .custom-buy-buttons-wrapper[data-swap-enabled="false"] .direct-add-to-cart-btn:not(.joy-pdp-notify-state)::after {
+  .main-product-os .custom-buy-buttons-wrapper[data-swap-enabled="false"] .direct-add-to-cart-btn.joy-pdp-added-state::before,
+  .main-product-os .custom-buy-buttons-wrapper[data-swap-enabled="false"] .direct-add-to-cart-btn.joy-pdp-added-state::after {
     box-shadow: none;
   }
 {% endstylesheet %}
