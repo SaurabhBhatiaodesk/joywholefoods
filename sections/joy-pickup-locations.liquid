@@ -30,34 +30,222 @@
   {%- endif -%}{%- endfor -%}]{%- endcapture -%}{{ block_data | strip }}</script>
  </div>
 </section>
+
 <style>
-#joy-pickups-{{ section.id }}{background:var(--jpl-bg);font-family:'DM Sans',sans-serif;color:#18253a}
-#joy-pickups-{{ section.id }} *{box-sizing:border-box}
-#joy-pickups-{{ section.id }} [hidden]{display:none!important}
-#joy-pickups-{{ section.id }} .jpl-wrap{max-width:1200px;margin:auto}
-#joy-pickups-{{ section.id }} h2,#joy-pickups-{{ section.id }} h3{font-family:'Holiday Journey',sans-serif;color:var(--jpl-green);font-weight:400}
-#joy-pickups-{{ section.id }} h2{font-size:clamp(26px,2.6vw,36px);line-height:1.2;margin:0 0 14px}
-#joy-pickups-{{ section.id }} .jpl-toolbar{display:grid;grid-template-columns:minmax(240px,1fr) auto;align-items:center;gap:12px;margin-bottom:13px}
-#joy-pickups-{{ section.id }} .jpl-search{position:relative;display:block}
-#joy-pickups-{{ section.id }} .jpl-search svg{position:absolute;left:14px;top:50%;width:20px;height:20px;transform:translateY(-50%);pointer-events:none;color:var(--jpl-green)}
-#joy-pickups-{{ section.id }} .jpl-search input{width:100%;height:46px;padding:0 14px 0 44px;border:1px solid #dce1de;border-radius:10px;background:white;color:#18253a;font:inherit;outline:none}
-#joy-pickups-{{ section.id }} .jpl-search input:focus{border-color:var(--jpl-green)}
-#joy-pickups-{{ section.id }} .jpl-days{display:flex;gap:7px;flex-wrap:wrap}
-#joy-pickups-{{ section.id }} .jpl-days button{background:var(--jpl-cream);border:1px solid #ded8cb;border-radius:24px;min-height:44px;padding:8px 17px;color:#18253a;cursor:pointer;font-size:13px}
-#joy-pickups-{{ section.id }} .jpl-days button.is-active{background:var(--jpl-green);border-color:var(--jpl-green);color:white}
-#joy-pickups-{{ section.id }} .jpl-list{display:grid;gap:8px}
-#joy-pickups-{{ section.id }} .jpl-card{border:1px solid #e1e5e3;border-radius:9px;background:white;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:12px 18px}
-#joy-pickups-{{ section.id }} .jpl-card h3{font-size:19px;line-height:1.2;margin:0 0 4px}
-#joy-pickups-{{ section.id }} .jpl-card p{font-size:14px;margin:0 0 4px}
-#joy-pickups-{{ section.id }} .jpl-card span{font-size:13px;color:#526278}
-#joy-pickups-{{ section.id }} .jpl-card a{white-space:nowrap;color:var(--jpl-green);font-size:13px;font-weight:700;text-decoration:underline}
-#joy-pickups-{{ section.id }} .jpl-view{margin-top:10px;width:100%;min-height:42px;border:1px solid var(--jpl-green);background:white;border-radius:24px;color:var(--jpl-green);font-weight:700;cursor:pointer}
-#joy-pickups-{{ section.id }} .jpl-note{font-size:12px;color:#617087;text-align:center;margin:12px 0 0}
-#joy-pickups-{{ section.id }} .jpl-status,#joy-pickups-{{ section.id }} .jpl-empty{font-size:13px;text-align:center;padding:12px}
-@media(max-width:990px){#joy-pickups-{{ section.id }} .jpl-toolbar{grid-template-columns:1fr}}
-@media(max-width:749px){#joy-pickups-{{ section.id }}{padding:{{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px!important}#joy-pickups-{{ section.id }} .jpl-days button{font-size:12px;min-height:40px;padding:7px 12px}#joy-pickups-{{ section.id }} .jpl-card{padding:12px}}
-@media(max-width:430px){#joy-pickups-{{ section.id }} .jpl-card{align-items:flex-start;flex-direction:column;gap:8px}}
+  #joy-pickups-{{ section.id }} {
+    background: var(--jpl-bg);
+    font-family: 'DM Sans', sans-serif;
+    color: #18253a;
+  }
+
+  #joy-pickups-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #joy-pickups-{{ section.id }} [hidden] {
+    display: none !important;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-wrap {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  #joy-pickups-{{ section.id }} h2,
+  #joy-pickups-{{ section.id }} h3 {
+    font-family: 'Holiday Journey', sans-serif;
+    color: var(--jpl-green);
+    font-weight: 400;
+  }
+
+  #joy-pickups-{{ section.id }} h2 {
+    font-size: clamp(26px, 2.6vw, 36px);
+    line-height: 1.2;
+    margin: 0 0 14px;
+  }
+
+  /* Toolbar */
+
+  #joy-pickups-{{ section.id }} .jpl-toolbar {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 13px;
+  }
+
+  /* Search */
+
+  #joy-pickups-{{ section.id }} .jpl-search {
+    position: relative;
+    display: block;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-search svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--jpl-green);
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-search input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px 0 44px;
+    border: 1px solid #dce1de;
+    border-radius: 10px;
+    background: white;
+    color: #18253a;
+    font: inherit;
+    outline: none;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-search input:focus {
+    border-color: var(--jpl-green);
+  }
+
+  /* Day Filters */
+
+  #joy-pickups-{{ section.id }} .jpl-days {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-days button {
+    background: var(--jpl-cream);
+    border: 1px solid #ded8cb;
+    border-radius: 24px;
+    min-height: 44px;
+    padding: 8px 17px;
+    color: #18253a;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-days button.is-active {
+    background: var(--jpl-green);
+    border-color: var(--jpl-green);
+    color: white;
+  }
+
+  /* Pickup List */
+
+  #joy-pickups-{{ section.id }} .jpl-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  /* Pickup Cards */
+
+  #joy-pickups-{{ section.id }} .jpl-card {
+    border: 1px solid #e1e5e3;
+    border-radius: 9px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 18px;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-card h3 {
+    font-size: 19px;
+    line-height: 1.2;
+    margin: 0 0 4px;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-card p {
+    font-size: 14px;
+    margin: 0 0 4px;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-card span {
+    font-size: 13px;
+    color: #526278;
+  }
+
+  #joy-pickups-{{ section.id }} .jpl-card a {
+    white-space: nowrap;
+    color: var(--jpl-green);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  /* View All Button */
+
+  #joy-pickups-{{ section.id }} .jpl-view {
+    margin-top: 10px;
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--jpl-green);
+    background: white;
+    border-radius: 24px;
+    color: var(--jpl-green);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Notes */
+
+  #joy-pickups-{{ section.id }} .jpl-note {
+    font-size: 12px;
+    color: #617087;
+    text-align: center;
+    margin: 12px 0 0;
+  }
+
+  /* Status and Empty State */
+
+  #joy-pickups-{{ section.id }} .jpl-status,
+  #joy-pickups-{{ section.id }} .jpl-empty {
+    font-size: 13px;
+    text-align: center;
+    padding: 12px;
+  }
+
+  /* Tablet Responsive */
+
+  @media (max-width: 990px) {
+    #joy-pickups-{{ section.id }} .jpl-toolbar {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Mobile Responsive */
+
+  @media (max-width: 749px) {
+    #joy-pickups-{{ section.id }} {
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px !important;
+    }
+
+    #joy-pickups-{{ section.id }} .jpl-days button {
+      font-size: 12px;
+      min-height: 40px;
+      padding: 7px 12px;
+    }
+
+    #joy-pickups-{{ section.id }} .jpl-card {
+      padding: 12px;
+    }
+  }
+
+  /* Small Mobile Responsive */
+
+  @media (max-width: 430px) {
+    #joy-pickups-{{ section.id }} .jpl-card {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
 </style>
+
 <script>
 (function(){
  const root=document.getElementById('joy-pickups-{{ section.id }}');
