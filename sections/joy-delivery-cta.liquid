@@ -1,0 +1,241 @@
+{% comment %} Standalone Shopify section — Joy delivery CTA {% endcomment %}
+
+<section
+  id="joy-delivery-{{ section.id }}"
+  class="joy-delivery"
+  style="
+    --jd-green: {{ section.settings.green }};
+    --jd-lime: {{ section.settings.lime }};
+    --jd-cream: {{ section.settings.cream }};
+    --jd-text: {{ section.settings.text_color }};
+    --jd-bg: {{ section.settings.bg_color }};
+    --jd-top: {{ section.settings.padding_top }}px;
+    --jd-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="jd-container">
+    <div class="jd-bottom">
+      <h2>{{ section.settings.bottom_title | escape }}</h2>
+      <p>{{ section.settings.bottom_text | escape }}</p>
+
+      <div>
+        {% if section.settings.shop_link != blank %}
+          <a class="jd-primary" href="{{ section.settings.shop_link }}">
+            {{ section.settings.shop_label | escape }} →
+          </a>
+        {% endif %}
+
+        {% if section.settings.subscription_link != blank %}
+          <a class="jd-outline" href="{{ section.settings.subscription_link }}">
+            {{ section.settings.subscription_label | escape }} →
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #joy-delivery-{{ section.id }} {
+    background: var(--jd-bg);
+    color: var(--jd-text);
+    padding: var(--jd-top) 20px var(--jd-bottom);
+    font-family: inherit;
+  }
+
+  #joy-delivery-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-container {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  #joy-delivery-{{ section.id }} h2 {
+    color: var(--jd-green);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.13;
+    margin: 0;
+    font-size: clamp(25px, 2.5vw, 34px);
+  }
+
+  #joy-delivery-{{ section.id }} p {
+    margin: 0;
+  }
+
+  #joy-delivery-{{ section.id }} a {
+    color: var(--jd-green);
+    transition: background-color .2s, border-color .2s;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-bottom {
+    text-align: center;
+    margin: 24px 0 0;
+    border-top: 1px solid #e2e5e0;
+    padding-top: 19px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-bottom p {
+    margin: 7px 0 16px;
+    font-size: 15px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-bottom > div {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-bottom a {
+    text-decoration: none;
+    min-width: 210px;
+    padding: 12px 22px;
+    border-radius: 24px;
+    font-weight: 800;
+    font-size: 14px;
+    font-family:'DM Sans';
+  }
+
+  #joy-delivery-{{ section.id }} .jd-primary {
+    background: var(--jd-lime);
+    color: #092b22;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-outline {
+    border: 1px solid var(--jd-green);
+    border-radius: 11px;
+    text-decoration: none;
+    padding: 12px 22px;
+    font-weight: 750;
+    text-align: center;
+    font-size: 14px;
+    font-family:'DM Sans';
+  }
+
+  @media (max-width: 749px) {
+    #joy-delivery-{{ section.id }} {
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Joy delivery CTA",
+  "settings": [
+    {
+      "type": "text",
+      "id": "bottom_title",
+      "label": "Title",
+      "default": "Ready to get started?"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Description",
+      "default": "Order once or build a subscription with your favourites."
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop button link"
+    },
+    {
+      "type": "text",
+      "id": "subscription_label",
+      "label": "Subscription button text",
+      "default": "Build a subscription"
+    },
+    {
+      "type": "url",
+      "id": "subscription_link",
+      "label": "Subscription button link"
+    },
+    {
+      "type": "color",
+      "id": "green",
+      "label": "Dark green",
+      "default": "#064633"
+    },
+    {
+      "type": "color",
+      "id": "lime",
+      "label": "Lime buttons",
+      "default": "#c4eb70"
+    },
+    {
+      "type": "color",
+      "id": "cream",
+      "label": "Cream card backgrounds",
+      "default": "#f8f5ed"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#18253a"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Joy delivery CTA"
+    }
+  ]
+}
+{% endschema %}

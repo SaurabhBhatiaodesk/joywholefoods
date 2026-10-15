@@ -1,1 +1,907 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"settings":{"padding_top":28,"padding_bottom":28,"mobile_padding_top":40,"mobile_padding_bottom":40}},"rich_text_dTaFeB":{"type":"rich-text","blocks":{"heading_J749Dw":{"type":"heading","settings":{"heading":"PIck up & delivery","heading_size":"h1"}},"text_WQjLrB":{"type":"text","settings":{"text":"<p><strong>Getting fresh food from local farmers is easy. We deliver across Brisbane, the Sunshine Coast, the Gold Coast, Tweed Heads, parts of Northern NSW, Gympie and Toowoomba.<\/strong><\/p><p><\/p>"}}},"block_order":["heading_J749Dw","text_WQjLrB"],"name":"t:sections.rich-text.presets.name","settings":{"desktop_content_position":"center","content_alignment":"center","color_scheme":"","full_width":true,"padding_top":40,"padding_bottom":52}},"image_with_text_jV7zEV":{"type":"image-with-text","blocks":{"heading_QeHVLB":{"type":"heading","settings":{"heading":"Free Pick Up","heading_size":"h1"}},"text_xLU8D9":{"type":"text","settings":{"text":"<p>Want to save on delivery fees?<br\/>You can collect your order from one of our <strong>30+ pickup points across Brisbane with no delivery fee<\/strong>. The minimum order for pick-up is $50, and a $2 temporary fuel levy applies<br\/><\/p><p>These locations are hosted by our wonderful customers who open their homes or businesses to help make fresh food more accessible in their community.<\/p><p>Each pickup location has a scheduled delivery day. We'll send you a text message before your collection day with an estimated delivery time and another message once your order has arrived.<\/p><p>If your order includes chilled or frozen items, we pack them carefully with ice packs to keep them cold until you collect.<\/p><p>We simply ask that you collect your box within <strong>a few hours of delivery<\/strong> to keep everything fresh.<\/p>","text_style":"body"}},"button_TyT9eB":{"type":"button","settings":{"button_label":"How Pick-up works","button_link":"shopify:\/\/pages\/collecting-from-a-pick-up-point","button_style_secondary":false}}},"block_order":["heading_QeHVLB","text_xLU8D9","button_TyT9eB"],"name":"t:sections.image-with-text.presets.name","settings":{"image":"shopify:\/\/shop_images\/1-free-pick-up-organic-food-brisbane-gold-coast.jpg","height":"adapt","desktop_image_width":"medium","layout":"image_first","desktop_content_position":"top","desktop_content_alignment":"left","content_layout":"no-overlap","color_scheme":"","image_behavior":"none","mobile_content_alignment":"left","padding_top":36,"padding_bottom":36,"mobile_padding_top":40,"mobile_padding_bottom":0}},"3f91bc16-16e6-434a-8427-9cd5fc389355":{"type":"gm-image-with-text","blocks":{"template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-heading-1":{"type":"heading","settings":{"heading":"Home delivery","heading_size":"h1"}},"template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-text-1":{"type":"text","settings":{"text":"<p>Of course it's often more convenient to have your order delivered to your door so we offer that too.&nbsp;<\/p><p>We do our own deliveries in the Brisbane area from Wednesday to Saturday and use refrigerated couriers to deliver to the Sunshine Coast, the Gold Coast, Tweed Heads and Northern NSW.<br\/><br\/>Home delivery is a flat rate of $12.50. For Brisbane and northern Gold Coast customers, we offer free delivery on orders over $200. A temporary fuel levy also applies: $2 for local deliveries and $4 for refrigerated courier orders.<br\/><br\/>Frozen and cold items will be packed in Styrofoam or chilltainers with ice packs. Please arrange to take them inside quickly.<\/p>","text_style":"body"}}},"block_order":["template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-heading-1","template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-text-1"],"custom_css":[".image-with-text {padding-top: 0;}","@media (max-width: 767px) {.gm {padding: 0px 0 20px; }}"],"settings":{"bg_color":"#ffffff","image":"shopify:\/\/shop_images\/Trev_Home_Delivery_Van.jpg","height":"adapt","desktop_image_width":"medium","layout":"text_first","desktop_content_position":"middle","desktop_content_alignment":"left","content_layout":"no-overlap","color_scheme":"","image_behavior":"none","mobile_content_alignment":"left","padding_top":36,"padding_bottom":36}},"e1a1623e-1c21-40b0-adf8-65cda35d3fc0":{"type":"map-section","custom_css":["@media (max-width: 767px) {h2 {font-size: 32px; } .about {padding-top: 20px !important; padding-bottom: 20px !important; }}"],"settings":{"bg_color":"#fffaf5","heading":"Our pick up points","paragraph":"<p>Enter your suburb below to see if we have a pick-up point near you.<\/p><p><em>Please note the time frame provided is an estimate of when our driver will arrive at the pick-up location each week. We will send a confirmation text message with a more specific time two days prior to your collection date. <\/em><\/p>","subheading":"We also offer home delivery right across Brisbane, Sunshine Coast, Gold Coast, Gympie, Toowoomba and parts of Northern NSW.","paragraph2":"<p><em>Please try to collect from our pick-up points within 5 hours to ensure your box isn't sitting out too long. It is your responsibility to remember to collect your order.<\/em><\/p>","padding_top":60,"padding_bottom":60}},"table_columns_8PwV73":{"type":"table_columns","blocks":{"column_UY7TUE":{"type":"column","settings":{"column_data1":"<p>WEDNESDAY<\/p>","column_data2":"<p>ALDERLEY<\/p>","column_data3":"<p>9am - 12 noon<\/p>","column_data4":"<p>100 Mornington Street<\/p>"}},"column_qVHfET":{"type":"column","settings":{"column_data1":"<p>WEDNESDAY<\/p>","column_data2":"<p>KEDRON<\/p>","column_data3":"<p>9am - 12 noon<\/p>","column_data4":"<p>23 Eddowes Street<\/p>"}},"column_afLVmp":{"type":"column","settings":{"column_data1":"<p>WEDNESDAY<\/p>","column_data2":"<p>TARINGA<\/p>","column_data3":"<p>9am - 12 noon<\/p>","column_data4":"<p>203 Taringa Parade<\/p>"}},"column_8KfVKx":{"type":"column","settings":{"column_data1":"<p>WEDNESDAY<\/p>","column_data2":"<p>PULLENVALE (BIS)<\/p>","column_data3":"<p>1 - 4pm<\/p>","column_data4":"<p>2447 Moggill Road<\/p>"}},"column_XPAKfW":{"type":"column","settings":{"column_data1":"<p>WEDNESDAY<\/p>","column_data2":"<p>WOOLOOWIN<\/p>","column_data3":"<p>7am - 9am<\/p>","column_data4":"<p>11 Owen Street<\/p>"}},"column_yxMLeb":{"type":"column","settings":{"column_data1":"<p>WED or THURS<\/p>","column_data2":"<p>ROCKLEA (warehouse)<\/p>","column_data3":"<p>8am - 12pm<\/p>","column_data4":"<p>34 Reginald Street<\/p>"}},"column_JhRxri":{"type":"column","settings":{"column_data1":"<p>THURSDAY<\/p>","column_data2":"<p>FOREST LAKE<\/p>","column_data3":"<p>9am - 12 noon<\/p>","column_data4":"<p>10 Allen Close<\/p>"}},"column_PG4q4F":{"type":"column","settings":{"column_data1":"<p>THURSDAY<\/p>","column_data2":"<p>PIMPAMA<\/p>","column_data3":"<p>12:30 - 3:30pm<\/p>","column_data4":"<p>48\/7 Angela Way<\/p>"}},"column_jFBUDV":{"type":"column","disabled":true,"settings":{"column_data1":"<p>THURSDAY<\/p>","column_data2":"<p>ANNERLEY<\/p>","column_data3":"<p>9am - 12 noon<\/p>","column_data4":"<p>100 Venner Road<\/p>"}},"column_kikRH9":{"type":"column","settings":{"column_data1":"<p>THURSDAY<\/p>","column_data2":"<p>EDENS LANDING<\/p>","column_data3":"<p>9am - 12 noon<\/p>","column_data4":"<p>10 Jonath Court<\/p>"}},"column_DNHk9y":{"type":"column","disabled":true,"settings":{"column_data1":"<p>THURSDAY<\/p>","column_data2":"<p>ORMEAU HILLS<\/p>","column_data3":"<p>12.30 - 3.30pm<\/p>","column_data4":"<p>5 Appadene St<\/p>"}},"column_abzkDe":{"type":"column","disabled":true,"settings":{"column_data1":"<p>THURSDAY<\/p>","column_data2":"<p>SADLIERS CROSSING<\/p>","column_data3":"<p>10am - 2pm<\/p>","column_data4":"<p>23 Ferrett Street<\/p>"}},"column_PC9iLg":{"type":"column","disabled":true,"settings":{"column_data1":"<p>THURSDAY<\/p>","column_data2":"<p>BRASSALL<\/p>","column_data3":"<p>12.30 - 3.30pm<\/p>","column_data4":"<p>11 Stitz Court<\/p>"}},"column_7DmPGT":{"type":"column","settings":{"column_data1":"<p>THURSDAY<\/p>","column_data2":"<p>KARANA DOWNS<\/p>","column_data3":"<p>12.30 - 3.30pm<\/p>","column_data4":"<p>2 Kynuna Court<\/p>"}},"column_pfBxpd":{"type":"column","disabled":true,"settings":{"column_data1":"<p>FRIDAY<\/p>","column_data2":"<p>KALLANGUR<\/p>","column_data3":"<p>12.30 - 3.30pm<\/p>","column_data4":"<p>52 Melinda Court<\/p>"}},"column_H3McKp":{"type":"column","settings":{"column_data1":"<p>FRIDAY<\/p>","column_data2":"<p>NARANGBA<\/p>","column_data3":"<p>12.30 - 3.30pm<\/p>","column_data4":"<p>21 Matterhorn Drive<\/p>"}},"column_JTNFK7":{"type":"column","settings":{"column_data1":"<p>FRIDAY<\/p>","column_data2":"<p>DAYBORO<\/p>","column_data3":"<p>12.30 - 3.30pm<\/p>","column_data4":"<p>3468 Mount Mee Road<\/p>"}},"column_4CpG64":{"type":"column","disabled":true,"settings":{"column_data1":"<p>FRIDAY<\/p>","column_data2":"<p>BRIBIE ISLAND&nbsp;<\/p>","column_data3":"<p>11am - 1pm<\/p>","column_data4":"<p>10 Aylward Rd, Ningi<br\/>*Minimum order for pickup &nbsp;$100<\/p>"}},"column_WXBeVW":{"type":"column","settings":{"column_data1":"<p>FRIDAY<\/p>","column_data2":"<p>EATONS HILL<\/p>","column_data3":"<p>9am - 12 noon<\/p>","column_data4":"<p>14 Queen Elizabeth Drive<\/p>"}},"column_d86XFY":{"type":"column","disabled":true,"settings":{"column_data1":"<p>FRIDAY<\/p>","column_data2":"<p>SAMFORD VALLEY STEINER SCHOOL<\/p>","column_data3":"<p>2.45pm<\/p>","column_data4":"<p>SAMFORD VALLEY STEINER SCHOOL<\/p>"}},"column_eAb4EP":{"type":"column","settings":{"column_data1":"<p>FRIDAY<\/p>","column_data2":"<p>CAPALABA<\/p>","column_data3":"<p>12.30 - 3.30pm<\/p>","column_data4":"<p>69 Killarney Crescent<\/p>"}},"column_cDPwTr":{"type":"column","settings":{"column_data1":"<p>FRIDAY<\/p>","column_data2":"<p>WYNNUM WEST<\/p>","column_data3":"<p>11am - 2pm<\/p>","column_data4":"<p>1\/203 Randall Road<\/p>"}},"column_xXDR9t":{"type":"column","settings":{"column_data1":"<p>SATURDAY<\/p>","column_data2":"<p>CARINDALE<\/p>","column_data3":"<p>7 - 9am<\/p>","column_data4":"<p>79 Kilmorey Street<\/p>"}},"column_JrcNbt":{"type":"column","settings":{"column_data1":"<p>SATURDAY<\/p>","column_data2":"<p>BALMORAL<br\/><\/p>","column_data3":"<p>7 - 9am<\/p>","column_data4":"<p>3 Walkers Drive<\/p>"}},"column_DwterM":{"type":"column","settings":{"column_data1":"<p>SATURDAY<\/p>","column_data2":"<p>&nbsp;ROCHEDALE SOUTH<\/p>","column_data3":"<p>8 - 10am<\/p>","column_data4":"<p>6 Bawden Court<\/p>"}},"column_zXhqPA":{"type":"column","settings":{"column_data1":"<p>SATURDAY<\/p>","column_data2":"<p>TARRAGINDI<\/p>","column_data3":"<p>7 - 9am<\/p>","column_data4":"<p>27 Kogarah Street<\/p>"}},"column_x6qkaY":{"type":"column","settings":{"column_data1":"<p>SATURDAY<\/p>","column_data2":"<p>SAMFORD<\/p>","column_data3":"<p>8 - 10am<\/p>","column_data4":"<p>6 Church Street<\/p>"}},"column_MjBHLn":{"type":"column","settings":{"column_data1":"<p>SATURDAY<\/p>","column_data2":"<p>KEPERRA<\/p>","column_data3":"<p>7 - 9am<\/p>","column_data4":"<p>58 Glengarry Road<\/p>"}}},"block_order":["column_UY7TUE","column_qVHfET","column_afLVmp","column_8KfVKx","column_XPAKfW","column_yxMLeb","column_JhRxri","column_PG4q4F","column_jFBUDV","column_kikRH9","column_DNHk9y","column_abzkDe","column_PC9iLg","column_7DmPGT","column_pfBxpd","column_H3McKp","column_JTNFK7","column_4CpG64","column_WXBeVW","column_d86XFY","column_eAb4EP","column_cDPwTr","column_xXDR9t","column_JrcNbt","column_DwterM","column_zXhqPA","column_x6qkaY","column_MjBHLn"],"custom_css":[".table_columns .about_title,.table_columns .about_title p,.table_columns .about_title * {color: #086c3f !important;}"],"name":"table_columns","settings":{"table_heading":"<p>Pick Up Points<\/p>","column_heading1":"<p>DELIVERY DAY<\/p>","column_heading2":"<p>SUBURB<\/p>","column_heading3":"<p>ESTIMATED DROP OFF TIME<\/p>","column_heading4":"<p>STREET &nbsp;ADDRESS<\/p>","padding_top":36,"padding_bottom":36}},"93b6770b-e6f8-490f-84ea-a3f971be577a":{"type":"gm-image-with-text","blocks":{"template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-heading-1":{"type":"heading","settings":{"heading":"Want a pick-up point in your area?","heading_size":"h1"}},"template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-text-1":{"type":"text","settings":{"text":"<p>We are regularly adding new pick-up points as we expand. Click the button below to register your interest in being a customer and\/or allowing us to use your home or business as a pick-up point. <br\/><strong><br\/>Pick-up point owners receive $2 store credit for every order that is collected from their home!<\/strong><\/p>","text_style":"body"}},"template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-button-1":{"type":"button","settings":{"button_label":"Register Now","button_link":"https:\/\/forms.gle\/gQ5wdsEo83rELDXM7","button_style_secondary":false}}},"block_order":["template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-heading-1","template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-text-1","template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-button-1"],"custom_css":["@media (max-width: 767px) {.image-with-text__media-item {padding: 0 20px; } .gm {padding: 40px 0 0; }}"],"settings":{"bg_color":"#ffffff","image":"shopify:\/\/shop_images\/3-pick-up-point-in-your-area-food-delivery-brisbane.jpg","height":"small","desktop_image_width":"medium","layout":"image_first","desktop_content_position":"middle","desktop_content_alignment":"left","content_layout":"no-overlap","color_scheme":"","image_behavior":"none","mobile_content_alignment":"left","padding_top":36,"padding_bottom":4}},"rich_text_7kLYNU":{"type":"rich-text","blocks":{"heading_mBx8qt":{"type":"heading","settings":{"heading":"There’s a better way to shop for food","heading_size":"h2"}},"text_bata7p":{"type":"text","settings":{"text":"<p>Stop settling for supermarket produce. Get fresh, nutrient rich food direct from farmers who care. It’s easier than you think and you’ll taste the difference.<\/p><p><br\/>No lock ins. Order when it suits you.<\/p>"}},"button_niFX8g":{"type":"button","settings":{"button_label":"Start Your First Order","button_link":"shopify:\/\/collections\/all","button_style_secondary":false,"button_label_2":"","button_link_2":"","button_style_secondary_2":false}}},"block_order":["heading_mBx8qt","text_bata7p","button_niFX8g"],"name":"t:sections.rich-text.presets.name","settings":{"desktop_content_position":"center","content_alignment":"center","color_scheme":"scheme-1ddcb3b1-8f57-401e-88aa-a2139636431e","full_width":true,"padding_top":40,"padding_bottom":52}},"featured_blog_7zGY9H":{"type":"featured-blog","name":"t:sections.featured-blog.presets.name","settings":{"heading":"Easy nourishing recipes to inspire you","heading_size":"h1","blog":"organic-meal-kits-recipe-collection","post_limit":3,"columns_desktop":3,"color_scheme":"","show_image":true,"show_date":true,"show_author":false,"show_view_all":true,"padding_top":36,"padding_bottom":36}}},"order":["main","rich_text_dTaFeB","image_with_text_jV7zEV","3f91bc16-16e6-434a-8427-9cd5fc389355","e1a1623e-1c21-40b0-adf8-65cda35d3fc0","table_columns_8PwV73","93b6770b-e6f8-490f-84ea-a3f971be577a","rich_text_7kLYNU","featured_blog_7zGY9H"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40
+      }
+    },
+    "rich_text_dTaFeB": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_J749Dw": {
+          "type": "heading",
+          "settings": {
+            "heading": "PIck up & delivery",
+            "heading_size": "h1"
+          }
+        },
+        "text_WQjLrB": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Getting fresh food from local farmers is easy. We deliver across Brisbane, the Sunshine Coast, the Gold Coast, Tweed Heads, parts of Northern NSW, Gympie and Toowoomba.</strong></p><p></p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_J749Dw",
+        "text_WQjLrB"
+      ],
+      "disabled": true,
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "joy_delivery_hero_3pwCnM": {
+      "type": "joy-delivery-hero",
+      "name": "Joy delivery hero",
+      "settings": {
+        "color_scheme": "",
+        "subheading": "Delivery Schedule",
+        "heading": "Want to know if we deliver to you?",
+        "label": "Delivery Schedule Postcode Search",
+        "text": "Enter you postcode to search delivery schedules in your area.",
+        "postCodeLabel": "Postcode:",
+        "pickupLabel": "Pickup",
+        "pickupMessage": "There are currently no delivery schedules available for your postcode.",
+        "pickupText": "",
+        "padding_top": 40,
+        "padding_bottom": 0,
+        "hero_title": "Pick up & delivery",
+        "hero_text": "Fresh food from local farmers, delivered to your door or a community pick up point.",
+        "postcode_button": "Check your delivery options",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
+    "joy_delivery_methods_WgREAy": {
+      "type": "joy-delivery-methods",
+      "blocks": {
+        "service_mYBQbF": {
+          "type": "service",
+          "settings": {
+            "icon": "truck",
+            "title": "Local home delivery",
+            "description": "<p>Our three delivery vans bring fresh food to your door from Wednesday to Saturday. Your delivery day depends on your suburb.</p>",
+            "highlight": "",
+            "details": "<p>$50 minimum order, or $100 for southern Gold Coast.</p><p>$12.50 delivery. Free delivery on orders over $200. Temporary $2 fuel levy applies.</p>"
+          }
+        },
+        "service_CeUbwf": {
+          "type": "service",
+          "settings": {
+            "icon": "box",
+            "title": "Refrigerated courier delivery",
+            "description": "<p>For areas outside our local runs, we pack your order at our Rocklea warehouse and send it with a refrigerated courier. Available days depend on your postcode.</p>",
+            "highlight": "",
+            "details": "<p>$150 minimum order.</p><p>$12.50 delivery plus a temporary $4 fuel levy.</p><p>Refrigerate chilled items promptly when your order arrives.</p>"
+          }
+        },
+        "service_VkXPfk": {
+          "type": "service",
+          "settings": {
+            "icon": "people",
+            "title": "Community pick up",
+            "description": "<p>$50 minimum order.<br>No delivery fee. Temporary $2 fuel levy applies.</p>",
+            "highlight": "<p>These locations are hosted by our wonderful customers who open their homes or businesses to help make fresh food more accessible in their community.</p>",
+            "details": "<p>Pick up points are customers' homes or businesses, rather than staffed shops.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "service_mYBQbF",
+        "service_CeUbwf",
+        "service_VkXPfk"
+      ],
+      "name": "Joy delivery methods",
+      "settings": {
+        "levy_note": "Our fuel levy is temporary. We hope to remove it when diesel prices come back down.",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 0,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 0
+      }
+    },
+    "joy_order_cutoffs_6giLyF": {
+      "type": "joy-order-cutoffs",
+      "blocks": {
+        "cutoff_BCcPPx": {
+          "type": "cutoff",
+          "settings": {
+            "day": "Wednesday",
+            "deadline": "Monday 10am"
+          }
+        },
+        "cutoff_9x4jPK": {
+          "type": "cutoff",
+          "settings": {
+            "day": "Thursday",
+            "deadline": "Tuesday 10am"
+          }
+        },
+        "cutoff_r68p3n": {
+          "type": "cutoff",
+          "settings": {
+            "day": "Friday & Saturday",
+            "deadline": "Wednesday 10am"
+          }
+        }
+      },
+      "block_order": [
+        "cutoff_BCcPPx",
+        "cutoff_9x4jPK",
+        "cutoff_r68p3n"
+      ],
+      "name": "Joy order cutoffs",
+      "settings": {
+        "cutoffs_title": "Order cutoffs",
+        "cutoffs_note": "<p>Missed the cutoff? See if we can help with a late order.</p>",
+        "contact_link": "",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 40,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 28
+      }
+    },
+    "joy_pickup_locations_rLaDgq": {
+      "type": "joy-pickup-locations",
+      "blocks": {
+        "pickup_kQeLKm": {
+          "type": "pickup",
+          "settings": {
+            "bird_id": "",
+            "suburb": "Taringa",
+            "postcode": "4068",
+            "day": "Wednesday",
+            "hours": "9am to noon",
+            "address": "203 Taringa Parade",
+            "map_link": ""
+          }
+        },
+        "pickup_6baQxy": {
+          "type": "pickup",
+          "settings": {
+            "bird_id": "",
+            "suburb": "Pimpama",
+            "postcode": "4209",
+            "day": "Thursday",
+            "hours": "12:30pm to 3:30pm",
+            "address": "48/7 Angela Way",
+            "map_link": ""
+          }
+        },
+        "pickup_7YTxC6": {
+          "type": "pickup",
+          "settings": {
+            "bird_id": "",
+            "suburb": "Samford",
+            "postcode": "4520",
+            "day": "Saturday",
+            "hours": "8am to 10am",
+            "address": "6 Church Street",
+            "map_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "pickup_kQeLKm",
+        "pickup_6baQxy",
+        "pickup_7YTxC6"
+      ],
+      "name": "Joy pickup locations",
+      "settings": {
+        "pickups_title": "Find your local pick up point",
+        "locations_json_url": "",
+        "initial_locations": 3,
+        "pickups_note": "Times shown are estimated driver arrival times. Please wait for your ready to collect SMS.",
+        "green": "#086c3f",
+        "cream": "#f8f5ed",
+        "bg_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 0
+      }
+    },
+    "joy_packaging_care_HwkMNn": {
+      "type": "joy-packaging-care",
+      "blocks": {
+        "packaging_zdkPt9": {
+          "type": "packaging",
+          "settings": {
+            "icon": "recycle",
+            "title": "Recycled boxes",
+            "body": "<p>We reuse boxes wherever we can. They might look a little loved, but they're all about sustainability! For local orders, please return your boxes so we can use them again.</p>"
+          }
+        },
+        "packaging_VXncDR": {
+          "type": "packaging",
+          "settings": {
+            "icon": "cold",
+            "title": "Local orders",
+            "body": "<p>If your order includes cold items, we use styrofoam to help keep them cold. You can select your fresh produce packaging preference in the cart.</p>"
+          }
+        },
+        "packaging_PYzCRg": {
+          "type": "packaging",
+          "settings": {
+            "icon": "box",
+            "title": "Courier orders",
+            "body": "<p>We use cardboard boxes and insulated packaging for courier deliveries.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "packaging_zdkPt9",
+        "packaging_VXncDR",
+        "packaging_PYzCRg"
+      ],
+      "name": "Joy packaging care",
+      "settings": {
+        "packaging_title": "Packed with care, reused with joy",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
+    "joy_delivery_faqs_ypGTkQ": {
+      "type": "joy-delivery-faqs",
+      "blocks": {
+        "faq_4RpeqB": {
+          "type": "faq",
+          "settings": {
+            "question": "What if I'm not home for delivery?",
+            "answer": "<p>Contact us to arrange a suitable delivery option. Availability depends on your local delivery route.</p>"
+          }
+        },
+        "faq_QFaqPn": {
+          "type": "faq",
+          "settings": {
+            "question": "When can I collect my order?",
+            "answer": "<p>Please wait for your ready-to-collect SMS. Pickup times are estimated driver arrival times.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_4RpeqB",
+        "faq_QFaqPn"
+      ],
+      "name": "Joy delivery FAQs",
+      "settings": {
+        "faq_title": "Frequently asked questions",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
+      }
+    },
+    "joy_pickup_interest_zMRTWJ": {
+      "type": "joy-pickup-interest",
+      "name": "Joy pickup interest",
+      "settings": {
+        "interest_title": "Want a pick up point in your area?",
+        "interest_text": "Request a location or apply to host at your home or business. We'll review demand and delivery routes before adding new points.",
+        "interest_button": "Register your interest",
+        "interest_link": "",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
+      }
+    },
+    "joy_delivery_cta_pmqDW3": {
+      "type": "joy-delivery-cta",
+      "name": "Joy delivery CTA",
+      "settings": {
+        "bottom_title": "Ready to get started?",
+        "bottom_text": "Order once or build a subscription with your favourites.",
+        "shop_label": "Shop now",
+        "shop_link": "shopify://collections/all",
+        "subscription_label": "Build a subscription",
+        "subscription_link": "shopify://pages/build-your-subscription",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#18253a",
+        "bg_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
+    "image_with_text_jV7zEV": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_QeHVLB": {
+          "type": "heading",
+          "settings": {
+            "heading": "Free Pick Up",
+            "heading_size": "h1"
+          }
+        },
+        "text_xLU8D9": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Want to save on delivery fees?<br/>You can collect your order from one of our <strong>30+ pickup points across Brisbane with no delivery fee</strong>. The minimum order for pick-up is $50, and a $2 temporary fuel levy applies<br/></p><p>These locations are hosted by our wonderful customers who open their homes or businesses to help make fresh food more accessible in their community.</p><p>Each pickup location has a scheduled delivery day. We'll send you a text message before your collection day with an estimated delivery time and another message once your order has arrived.</p><p>If your order includes chilled or frozen items, we pack them carefully with ice packs to keep them cold until you collect.</p><p>We simply ask that you collect your box within <strong>a few hours of delivery</strong> to keep everything fresh.</p>",
+            "text_style": "body"
+          }
+        },
+        "button_TyT9eB": {
+          "type": "button",
+          "settings": {
+            "button_label": "How Pick-up works",
+            "button_link": "shopify://pages/collecting-from-a-pick-up-point",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_QeHVLB",
+        "text_xLU8D9",
+        "button_TyT9eB"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/1-free-pick-up-organic-food-brisbane-gold-coast.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 0
+      }
+    },
+    "3f91bc16-16e6-434a-8427-9cd5fc389355": {
+      "type": "gm-image-with-text",
+      "blocks": {
+        "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Home delivery",
+            "heading_size": "h1"
+          }
+        },
+        "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Of course it's often more convenient to have your order delivered to your door so we offer that too.&nbsp;</p><p>We do our own deliveries in the Brisbane area from Wednesday to Saturday and use refrigerated couriers to deliver to the Sunshine Coast, the Gold Coast, Tweed Heads and Northern NSW.<br/><br/>Home delivery is a flat rate of $12.50. For Brisbane and northern Gold Coast customers, we offer free delivery on orders over $200. A temporary fuel levy also applies: $2 for local deliveries and $4 for refrigerated courier orders.<br/><br/>Frozen and cold items will be packed in Styrofoam or chilltainers with ice packs. Please arrange to take them inside quickly.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-heading-1",
+        "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-text-1"
+      ],
+      "custom_css": [
+        ".image-with-text {padding-top: 0;}",
+        "@media (max-width: 767px) {.gm {padding: 0px 0 20px; }}"
+      ],
+      "settings": {
+        "bg_color": "#ffffff",
+        "image": "shopify://shop_images/Trev_Home_Delivery_Van.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "e1a1623e-1c21-40b0-adf8-65cda35d3fc0": {
+      "type": "map-section",
+      "custom_css": [
+        "@media (max-width: 767px) {h2 {font-size: 32px; } .about {padding-top: 20px !important; padding-bottom: 20px !important; }}"
+      ],
+      "settings": {
+        "bg_color": "#fffaf5",
+        "heading": "Our pick up points",
+        "paragraph": "<p>Enter your suburb below to see if we have a pick-up point near you.</p><p><em>Please note the time frame provided is an estimate of when our driver will arrive at the pick-up location each week. We will send a confirmation text message with a more specific time two days prior to your collection date. </em></p>",
+        "subheading": "We also offer home delivery right across Brisbane, Sunshine Coast, Gold Coast, Gympie, Toowoomba and parts of Northern NSW.",
+        "paragraph2": "<p><em>Please try to collect from our pick-up points within 5 hours to ensure your box isn't sitting out too long. It is your responsibility to remember to collect your order.</em></p>",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "table_columns_8PwV73": {
+      "type": "table_columns",
+      "blocks": {
+        "column_UY7TUE": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>WEDNESDAY</p>",
+            "column_data2": "<p>ALDERLEY</p>",
+            "column_data3": "<p>9am - 12 noon</p>",
+            "column_data4": "<p>100 Mornington Street</p>"
+          }
+        },
+        "column_qVHfET": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>WEDNESDAY</p>",
+            "column_data2": "<p>KEDRON</p>",
+            "column_data3": "<p>9am - 12 noon</p>",
+            "column_data4": "<p>23 Eddowes Street</p>"
+          }
+        },
+        "column_afLVmp": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>WEDNESDAY</p>",
+            "column_data2": "<p>TARINGA</p>",
+            "column_data3": "<p>9am - 12 noon</p>",
+            "column_data4": "<p>203 Taringa Parade</p>"
+          }
+        },
+        "column_8KfVKx": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>WEDNESDAY</p>",
+            "column_data2": "<p>PULLENVALE (BIS)</p>",
+            "column_data3": "<p>1 - 4pm</p>",
+            "column_data4": "<p>2447 Moggill Road</p>"
+          }
+        },
+        "column_XPAKfW": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>WEDNESDAY</p>",
+            "column_data2": "<p>WOOLOOWIN</p>",
+            "column_data3": "<p>7am - 9am</p>",
+            "column_data4": "<p>11 Owen Street</p>"
+          }
+        },
+        "column_yxMLeb": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>WED or THURS</p>",
+            "column_data2": "<p>ROCKLEA (warehouse)</p>",
+            "column_data3": "<p>8am - 12pm</p>",
+            "column_data4": "<p>34 Reginald Street</p>"
+          }
+        },
+        "column_JhRxri": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>THURSDAY</p>",
+            "column_data2": "<p>FOREST LAKE</p>",
+            "column_data3": "<p>9am - 12 noon</p>",
+            "column_data4": "<p>10 Allen Close</p>"
+          }
+        },
+        "column_PG4q4F": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>THURSDAY</p>",
+            "column_data2": "<p>PIMPAMA</p>",
+            "column_data3": "<p>12:30 - 3:30pm</p>",
+            "column_data4": "<p>48/7 Angela Way</p>"
+          }
+        },
+        "column_jFBUDV": {
+          "type": "column",
+          "disabled": true,
+          "settings": {
+            "column_data1": "<p>THURSDAY</p>",
+            "column_data2": "<p>ANNERLEY</p>",
+            "column_data3": "<p>9am - 12 noon</p>",
+            "column_data4": "<p>100 Venner Road</p>"
+          }
+        },
+        "column_kikRH9": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>THURSDAY</p>",
+            "column_data2": "<p>EDENS LANDING</p>",
+            "column_data3": "<p>9am - 12 noon</p>",
+            "column_data4": "<p>10 Jonath Court</p>"
+          }
+        },
+        "column_DNHk9y": {
+          "type": "column",
+          "disabled": true,
+          "settings": {
+            "column_data1": "<p>THURSDAY</p>",
+            "column_data2": "<p>ORMEAU HILLS</p>",
+            "column_data3": "<p>12.30 - 3.30pm</p>",
+            "column_data4": "<p>5 Appadene St</p>"
+          }
+        },
+        "column_abzkDe": {
+          "type": "column",
+          "disabled": true,
+          "settings": {
+            "column_data1": "<p>THURSDAY</p>",
+            "column_data2": "<p>SADLIERS CROSSING</p>",
+            "column_data3": "<p>10am - 2pm</p>",
+            "column_data4": "<p>23 Ferrett Street</p>"
+          }
+        },
+        "column_PC9iLg": {
+          "type": "column",
+          "disabled": true,
+          "settings": {
+            "column_data1": "<p>THURSDAY</p>",
+            "column_data2": "<p>BRASSALL</p>",
+            "column_data3": "<p>12.30 - 3.30pm</p>",
+            "column_data4": "<p>11 Stitz Court</p>"
+          }
+        },
+        "column_7DmPGT": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>THURSDAY</p>",
+            "column_data2": "<p>KARANA DOWNS</p>",
+            "column_data3": "<p>12.30 - 3.30pm</p>",
+            "column_data4": "<p>2 Kynuna Court</p>"
+          }
+        },
+        "column_pfBxpd": {
+          "type": "column",
+          "disabled": true,
+          "settings": {
+            "column_data1": "<p>FRIDAY</p>",
+            "column_data2": "<p>KALLANGUR</p>",
+            "column_data3": "<p>12.30 - 3.30pm</p>",
+            "column_data4": "<p>52 Melinda Court</p>"
+          }
+        },
+        "column_H3McKp": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>FRIDAY</p>",
+            "column_data2": "<p>NARANGBA</p>",
+            "column_data3": "<p>12.30 - 3.30pm</p>",
+            "column_data4": "<p>21 Matterhorn Drive</p>"
+          }
+        },
+        "column_JTNFK7": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>FRIDAY</p>",
+            "column_data2": "<p>DAYBORO</p>",
+            "column_data3": "<p>12.30 - 3.30pm</p>",
+            "column_data4": "<p>3468 Mount Mee Road</p>"
+          }
+        },
+        "column_4CpG64": {
+          "type": "column",
+          "disabled": true,
+          "settings": {
+            "column_data1": "<p>FRIDAY</p>",
+            "column_data2": "<p>BRIBIE ISLAND&nbsp;</p>",
+            "column_data3": "<p>11am - 1pm</p>",
+            "column_data4": "<p>10 Aylward Rd, Ningi<br/>*Minimum order for pickup &nbsp;$100</p>"
+          }
+        },
+        "column_WXBeVW": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>FRIDAY</p>",
+            "column_data2": "<p>EATONS HILL</p>",
+            "column_data3": "<p>9am - 12 noon</p>",
+            "column_data4": "<p>14 Queen Elizabeth Drive</p>"
+          }
+        },
+        "column_d86XFY": {
+          "type": "column",
+          "disabled": true,
+          "settings": {
+            "column_data1": "<p>FRIDAY</p>",
+            "column_data2": "<p>SAMFORD VALLEY STEINER SCHOOL</p>",
+            "column_data3": "<p>2.45pm</p>",
+            "column_data4": "<p>SAMFORD VALLEY STEINER SCHOOL</p>"
+          }
+        },
+        "column_eAb4EP": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>FRIDAY</p>",
+            "column_data2": "<p>CAPALABA</p>",
+            "column_data3": "<p>12.30 - 3.30pm</p>",
+            "column_data4": "<p>69 Killarney Crescent</p>"
+          }
+        },
+        "column_cDPwTr": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>FRIDAY</p>",
+            "column_data2": "<p>WYNNUM WEST</p>",
+            "column_data3": "<p>11am - 2pm</p>",
+            "column_data4": "<p>1/203 Randall Road</p>"
+          }
+        },
+        "column_xXDR9t": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>SATURDAY</p>",
+            "column_data2": "<p>CARINDALE</p>",
+            "column_data3": "<p>7 - 9am</p>",
+            "column_data4": "<p>79 Kilmorey Street</p>"
+          }
+        },
+        "column_JrcNbt": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>SATURDAY</p>",
+            "column_data2": "<p>BALMORAL<br/></p>",
+            "column_data3": "<p>7 - 9am</p>",
+            "column_data4": "<p>3 Walkers Drive</p>"
+          }
+        },
+        "column_DwterM": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>SATURDAY</p>",
+            "column_data2": "<p>&nbsp;ROCHEDALE SOUTH</p>",
+            "column_data3": "<p>8 - 10am</p>",
+            "column_data4": "<p>6 Bawden Court</p>"
+          }
+        },
+        "column_zXhqPA": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>SATURDAY</p>",
+            "column_data2": "<p>TARRAGINDI</p>",
+            "column_data3": "<p>7 - 9am</p>",
+            "column_data4": "<p>27 Kogarah Street</p>"
+          }
+        },
+        "column_x6qkaY": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>SATURDAY</p>",
+            "column_data2": "<p>SAMFORD</p>",
+            "column_data3": "<p>8 - 10am</p>",
+            "column_data4": "<p>6 Church Street</p>"
+          }
+        },
+        "column_MjBHLn": {
+          "type": "column",
+          "settings": {
+            "column_data1": "<p>SATURDAY</p>",
+            "column_data2": "<p>KEPERRA</p>",
+            "column_data3": "<p>7 - 9am</p>",
+            "column_data4": "<p>58 Glengarry Road</p>"
+          }
+        }
+      },
+      "block_order": [
+        "column_UY7TUE",
+        "column_qVHfET",
+        "column_afLVmp",
+        "column_8KfVKx",
+        "column_XPAKfW",
+        "column_yxMLeb",
+        "column_JhRxri",
+        "column_PG4q4F",
+        "column_jFBUDV",
+        "column_kikRH9",
+        "column_DNHk9y",
+        "column_abzkDe",
+        "column_PC9iLg",
+        "column_7DmPGT",
+        "column_pfBxpd",
+        "column_H3McKp",
+        "column_JTNFK7",
+        "column_4CpG64",
+        "column_WXBeVW",
+        "column_d86XFY",
+        "column_eAb4EP",
+        "column_cDPwTr",
+        "column_xXDR9t",
+        "column_JrcNbt",
+        "column_DwterM",
+        "column_zXhqPA",
+        "column_x6qkaY",
+        "column_MjBHLn"
+      ],
+      "custom_css": [
+        ".table_columns .about_title,.table_columns .about_title p,.table_columns .about_title * {color: #086c3f !important;}"
+      ],
+      "name": "table_columns",
+      "settings": {
+        "table_heading": "<p>Pick Up Points</p>",
+        "column_heading1": "<p>DELIVERY DAY</p>",
+        "column_heading2": "<p>SUBURB</p>",
+        "column_heading3": "<p>ESTIMATED DROP OFF TIME</p>",
+        "column_heading4": "<p>STREET &nbsp;ADDRESS</p>",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "93b6770b-e6f8-490f-84ea-a3f971be577a": {
+      "type": "gm-image-with-text",
+      "blocks": {
+        "template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Want a pick-up point in your area?",
+            "heading_size": "h1"
+          }
+        },
+        "template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>We are regularly adding new pick-up points as we expand. Click the button below to register your interest in being a customer and/or allowing us to use your home or business as a pick-up point. <br/><strong><br/>Pick-up point owners receive $2 store credit for every order that is collected from their home!</strong></p>",
+            "text_style": "body"
+          }
+        },
+        "template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-button-1": {
+          "type": "button",
+          "settings": {
+            "button_label": "Register Now",
+            "button_link": "https://forms.gle/gQ5wdsEo83rELDXM7",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-heading-1",
+        "template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-text-1",
+        "template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-button-1"
+      ],
+      "custom_css": [
+        "@media (max-width: 767px) {.image-with-text__media-item {padding: 0 20px; } .gm {padding: 40px 0 0; }}"
+      ],
+      "settings": {
+        "bg_color": "#ffffff",
+        "image": "shopify://shop_images/3-pick-up-point-in-your-area-food-delivery-brisbane.jpg",
+        "height": "small",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 4
+      }
+    },
+    "rich_text_7kLYNU": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_mBx8qt": {
+          "type": "heading",
+          "settings": {
+            "heading": "There’s a better way to shop for food",
+            "heading_size": "h2"
+          }
+        },
+        "text_bata7p": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Stop settling for supermarket produce. Get fresh, nutrient rich food direct from farmers who care. It’s easier than you think and you’ll taste the difference.</p><p><br/>No lock ins. Order when it suits you.</p>"
+          }
+        },
+        "button_niFX8g": {
+          "type": "button",
+          "settings": {
+            "button_label": "Start Your First Order",
+            "button_link": "shopify://collections/all",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_mBx8qt",
+        "text_bata7p",
+        "button_niFX8g"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1ddcb3b1-8f57-401e-88aa-a2139636431e",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "featured_blog_7zGY9H": {
+      "type": "featured-blog",
+      "name": "t:sections.featured-blog.presets.name",
+      "settings": {
+        "heading": "Easy nourishing recipes to inspire you",
+        "heading_size": "h1",
+        "blog": "organic-meal-kits-recipe-collection",
+        "post_limit": 3,
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_image": true,
+        "show_date": true,
+        "show_author": false,
+        "show_view_all": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich_text_dTaFeB",
+    "joy_delivery_hero_3pwCnM",
+    "joy_delivery_methods_WgREAy",
+    "joy_order_cutoffs_6giLyF",
+    "joy_pickup_locations_rLaDgq",
+    "joy_packaging_care_HwkMNn",
+    "joy_delivery_faqs_ypGTkQ",
+    "joy_pickup_interest_zMRTWJ",
+    "joy_delivery_cta_pmqDW3",
+    "image_with_text_jV7zEV",
+    "3f91bc16-16e6-434a-8427-9cd5fc389355",
+    "e1a1623e-1c21-40b0-adf8-65cda35d3fc0",
+    "table_columns_8PwV73",
+    "93b6770b-e6f8-490f-84ea-a3f971be577a",
+    "rich_text_7kLYNU",
+    "featured_blog_7zGY9H"
+  ]
+}

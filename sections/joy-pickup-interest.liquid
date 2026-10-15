@@ -1,0 +1,241 @@
+{% comment %} Standalone Shopify section — Joy pickup interest {% endcomment %}
+<section
+  id="joy-delivery-{{ section.id }}"
+  class="joy-delivery"
+  style="--jd-green:{{ section.settings.green }};--jd-lime:{{ section.settings.lime }};--jd-cream:{{ section.settings.cream }};--jd-text:{{ section.settings.text_color }};--jd-bg:{{ section.settings.bg_color }};--jd-top:{{ section.settings.padding_top }}px;--jd-bottom:{{ section.settings.padding_bottom }}px"
+>
+  <div class="jd-container">
+    <div class="jd-interest">
+      <span class="jd-icon jd-icon-small" aria-hidden="true">
+        <svg fill="currentColor" height="30" width="30" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	        viewBox="0 0 512 512" xml:space="preserve">
+                <g>
+                    <g>
+                        <path d="M256,2.938l-256,256v48.427h62.061v201.697h155.152V384.941h77.576v124.121h155.151V307.365H512v-48.427L256,2.938z
+                            M403.394,260.82v201.697h-62.061V338.396H170.667v124.121h-62.061V260.82H63.943L256,68.762L448.057,260.82H403.394z"/>
+                    </g>
+                </g>
+                </svg>
+      </span>
+      <div>
+        <h2>{{ section.settings.interest_title | escape }}</h2>
+        <p>{{ section.settings.interest_text | escape | newline_to_br }}</p>
+      </div>
+      {% if section.settings.interest_link != blank %}
+        <a href="{{ section.settings.interest_link }}">{{ section.settings.interest_button | escape }} →</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #joy-delivery-{{ section.id }} {
+    background: var(--jd-bg);
+    color: var(--jd-text);
+    padding: var(--jd-top) 20px var(--jd-bottom);
+    font-family: inherit;
+  }
+
+  #joy-delivery-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-container {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  #joy-delivery-{{ section.id }} h2 {
+    color: var(--jd-green);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.13;
+    margin: 0;
+    font-size: clamp(25px, 2.5vw, 34px);
+  }
+
+  #joy-delivery-{{ section.id }} p {
+    margin: 0;
+  }
+
+  #joy-delivery-{{ section.id }} a {
+    transition: background-color .2s, border-color .2s;
+    color: var(--jd-green);
+  }
+
+  #joy-delivery-{{ section.id }} .jd-icon {
+    width: 86px;
+    height: 86px;
+    border-radius: 100%;
+    background: #e8f3c8;
+    color: var(--jd-green);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 10px;
+    font-size: 48px;
+    flex-shrink: 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-icon-small {
+    width: 68px;
+    height: 68px;
+    font-size: 35px;
+    margin: 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest {
+    background: var(--jd-cream);
+    border-radius: 8px;
+    margin-top: 22px;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest > div {
+    flex: 1;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest h2 {
+    font-size: 22px;
+    margin-bottom: 5px;
+    font-weight:300;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest > a {
+    border: 1px solid var(--jd-green);
+    border-radius: 11px;
+    text-decoration: none;
+    padding: 12px 22px;
+    font-weight: 750;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  @media (max-width: 749px) {
+    #joy-delivery-{{ section.id }} {
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-interest {
+      flex-wrap: wrap;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-interest > a {
+      width: 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Joy pickup interest",
+  "settings": [
+    {
+      "type": "text",
+      "id": "interest_title",
+      "label": "Title",
+      "default": "Want a pick up point in your area?"
+    },
+    {
+      "type": "textarea",
+      "id": "interest_text",
+      "label": "Description",
+      "default": "Request a location or apply to host at your home or business. We'll review demand and delivery routes before adding new points."
+    },
+    {
+      "type": "text",
+      "id": "interest_button",
+      "label": "Button text",
+      "default": "Register your interest"
+    },
+    {
+      "type": "url",
+      "id": "interest_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "green",
+      "label": "Dark green",
+      "default": "#064633"
+    },
+    {
+      "type": "color",
+      "id": "lime",
+      "label": "Lime buttons",
+      "default": "#c4eb70"
+    },
+    {
+      "type": "color",
+      "id": "cream",
+      "label": "Cream card backgrounds",
+      "default": "#f8f5ed"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#18253a"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Joy pickup interest"
+    }
+  ]
+}
+{% endschema %}

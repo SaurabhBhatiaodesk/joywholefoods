@@ -1,0 +1,845 @@
+{% comment %} Standalone Shopify section — Joy delivery methods {% endcomment %}
+<section id="joy-delivery-{{ section.id }}" class="joy-delivery" style="--jd-green:{{ section.settings.green }};--jd-lime:{{ section.settings.lime }};--jd-cream:{{ section.settings.cream }};--jd-text:{{ section.settings.text_color }};--jd-bg:{{ section.settings.bg_color }};--jd-top:{{ section.settings.padding_top }}px;--jd-bottom:{{ section.settings.padding_bottom }}px">
+<div class="jd-container">
+    <div class="jd-service-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'service' %}
+          <article class="jd-service-card" {{ block.shopify_attributes }}>
+            <div class="jd-icon" aria-hidden="true">
+              {% case block.settings.icon %}
+                {% when 'truck' %}<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h25v23H5zM30 20h8l6 9v6H30"/><circle cx="13" cy="36" r="4"/><circle cx="37" cy="36" r="4"/><path d="M8 20H2m7 6H4"/></svg>
+                {% when 'box' %}<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m24 4 18 10v21L24 45 6 35V14zM6 14l18 10 18-10M24 24v21M15 9l18 10"/></svg>
+                {% when 'people' %}<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="24" cy="12" r="6"/><path d="M13 35v-8c0-6 5-10 11-10s11 4 11 10v8H13z"/><circle cx="7" cy="19" r="4"/><path d="M4 36H1v-8c0-3 3-5 7-5"/><circle cx="41" cy="19" r="4"/><path d="M44 36h3v-8c0-3-3-5-7-5"/></svg>
+              {% endcase %}
+            </div>
+            <h2>{{ block.settings.title | escape }}</h2>
+            <div class="jd-copy">{{ block.settings.description }}</div>
+            {% if block.settings.highlight != blank %}<div class="jd-card-highlight">{{ block.settings.highlight }}</div>{% endif %}
+            {% if block.settings.details != blank %}<div class="jd-card-details">{{ block.settings.details }}</div>{% endif %}
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% if section.settings.levy_note != blank %}<p class="jd-levy">{{ section.settings.levy_note | escape }}</p>{% endif %}
+
+
+</div>
+</section>
+
+
+<style>
+  #joy-delivery-{{ section.id }} {
+    background: var(--jd-bg);
+    color: var(--jd-text);
+    padding: var(--jd-top) 20px var(--jd-bottom);
+    font-family: inherit;
+  }
+
+  #joy-delivery-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #joy-delivery-{{ section.id }} [hidden] {
+    display: none !important;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-container {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  #joy-delivery-{{ section.id }} h1,
+  #joy-delivery-{{ section.id }} h2,
+  #joy-delivery-{{ section.id }} h3 {
+    color: var(--jd-green);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.13;
+    margin: 0;
+  }
+
+  #joy-delivery-{{ section.id }} h2 {
+    font-size: clamp(25px, 2.5vw, 34px);
+  }
+
+  #joy-delivery-{{ section.id }} p {
+    margin: 0;
+  }
+
+  /* Hero Section */
+
+  #joy-delivery-{{ section.id }} .jd-hero {
+    text-align: center;
+    margin: 0 auto 30px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-hero h1 {
+    font-size: clamp(38px, 5vw, 64px);
+  }
+
+  #joy-delivery-{{ section.id }} .jd-hero > p {
+    font-size: clamp(16px, 1.65vw, 22px);
+    line-height: 1.4;
+    margin: 8px auto 20px;
+    max-width: 680px;
+  }
+
+  /* Postcode Form */
+
+  #joy-delivery-{{ section.id }} .jd-postcode {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 740px;
+    margin: auto;
+    position: relative;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode input {
+    width: 54%;
+    min-width: 0;
+    border: 1px solid #dfe3e0;
+    border-radius: 10px;
+    padding: 15px 15px 15px 43px;
+    background: #fff;
+    color: var(--jd-text);
+    height: 54px;
+    font: inherit;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pin {
+    position: absolute;
+    left: 17px;
+    top: 13px;
+    font-size: 24px;
+  }
+
+  #joy-delivery-{{ section.id }} button,
+  #joy-delivery-{{ section.id }} a {
+    transition: background-color .2s, border-color .2s;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode button {
+    flex: 1;
+    border: 0;
+    background: var(--jd-lime);
+    color: #082f21;
+    border-radius: 9px;
+    height: 54px;
+    padding: 0 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-check-feedback {
+    max-width: 740px;
+    margin: 9px auto 0;
+    font-size: 13px;
+    text-align: left;
+  }
+
+  /* Service Cards */
+
+  #joy-delivery-{{ section.id }} .jd-service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-service-card {
+    background: var(--jd-cream);
+    border-radius: 8px;
+    padding: 20px 24px 25px;
+    text-align: center;
+    min-width: 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-icon {
+    width: 86px;
+    height: 86px;
+    border-radius: 100%;
+    background: #e8f3c8;
+    color: var(--jd-green);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 10px;
+    font-size: 48px;
+    flex-shrink: 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-icon svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-service-card h2 {
+    font-weight: 300;
+    font-size: clamp(22px, 2.1vw, 28px);
+    margin: 0 0 12px;
+  }
+  #joy-delivery-{{ section.id }} .jd-copy p,
+  #joy-delivery-{{ section.id }} .jd-copy {
+    font-size: 16px;
+    line-height: 1.42;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-card-details {
+    border-top: 1px solid #ddd8ce;
+    margin-top: 18px;
+    padding-top: 17px;
+  }
+    #joy-delivery-{{ section.id }} .jd-card-details p{
+        font-size: 15px;
+        line-height: 1.5;
+    }
+    #joy-delivery-{{ section.id }} .jd-card-highlight p{
+        font-size: 15px;
+        font-weight: 650;
+        line-height: 1.35;
+    }
+  #joy-delivery-{{ section.id }} .jd-card-highlight {
+    background: #fff3ca;
+    border-radius: 6px;
+    padding: 13px;
+    margin-top: 18px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-copy p,
+  #joy-delivery-{{ section.id }} .jd-card-details p {
+    margin: 0 0 10px;
+  }
+
+  /* Levy */
+
+  #joy-delivery-{{ section.id }} .jd-levy {
+    text-align: center;
+    margin: 14px 0 20px;
+    font-size: 15px;
+  }
+
+  /* Cutoff Panel */
+
+  #joy-delivery-{{ section.id }} .jd-cutoff-panel {
+    background: var(--jd-cream);
+    border-radius: 8px;
+    padding: 19px 22px 15px;
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    align-items: center;
+    gap: 14px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-cutoff-panel h2 {
+    font-size: 30px;
+    font-weight:300;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-cutoffs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #joy-delivery-{{ section.id }} .jd-cutoff {
+    text-align: center;
+    border-left: 1px solid #ded5c8;
+    padding: 4px 6px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-cutoff strong {
+    color: var(--jd-green);
+    font-size: 16px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-cutoff-panel > p {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  #joy-delivery-{{ section.id }} a {
+    color: var(--jd-green);
+  }
+
+  /* Pickup Locations */
+
+  #joy-delivery-{{ section.id }} .jd-pickups {
+    margin-top: 26px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pickups > h2 {
+    margin-bottom: 12px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-filter-bar {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) auto;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-filter-search {
+    position: relative;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-filter-search span {
+    position: absolute;
+    top: 9px;
+    left: 14px;
+    font-size: 25px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-filter-search input {
+    width: 100%;
+    height: 42px;
+    border: 1px solid #dfe3e0;
+    border-radius: 10px;
+    background: white;
+    padding: 0 14px 0 45px;
+    font: inherit;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-filter-days {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-filter-days button {
+    border: 1px solid #dcd8ce;
+    background: var(--jd-cream);
+    border-radius: 22px;
+    min-height: 42px;
+    padding: 0 17px;
+    color: var(--jd-text);
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-filter-days button.is-active {
+    background: var(--jd-green);
+    border-color: var(--jd-green);
+    color: #fff;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pickup-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pickup-item {
+    border: 1px solid #e0e4e2;
+    background: #fff;
+    border-radius: 8px;
+    padding: 11px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pickup-item h3 {
+    font-size: 18px;
+    margin-bottom: 3px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pickup-item p {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pickup-item span {
+    font-size: 13px;
+    color: #506278;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pickup-item a {
+    font-size: 13px;
+    white-space: nowrap;
+    font-weight: 750;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-view-all {
+    width: 100%;
+    margin-top: 10px;
+    border: 1px solid var(--jd-green);
+    border-radius: 30px;
+    background: transparent;
+    color: var(--jd-green);
+    height: 40px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-empty {
+    padding: 16px;
+    text-align: center;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pickups-note {
+    text-align: center;
+    font-size: 12px;
+    color: #617087;
+    margin-top: 10px;
+  }
+
+  /* Packaging Section */
+
+  #joy-delivery-{{ section.id }} .jd-packaging {
+    margin-top: 22px;
+    background: var(--jd-cream);
+    border-radius: 8px;
+    padding: 20px 24px 27px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-packaging > h2 {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-packaging-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #joy-delivery-{{ section.id }} .jd-packaging-item {
+    display: flex;
+    gap: 15px;
+    padding: 0 20px;
+    border-right: 1px solid #ddd8ce;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-packaging-item:first-child {
+    padding-left: 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-packaging-item:last-child {
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-icon-small {
+    width: 68px;
+    height: 68px;
+    font-size: 35px;
+    margin: 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-packaging-item h3 {
+    font-size: 17px;
+    margin: 8px 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-packaging-item div div {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* FAQ Section */
+
+  #joy-delivery-{{ section.id }} .jd-faq {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 22px;
+    margin-top: 25px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-faq-list {
+    display: grid;
+    gap: 8px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-faq details {
+    border: 1px solid #dfe3e0;
+    border-radius: 9px;
+    background: white;
+    padding: 0 16px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-faq summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    font-size: 14px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-faq details[open] summary span {
+    transform: rotate(180deg);
+  }
+
+  #joy-delivery-{{ section.id }} .jd-faq details > div {
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 0 0 14px;
+  }
+
+  /* Interest Section */
+
+  #joy-delivery-{{ section.id }} .jd-interest {
+    background: var(--jd-cream);
+    border-radius: 8px;
+    margin-top: 22px;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest > div {
+    flex: 1;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest h2 {
+    font-size: 22px;
+    margin-bottom: 5px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-interest > a,
+  #joy-delivery-{{ section.id }} .jd-outline {
+    border: 1px solid var(--jd-green);
+    border-radius: 11px;
+    text-decoration: none;
+    padding: 12px 22px;
+    font-weight: 750;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  /* Bottom Section */
+
+  #joy-delivery-{{ section.id }} .jd-bottom {
+    text-align: center;
+    margin: 24px 0 0;
+    border-top: 1px solid #e2e5e0;
+    padding-top: 19px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-bottom p {
+    margin: 7px 0 16px;
+    font-size: 15px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-bottom > div {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-bottom a {
+    text-decoration: none;
+    min-width: 210px;
+    padding: 12px 22px;
+    border-radius: 24px;
+    font-weight: 800;
+    font-size: 14px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-primary {
+    background: var(--jd-lime);
+    color: #092b22;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-visually-hidden {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Tablet Responsive */
+
+  @media (max-width: 990px) {
+    #joy-delivery-{{ section.id }} .jd-service-card {
+      padding: 18px 14px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-filter-bar {
+      grid-template-columns: 1fr;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-cutoff-panel {
+      grid-template-columns: 1fr;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-cutoff-panel h2 {
+      text-align: center;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-packaging-item {
+      flex-direction: column;
+    }
+  }
+
+  /* Mobile Responsive */
+
+  @media (max-width: 749px) {
+    #joy-delivery-{{ section.id }} {
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-hero h1 {
+      font-size: 39px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-postcode {
+      flex-direction: column;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-postcode input,
+    #joy-delivery-{{ section.id }} .jd-postcode button {
+      width: 100%;
+      flex: none;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-service-grid,
+    #joy-delivery-{{ section.id }} .jd-packaging-grid,
+    #joy-delivery-{{ section.id }} .jd-faq {
+      grid-template-columns: 1fr;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-service-card {
+      padding: 22px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-packaging-item {
+      flex-direction: row;
+      border: 0;
+      border-bottom: 1px solid #ddd8ce;
+      padding: 15px 0;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-packaging-item:last-child {
+      border: 0;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-cutoffs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #joy-delivery-{{ section.id }} .jd-cutoff strong {
+      font-size: 13px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-cutoff {
+      font-size: 12px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-filter-days button {
+      padding: 0 12px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-interest {
+      flex-wrap: wrap;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-interest > a {
+      width: 100%;
+    }
+  }
+
+  /* Small Mobile Responsive */
+
+  @media (max-width: 390px) {
+    #joy-delivery-{{ section.id }} .jd-cutoffs {
+      grid-template-columns: 1fr;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-cutoff {
+      border-left: 0;
+      border-bottom: 1px solid #ddd8ce;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-pickup-item {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 7px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Joy delivery methods",
+  "settings": [
+    {
+      "type": "text",
+      "id": "levy_note",
+      "label": "Fuel levy note",
+      "default": "Our fuel levy is temporary. We hope to remove it when diesel prices come back down."
+    },
+    {
+      "type": "color",
+      "id": "green",
+      "label": "Dark green",
+      "default": "#064633"
+    },
+    {
+      "type": "color",
+      "id": "lime",
+      "label": "Lime buttons",
+      "default": "#c4eb70"
+    },
+    {
+      "type": "color",
+      "id": "cream",
+      "label": "Cream card backgrounds",
+      "default": "#f8f5ed"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text",
+      "default": "#18253a"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Page background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Delivery method card",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "truck",
+              "label": "Delivery truck"
+            },
+            {
+              "value": "box",
+              "label": "Parcel box"
+            },
+            {
+              "value": "people",
+              "label": "People"
+            }
+          ],
+          "default": "truck"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Local home delivery"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Fresh food delivered from Wednesday to Saturday. Your delivery day depends on your suburb.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "highlight",
+          "label": "Highlighted note"
+        },
+        {
+          "type": "richtext",
+          "id": "details",
+          "label": "Fees and details",
+          "default": "<p>$50 minimum order, or $100 for southern Gold Coast.</p><p>$12.50 delivery. Free delivery on orders over $200. Temporary $2 fuel levy applies.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Joy delivery methods",
+      "blocks": [
+        {
+          "type": "service",
+          "settings": {
+            "icon": "truck",
+            "title": "Local home delivery",
+            "description": "<p>Our three delivery vans bring fresh food to your door from Wednesday to Saturday. Your delivery day depends on your suburb.</p>",
+            "details": "<p>$50 minimum order, or $100 for southern Gold Coast.</p><p>$12.50 delivery. Free delivery on orders over $200. Temporary $2 fuel levy applies.</p>"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "icon": "box",
+            "title": "Refrigerated courier delivery",
+            "description": "<p>For areas outside our local runs, we pack your order at our Rocklea warehouse and send it with a refrigerated courier. Available days depend on your postcode.</p>",
+            "details": "<p>$150 minimum order.</p><p>$12.50 delivery plus a temporary $4 fuel levy.</p><p>Refrigerate chilled items promptly when your order arrives.</p>"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "icon": "people",
+            "title": "Community pick up",
+            "description": "<p>$50 minimum order.<br>No delivery fee. Temporary $2 fuel levy applies.</p>",
+            "highlight": "<p>These locations are hosted by our wonderful customers who open their homes or businesses to help make fresh food more accessible in their community.</p>",
+            "details": "<p>Pick up points are customers' homes or businesses, rather than staffed shops.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

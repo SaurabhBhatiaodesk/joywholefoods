@@ -1,0 +1,766 @@
+{% comment %} Standalone Shopify section — Joy delivery hero {% endcomment %}
+<section
+  id="joy-delivery-{{ section.id }}"
+  class="joy-delivery"
+  style="--jd-green:{{ section.settings.green }};--jd-lime:{{ section.settings.lime }};--jd-cream:{{ section.settings.cream }};--jd-text:{{ section.settings.text_color }};--jd-bg:{{ section.settings.bg_color }};--jd-top:{{ section.settings.padding_top }}px;--jd-bottom:{{ section.settings.padding_bottom }}px"
+>
+  <div class="jd-container">
+    <header class="jd-hero">
+      <h1>{{ section.settings.hero_title | escape }}</h1>
+      <p>{{ section.settings.hero_text | escape | newline_to_br }}</p>
+      <form class="jd-postcode" data-postcode-form>
+        <label class="jd-visually-hidden" for="jd-postcode-{{ section.id }}">Enter your postcode</label>
+        <span aria-hidden="true" class="jd-pin">
+          <svg width="20"height="20"viewBox="-4 0 32 32"version="1.1"xmlns="http://www.w3.org/2000/svg"xmlns:xlink="http://www.w3.org/1999/xlink"xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                <title>location</title>
+                <desc>Created with Sketch Beta.</desc>
+                <defs>
+            </defs>
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-104.000000, -411.000000)" fill="#000000">
+                <path d="M116,426 C114.343,426 113,424.657 113,423 C113,421.343 114.343,420 116,420 C117.657,420 119,421.343 119,423 C119,424.657 117.657,426 116,426 L116,426 Z M116,418 C113.239,418 111,420.238 111,423 C111,425.762 113.239,428 116,428 C118.761,428 121,425.762 121,423 C121,420.238 118.761,418 116,418 L116,418 Z M116,440 C114.337,440.009 106,427.181 106,423 C106,417.478 110.477,413 116,413 C121.523,413 126,417.478 126,423 C126,427.125 117.637,440.009 116,440 L116,440 Z M116,411 C109.373,411 104,416.373 104,423 C104,428.018 114.005,443.011 116,443 C117.964,443.011 128,427.95 128,423 C128,416.373 122.627,411 116,411 L116,411 Z" id="location" sketch:type="MSShapeGroup">
+            </path></g></g>
+          </svg>
+        </span>
+        <div class="jd-input-wrap">
+          <input
+            id="jd-postcode-{{ section.id }}"
+            name="postcode"
+            autocomplete="off"
+            inputmode="numeric"
+            pattern="[0-9]{4}"
+            maxlength="4"
+            placeholder="Enter your postcode"
+            aria-autocomplete="list"
+            aria-controls="jd-suggestions-{{ section.id }}"
+            aria-expanded="false"
+            required
+          >
+          <div id="jd-suggestions-{{ section.id }}" class="jd-suggestions" role="listbox" data-suggestions hidden></div>
+        </div>
+        <button type="submit">
+          {{ section.settings.postcode_button | escape }}
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+      <p class="jd-check-feedback" data-postcode-feedback role="status" aria-live="polite" hidden></p>
+      <div class="jd-postcode-results" data-postcode-results hidden aria-live="polite">
+        <div class="jd-result-card" data-result-match hidden>
+          <h2 data-result-heading></h2>
+          <p class="jd-result-postcodes" data-result-postcodes></p>
+          <div class="jd-result-message" data-result-message></div>
+        </div>
+        <div class="jd-result-card" data-result-fallback hidden>
+          <h2>{{ section.settings.pickupLabel | escape }}</h2>
+          <p class="jd-fallback-warning">{{ section.settings.pickupMessage }}</p>
+          <div class="jd-result-message">{{ section.settings.pickupText }}</div>
+        </div>
+        <div class="jd-result-card" data-result-zone1 hidden>
+          <h2>Yes we deliver to your area! You're on Zone 1</h2>
+          <p class="jd-result-postcodes">Postcodes: 4000,4001,4002,4003,4004,4005,4006,4007,4008,4009</p>
+          <div class="jd-result-message">
+            <p>Your delivery day is: <strong>Wednesday</strong></p>
+            <p>Order deadline: <strong>10am Monday</strong></p>
+            <p>Minimum order value: <strong>$50</strong></p>
+            <p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p>
+            <p>
+              <em
+                >Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em
+              >
+            </p>
+          </div>
+        </div>
+        <div class="jd-result-card" data-result-toowoomba hidden>
+          <h2>Toowoomba &amp; surrounds</h2>
+          <p class="jd-result-postcodes">Postcodes: 4350, 4358</p>
+          <div class="jd-result-message">
+            <p><strong>Monday / Wednesday / Friday delivery</strong></p>
+            <p>Delivery days include Monday, Wednesday and Friday.</p>
+            <p>Order by midnight for Monday, Wednesday or Friday. $50 minimum order. (Select your delivery day)</p>
+            <p><strong>FREE DELIVERY</strong></p>
+            <p>
+              *Some 4352 suburbs including Cabarlah, Geham, Merrits Creek, Hampton and Pechey have a $5 delivery fee.
+            </p>
+            <p>*Exclusions include Postmans Ridge and Murphys Creek.</p>
+          </div>
+        </div>
+      </div>
+      <div data-postcode-data hidden>
+        {% for block in section.blocks %}
+          {% if block.settings.postcodes != blank %}
+            <div
+              data-postcode-area
+              data-codes="{{ block.settings.postcodes | escape }}"
+              data-name="{{ block.settings.locationName | escape }}"
+              {{ block.shopify_attributes }}
+            >
+              <div data-area-description>
+                {% assign current_date = 'now' | date: '%d/%m/%Y' -%}
+                {{- block.settings.postcodeText | replace: '[date]', current_date }}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </header>
+  </div>
+</section>
+
+<style>
+  #joy-delivery-{{ section.id }} {
+    background: var(--jd-bg);
+    color: var(--jd-text);
+    padding: var(--jd-top) 20px var(--jd-bottom);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  #joy-delivery-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #joy-delivery-{{ section.id }} [hidden] {
+    display: none !important;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-container {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  #joy-delivery-{{ section.id }} h1,
+  #joy-delivery-{{ section.id }} h2,
+  #joy-delivery-{{ section.id }} h3 {
+    color: var(--jd-green);
+    font-weight: 800;
+    letter-spacing: -.035em;
+    line-height: 1.13;
+    margin: 0;
+  }
+
+  #joy-delivery-{{ section.id }} h2 {
+    font-size: clamp(25px, 2.5vw, 34px);
+  }
+
+  #joy-delivery-{{ section.id }} p {
+    margin: 0;
+  }
+
+  /* Hero */
+
+  #joy-delivery-{{ section.id }} .jd-hero {
+    text-align: center;
+    margin: 0 auto 30px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-hero h1 {
+    font-weight: 400;
+    font-size: clamp(30px, 5vw, 48px);
+  }
+
+  #joy-delivery-{{ section.id }} .jd-hero > p {
+    font-size: clamp(16px, 1.65vw, 22px);
+    line-height: 1.4;
+    margin: 8px auto 20px;
+    max-width: 680px;
+  }
+
+  /* Postcode Form */
+
+  #joy-delivery-{{ section.id }} .jd-postcode {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 740px;
+    margin: auto;
+    position: relative;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #dfe3e0;
+    border-radius: 10px;
+    padding: 15px 15px 15px 43px;
+    background: #fff;
+    color: var(--jd-text);
+    height: 54px;
+    font: inherit;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-pin {
+    position: absolute;
+    left: 17px;
+    top: 9px;
+    font-size: 24px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-input-wrap {
+    width: 54%;
+    position: relative;
+    min-width: 0;
+  }
+
+  /* Suggestions */
+
+  #joy-delivery-{{ section.id }} .jd-suggestions {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    z-index: 25;
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid #dfe3e0;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .12);
+    text-align: left;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-suggestion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 15px;
+    border: 0;
+    border-bottom: 1px solid #edf0eb;
+    background: #fff;
+    color: var(--jd-text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-suggestion:hover,
+  #joy-delivery-{{ section.id }} .jd-suggestion:focus-visible {
+    background: var(--jd-cream);
+    outline: 2px solid var(--jd-green);
+    outline-offset: -2px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-suggestion strong {
+    font-weight: 700;
+    color: var(--jd-green);
+  }
+
+  #joy-delivery-{{ section.id }} .jd-suggestion small {
+    font-size: 12px;
+    color: #52685a;
+    text-align: right;
+  }
+
+  /* Buttons and Links */
+
+  #joy-delivery-{{ section.id }} button,
+  #joy-delivery-{{ section.id }} a {
+    transition: background-color .2s, border-color .2s;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode button {
+    flex: 1;
+    border: 0;
+    background: var(--jd-lime);
+    color: #082f21;
+    border-radius: 9px;
+    height: 54px;
+    padding: 0 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* Feedback */
+
+  #joy-delivery-{{ section.id }} .jd-check-feedback {
+    max-width: 740px;
+    margin: 9px auto 0;
+    font-size: 13px;
+    text-align: left;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-visually-hidden {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Mobile Responsive */
+
+  @media (max-width: 749px) {
+    #joy-delivery-{{ section.id }} {
+      padding: {{ section.settings.mobile_padding_top | default: 24 }}px 16px {{ section.settings.mobile_padding_bottom | default: 28 }}px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-hero h1 {
+      font-size: 39px;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-postcode {
+      flex-direction: column;
+    }
+
+    #joy-delivery-{{ section.id }} .jd-input-wrap,
+    #joy-delivery-{{ section.id }} .jd-postcode input,
+    #joy-delivery-{{ section.id }} .jd-postcode button {
+      width: 100%;
+      flex: none;
+    }
+  }
+
+  /* Postcode results use the existing Joy hero visual language */
+
+  #joy-delivery-{{ section.id }} .jd-postcode-results {
+    max-width: 740px;
+    margin: 20px auto 0;
+    text-align: left;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-result-card {
+    background: var(--jd-cream);
+    border: 1px solid #dfe3e0;
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-result-card h2 {
+    font-size: clamp(22px, 2.3vw, 29px);
+    margin: 0 0 6px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-result-postcodes {
+    font-size: 13px;
+    color: #516157;
+    margin: 0 0 13px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-result-message {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--jd-text);
+  }
+
+  #joy-delivery-{{ section.id }} .jd-result-message p {
+    margin: 0 0 10px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-fallback-warning {
+    color: #a72d27;
+    font-weight: 700;
+    margin: 5px 0 9px !important;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-check-feedback {
+    color: #aa3028;
+    text-align: center;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode input[aria-invalid="true"] {
+    border-color: #be3029;
+  }
+
+  @media (max-width: 749px) {
+    #joy-delivery-{{ section.id }} .jd-result-card {
+      padding: 17px;
+    }
+  }
+
+  /* FIX: autocomplete results must not inherit the lime submit-button styling */
+
+  #joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions {
+    background: #ffffff !important;
+    border: 1px solid #e2e6e2;
+    border-radius: 10px;
+    overflow: auto;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion {
+    display: flex;
+    width: 100%;
+    height: auto;
+    min-height: 46px;
+    flex: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 15px;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid #ecefeb;
+    border-radius: 0;
+    background: #ffffff !important;
+    color: var(--jd-text);
+    font-weight: 400;
+    text-align: left;
+    box-shadow: none;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion:last-child {
+    border-bottom: 0;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion:hover,
+  #joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion:focus-visible {
+    background: #f5f8f4 !important;
+    outline: 2px solid var(--jd-green);
+    outline-offset: -2px;
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion strong {
+    color: var(--jd-green);
+  }
+
+  #joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion small {
+    color: #53675b;
+  }
+</style>
+
+
+<script>
+  (function () {
+    const root = document.getElementById('joy-delivery-{{ section.id }}');
+    if (!root || root.dataset.jdInitialized === 'true') return;
+    root.dataset.jdInitialized = 'true';
+    const form = root.querySelector('[data-postcode-form]');
+    const input = form.querySelector('[name="postcode"]');
+    const suggestions = root.querySelector('[data-suggestions]');
+    const feedback = root.querySelector('[data-postcode-feedback]');
+    const results = root.querySelector('[data-postcode-results]');
+    const matched = root.querySelector('[data-result-match]');
+    const fallback = root.querySelector('[data-result-fallback]');
+    const toowoomba = root.querySelector('[data-result-toowoomba]');
+    const zone1 = root.querySelector('[data-result-zone1]');
+    const areaElements = Array.from(root.querySelectorAll('[data-postcode-area]'));
+    const zones = [];
+    const lookup = new Map();
+
+    // Existing Shopify postcode blocks take priority over example fallbacks.
+    areaElements.forEach(function (el) {
+      const name = el.dataset.name || 'Delivery area';
+      const codes = (el.dataset.codes || '').match(/\b\d{4}\b/g) || [];
+      const entry = {
+        name: name,
+        codes: codes,
+        html: (el.querySelector('[data-area-description]') || {}).innerHTML || '',
+        source: 'block',
+      };
+      zones.push(entry);
+      codes.forEach(function (code) {
+        if (!lookup.has(code)) lookup.set(code, entry);
+      });
+    });
+    // These two zones exist directly in the supplied source code; other zones
+    // must be supplied through Shopify editor blocks or migrated theme JSON.
+    const known = [
+      {
+        name: 'Zone 1',
+        codes: ['4000', '4001', '4002', '4003', '4004', '4005', '4006', '4007', '4008', '4009'],
+        source: 'zone1',
+      },
+      { name: 'Toowoomba & surrounds', codes: ['4350', '4358'], source: 'toowoomba' },
+    ];
+    known.forEach(function (entry) {
+      entry.codes.forEach(function (code) {
+        if (!lookup.has(code)) lookup.set(code, entry);
+      });
+    });
+
+    function closeSuggestions() {
+      suggestions.hidden = true;
+      suggestions.replaceChildren();
+      input.setAttribute('aria-expanded', 'false');
+    }
+    function resetResults() {
+      feedback.hidden = true;
+      feedback.textContent = '';
+      results.hidden = true;
+      [matched, fallback, toowoomba, zone1].forEach(function (el) {
+        el.hidden = true;
+      });
+      input.setCustomValidity('');
+      input.removeAttribute('aria-invalid');
+    }
+    function findOptions(text) {
+      if (!text) return [];
+      const out = [];
+      lookup.forEach(function (zone, code) {
+        if (code.startsWith(text)) out.push({ code: code, zone: zone });
+      });
+      return out
+        .sort(function (a, b) {
+          return a.code.localeCompare(b.code);
+        })
+        .slice(0, 12);
+    }
+    function renderSuggestions() {
+      closeSuggestions();
+      const text = input.value.trim();
+      if (!/^\d{1,4}$/.test(text)) return;
+      const options = findOptions(text);
+      if (!options.length) return;
+      options.forEach(function (item) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'jd-suggestion';
+        button.setAttribute('role', 'option');
+        const code = document.createElement('strong');
+        code.textContent = item.code;
+        const name = document.createElement('small');
+        name.textContent = item.zone.name;
+        button.append(code, name);
+        button.addEventListener('mousedown', function (event) {
+          event.preventDefault();
+        });
+        button.addEventListener('click', function () {
+          input.value = item.code;
+          closeSuggestions();
+          showResult(item.code);
+        });
+        suggestions.appendChild(button);
+      });
+      suggestions.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+    }
+    function showResult(code) {
+      closeSuggestions();
+      resetResults();
+      if (!/^\d{4}$/.test(code)) {
+        feedback.textContent = 'Please enter a valid four-digit Australian postcode.';
+        feedback.hidden = false;
+        input.setAttribute('aria-invalid', 'true');
+        return;
+      }
+      const zone = lookup.get(code);
+      results.hidden = false;
+      if (zone && zone.source === 'block') {
+        matched.hidden = false;
+        matched.querySelector('[data-result-heading]').textContent = zone.name;
+        matched.querySelector('[data-result-postcodes]').textContent = 'Postcodes: ' + zone.codes.join(', ');
+        matched.querySelector('[data-result-message]').innerHTML = zone.html;
+      } else if (zone && zone.source === 'zone1') {
+        zone1.hidden = false;
+      } else if (zone && zone.source === 'toowoomba') {
+        toowoomba.hidden = false;
+      } else {
+        fallback.hidden = false;
+      }
+    }
+    input.addEventListener('input', function () {
+      resetResults();
+      renderSuggestions();
+    });
+    input.addEventListener('focus', renderSuggestions);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSuggestions();
+      if (e.key === 'ArrowDown' && !suggestions.hidden) {
+        const first = suggestions.querySelector('button');
+        if (first) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+    suggestions.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeSuggestions();
+        input.focus();
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!root.contains(e.target) || !form.contains(e.target)) closeSuggestions();
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      showResult(input.value.trim());
+    });
+  })();
+</script>
+{% schema %}
+{
+  "name": "Joy delivery hero",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Delivery Schedule"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Want to know if we deliver to you?"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Delivery Schedule Postcode Search"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Enter you postcode to search delivery schedules in your area."
+    },
+    {
+      "type": "text",
+      "id": "postCodeLabel",
+      "label": "Postcode Label",
+      "default": "Postcode:"
+    },
+    {
+      "type": "header",
+      "content": "Pickup"
+    },
+    {
+      "type": "text",
+      "id": "pickupLabel",
+      "label": "Pickup Label",
+      "default": "Pickup"
+    },
+    {
+      "type": "inline_richtext",
+      "label": "Pickup Message",
+      "id": "pickupMessage",
+      "default": "There are currently no delivery schedules available for your postcode."
+    },
+    {
+      "type": "richtext",
+      "id": "pickupText",
+      "label": "Pickup Text"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "New hero design"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero heading",
+      "default": "Pick up & delivery"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_text",
+      "label": "Hero description",
+      "default": "Fresh food from local farmers, delivered to your door or a community pick up point."
+    },
+    {
+      "type": "text",
+      "id": "postcode_button",
+      "label": "Search button",
+      "default": "Check your delivery options"
+    },
+    {
+      "type": "color",
+      "id": "green",
+      "label": "Heading green",
+      "default": "#086C3F"
+    },
+    {
+      "type": "color",
+      "id": "lime",
+      "label": "Button lime",
+      "default": "#c4eb70"
+    },
+    {
+      "type": "color",
+      "id": "cream",
+      "label": "Result card background",
+      "default": "#f8f5ed"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#18253a"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    }
+  ],
+  "presets": [
+    {
+      "name": "Postcode Search"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "postcode",
+      "name": "Block",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "postcodes",
+          "label": "Please list all postcodes",
+          "info": "Separate with comma (,)"
+        },
+        {
+          "type": "text",
+          "id": "locationName",
+          "label": "Location Name"
+        },
+        {
+          "type": "richtext",
+          "id": "postcodeText",
+          "label": "Postcodes Text",
+          "info": "use [date] to show date."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
