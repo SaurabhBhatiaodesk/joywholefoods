@@ -234,7 +234,7 @@
         "padding_top": 0,
         "padding_bottom": 0,
         "mobile_padding_top": 24,
-        "mobile_padding_bottom": 28
+        "mobile_padding_bottom": 0
       }
     },
     "joy_packaging_care_HwkMNn": {
@@ -273,7 +273,7 @@
       "name": "Joy packaging care",
       "settings": {
         "packaging_title": "Packed with care, reused with joy",
-        "green": "#086C3F",
+        "green": "#086c3f",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
         "text_color": "#000000",
