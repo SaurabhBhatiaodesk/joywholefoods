@@ -7,7 +7,7 @@
       <form class="jd-postcode" data-postcode-form>
         <label class="jd-visually-hidden" for="jd-postcode-{{ section.id }}">Enter your postcode</label>
         <span aria-hidden="true" class="jd-pin">⌖</span>
-        <input id="jd-postcode-{{ section.id }}" name="postcode" autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Enter your postcode" required>
+        <div class="jd-input-wrap"><input id="jd-postcode-{{ section.id }}" name="postcode" autocomplete="off" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Enter your postcode" aria-autocomplete="list" aria-controls="jd-suggestions-{{ section.id }}" aria-expanded="false" required><div id="jd-suggestions-{{ section.id }}" class="jd-suggestions" role="listbox" data-suggestions hidden></div></div>
         <button type="submit">{{ section.settings.postcode_button | escape }} <span aria-hidden="true">→</span></button>
       </form>
       <p class="jd-check-feedback" data-postcode-feedback role="status" aria-live="polite" hidden></p>
@@ -67,13 +67,19 @@
 #joy-delivery-{{ section.id }} .jd-hero h1{font-size:clamp(38px,5vw,64px)}
 #joy-delivery-{{ section.id }} .jd-hero>p{font-size:clamp(16px,1.65vw,22px);line-height:1.4;margin:8px auto 20px;max-width:680px}
 #joy-delivery-{{ section.id }} .jd-postcode{display:flex;align-items:center;gap:12px;max-width:740px;margin:auto;position:relative}
-#joy-delivery-{{ section.id }} .jd-postcode input{width:54%;min-width:0;border:1px solid #dfe3e0;border-radius:10px;padding:15px 15px 15px 43px;background:#fff;color:var(--jd-text);height:54px;font:inherit}
-#joy-delivery-{{ section.id }} .jd-pin{position:absolute;left:17px;top:13px;font-size:24px}
+#joy-delivery-{{ section.id }} .jd-postcode input{width:100%;min-width:0;border:1px solid #dfe3e0;border-radius:10px;padding:15px 15px 15px 43px;background:#fff;color:var(--jd-text);height:54px;font:inherit}
+#joy-delivery-{{ section.id }} .jd-pin{position:absolute;left:17px;top:13px;font-size:24px;z-index:1;pointer-events:none}
+#joy-delivery-{{ section.id }} .jd-input-wrap{width:54%;position:relative;min-width:0}
+#joy-delivery-{{ section.id }} .jd-suggestions{position:absolute;top:calc(100% + 5px);left:0;width:100%;z-index:25;max-height:260px;overflow-y:auto;border:1px solid #dfe3e0;border-radius:10px;background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.12);text-align:left}
+#joy-delivery-{{ section.id }} .jd-suggestion{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:12px 15px;border:0;border-bottom:1px solid #edf0eb;background:#fff;color:var(--jd-text);font:inherit;text-align:left;cursor:pointer}
+#joy-delivery-{{ section.id }} .jd-suggestion:hover,#joy-delivery-{{ section.id }} .jd-suggestion:focus-visible{background:var(--jd-cream);outline:2px solid var(--jd-green);outline-offset:-2px}
+#joy-delivery-{{ section.id }} .jd-suggestion strong{font-weight:700;color:var(--jd-green)}
+#joy-delivery-{{ section.id }} .jd-suggestion small{font-size:12px;color:#52685a;text-align:right}
 #joy-delivery-{{ section.id }} button,#joy-delivery-{{ section.id }} a{transition:background-color .2s,border-color .2s}
 #joy-delivery-{{ section.id }} .jd-postcode button{flex:1;border:0;background:var(--jd-lime);color:#082f21;border-radius:9px;height:54px;padding:0 14px;font-weight:800;cursor:pointer}
 #joy-delivery-{{ section.id }} .jd-check-feedback{max-width:740px;margin:9px auto 0;font-size:13px;text-align:left}
 #joy-delivery-{{ section.id }} .jd-visually-hidden{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden}
-@media(max-width:749px){#joy-delivery-{{ section.id }}{padding:{{ section.settings.mobile_padding_top | default: 24 }}px 16px {{ section.settings.mobile_padding_bottom | default: 28 }}px}#joy-delivery-{{ section.id }} .jd-hero h1{font-size:39px}#joy-delivery-{{ section.id }} .jd-postcode{flex-direction:column}#joy-delivery-{{ section.id }} .jd-postcode input,#joy-delivery-{{ section.id }} .jd-postcode button{width:100%;flex:none}#joy-delivery-{{ section.id }} .jd-pin{top:13px}}
+@media(max-width:749px){#joy-delivery-{{ section.id }}{padding:{{ section.settings.mobile_padding_top | default: 24 }}px 16px {{ section.settings.mobile_padding_bottom | default: 28 }}px}#joy-delivery-{{ section.id }} .jd-hero h1{font-size:39px}#joy-delivery-{{ section.id }} .jd-postcode{flex-direction:column}#joy-delivery-{{ section.id }} .jd-input-wrap,#joy-delivery-{{ section.id }} .jd-postcode input,#joy-delivery-{{ section.id }} .jd-postcode button{width:100%;flex:none}#joy-delivery-{{ section.id }} .jd-pin{top:13px}}
 /* Postcode results use the existing Joy hero visual language */
 #joy-delivery-{{ section.id }} .jd-postcode-results{max-width:740px;margin:20px auto 0;text-align:left}
 #joy-delivery-{{ section.id }} .jd-result-card{background:var(--jd-cream);border:1px solid #dfe3e0;border-radius:12px;padding:20px 24px}
@@ -89,54 +95,124 @@
 
 <script>
 (function(){
-  const root=document.getElementById('joy-delivery-{{ section.id }}');
+  const root = document.getElementById('joy-delivery-{{ section.id }}');
   if (!root || root.dataset.jdInitialized === 'true') return;
-  root.dataset.jdInitialized='true';
-  const form=root.querySelector('[data-postcode-form]');
-  const input=form.querySelector('[name="postcode"]');
-  const feedback=root.querySelector('[data-postcode-feedback]');
-  const results=root.querySelector('[data-postcode-results]');
-  const matched=root.querySelector('[data-result-match]');
-  const fallback=root.querySelector('[data-result-fallback]');
-  const toowoomba=root.querySelector('[data-result-toowoomba]');
-  const zone1=root.querySelector('[data-result-zone1]');
-  const areas=Array.from(root.querySelectorAll('[data-postcode-area]'));
-  function reset(){
-    feedback.hidden=true; feedback.textContent='';
-    results.hidden=true; matched.hidden=true; fallback.hidden=true; toowoomba.hidden=true; zone1.hidden=true;
-    input.setCustomValidity('');input.removeAttribute('aria-invalid');
+  root.dataset.jdInitialized = 'true';
+  const form = root.querySelector('[data-postcode-form]');
+  const input = form.querySelector('[name="postcode"]');
+  const suggestions = root.querySelector('[data-suggestions]');
+  const feedback = root.querySelector('[data-postcode-feedback]');
+  const results = root.querySelector('[data-postcode-results]');
+  const matched = root.querySelector('[data-result-match]');
+  const fallback = root.querySelector('[data-result-fallback]');
+  const toowoomba = root.querySelector('[data-result-toowoomba]');
+  const zone1 = root.querySelector('[data-result-zone1]');
+  const areaElements = Array.from(root.querySelectorAll('[data-postcode-area]'));
+  const zones = [];
+  const lookup = new Map();
+
+  // Existing Shopify postcode blocks take priority over example fallbacks.
+  areaElements.forEach(function(el){
+    const name = el.dataset.name || 'Delivery area';
+    const codes = (el.dataset.codes || '').match(/\b\d{4}\b/g) || [];
+    const entry = {name:name, codes:codes, html:(el.querySelector('[data-area-description]') || {}).innerHTML || '', source:'block'};
+    zones.push(entry);
+    codes.forEach(function(code){if(!lookup.has(code)) lookup.set(code, entry)});
+  });
+  // These two zones exist directly in the supplied source code; other zones
+  // must be supplied through Shopify editor blocks or migrated theme JSON.
+  const known = [
+    {name:'Zone 1', codes:['4000','4001','4002','4003','4004','4005','4006','4007','4008','4009'], source:'zone1'},
+    {name:'Toowoomba & surrounds', codes:['4350','4358'], source:'toowoomba'}
+  ];
+  known.forEach(function(entry){
+    entry.codes.forEach(function(code){ if(!lookup.has(code)) lookup.set(code,entry) });
+  });
+
+  function closeSuggestions(){
+    suggestions.hidden = true;
+    suggestions.replaceChildren();
+    input.setAttribute('aria-expanded','false');
   }
-  input.addEventListener('input',reset);
-  form.addEventListener('submit',function(event){
-    event.preventDefault();
-    const code=input.value.trim();
-    reset();
+  function resetResults(){
+    feedback.hidden=true;
+    feedback.textContent='';
+    results.hidden=true;
+    [matched,fallback,toowoomba,zone1].forEach(function(el){el.hidden=true});
+    input.setCustomValidity('');
+    input.removeAttribute('aria-invalid');
+  }
+  function findOptions(text){
+    if(!text) return [];
+    const out=[];
+    lookup.forEach(function(zone,code){
+      if(code.startsWith(text)) out.push({code:code,zone:zone});
+    });
+    return out.sort(function(a,b){return a.code.localeCompare(b.code)}).slice(0,12);
+  }
+  function renderSuggestions(){
+    closeSuggestions();
+    const text=input.value.trim();
+    if(!/^\d{1,4}$/.test(text)) return;
+    const options=findOptions(text);
+    if(!options.length) return;
+    options.forEach(function(item){
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='jd-suggestion';
+      button.setAttribute('role','option');
+      const code=document.createElement('strong');code.textContent=item.code;
+      const name=document.createElement('small');name.textContent=item.zone.name;
+      button.append(code,name);
+      button.addEventListener('mousedown',function(event){event.preventDefault()});
+      button.addEventListener('click',function(){
+        input.value=item.code;
+        closeSuggestions();
+        showResult(item.code);
+      });
+      suggestions.appendChild(button);
+    });
+    suggestions.hidden=false;
+    input.setAttribute('aria-expanded','true');
+  }
+  function showResult(code){
+    closeSuggestions();
+    resetResults();
     if (!/^\d{4}$/.test(code)) {
-      input.setCustomValidity('Please enter a valid 4-digit Australian postcode.');
-      input.setAttribute('aria-invalid','true');
-      input.reportValidity();
-      feedback.textContent='Please enter a valid four-digit postcode.';
+      feedback.textContent='Please enter a valid four-digit Australian postcode.';
       feedback.hidden=false;
+      input.setAttribute('aria-invalid','true');
       return;
     }
-    const area=areas.find(function(el){
-      return (el.dataset.codes || '').split(/[,;\s]+/).some(function(token){return token.trim()===code});
-    });
+    const zone=lookup.get(code);
     results.hidden=false;
-    if(area){
+    if(zone && zone.source==='block'){
       matched.hidden=false;
-      matched.querySelector('[data-result-heading]').textContent=area.dataset.name || 'Delivery options';
-      matched.querySelector('[data-result-postcodes]').textContent='Postcodes: '+area.dataset.codes;
-      const message=area.querySelector('[data-area-description]');
-      matched.querySelector('[data-result-message]').innerHTML=message ? message.innerHTML : '';
-    }else if (['4000','4001','4002','4003','4004','4005','4006','4007','4008','4009'].includes(code)) {
+      matched.querySelector('[data-result-heading]').textContent=zone.name;
+      matched.querySelector('[data-result-postcodes]').textContent='Postcodes: '+zone.codes.join(', ');
+      matched.querySelector('[data-result-message]').innerHTML=zone.html;
+    } else if(zone && zone.source==='zone1'){
       zone1.hidden=false;
-    }else if (code === '4350' || code === '4358') {
+    } else if(zone && zone.source==='toowoomba'){
       toowoomba.hidden=false;
-    }else{
+    } else {
       fallback.hidden=false;
     }
+  }
+  input.addEventListener('input',function(){resetResults();renderSuggestions()});
+  input.addEventListener('focus',renderSuggestions);
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape') closeSuggestions();
+    if(e.key==='ArrowDown' && !suggestions.hidden){
+      const first=suggestions.querySelector('button');
+      if(first){e.preventDefault();first.focus()}
+    }
   });
+  suggestions.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){closeSuggestions();input.focus()}
+  });
+  document.addEventListener('click',function(e){if(!root.contains(e.target) || !form.contains(e.target))closeSuggestions()});
+  form.addEventListener('submit',function(e){e.preventDefault();showResult(input.value.trim())});
 })();
 </script>
 {% schema %}
