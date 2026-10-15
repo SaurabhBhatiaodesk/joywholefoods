@@ -391,6 +391,7 @@
         "text_xLU8D9",
         "button_TyT9eB"
       ],
+      "disabled": true,
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
         "image": "shopify://shop_images/1-free-pick-up-organic-food-brisbane-gold-coast.jpg",
@@ -431,6 +432,7 @@
         "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-heading-1",
         "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-text-1"
       ],
+      "disabled": true,
       "custom_css": [
         ".image-with-text {padding-top: 0;}",
         "@media (max-width: 767px) {.gm {padding: 0px 0 20px; }}"
@@ -806,6 +808,7 @@
         "template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-text-1",
         "template--16844372279511__93b6770b-e6f8-490f-84ea-a3f971be577a-button-1"
       ],
+      "disabled": true,
       "custom_css": [
         "@media (max-width: 767px) {.image-with-text__media-item {padding: 0 20px; } .gm {padding: 40px 0 0; }}"
       ],
@@ -858,6 +861,7 @@
         "text_bata7p",
         "button_niFX8g"
       ],
+      "disabled": true,
       "name": "t:sections.rich-text.presets.name",
       "settings": {
         "desktop_content_position": "center",
@@ -870,6 +874,7 @@
     },
     "featured_blog_7zGY9H": {
       "type": "featured-blog",
+      "disabled": true,
       "name": "t:sections.featured-blog.presets.name",
       "settings": {
         "heading": "Easy nourishing recipes to inspire you",
