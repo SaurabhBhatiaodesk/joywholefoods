@@ -166,7 +166,7 @@
         "cutoffs_title": "Order cutoffs",
         "cutoffs_note": "<p>Missed the cutoff? See if we can help with a late order.</p>",
         "contact_link": "",
-        "green": "#086C3F",
+        "green": "#086c3f",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
         "text_color": "#000000",
@@ -185,15 +185,15 @@
         "interest_text": "Request a location or apply to host at your home or business. We'll review demand and delivery routes before adding new points.",
         "interest_button": "Register your interest",
         "interest_link": "",
-        "green": "#064633",
+        "green": "#086C3F",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
-        "text_color": "#18253a",
+        "text_color": "#000000",
         "bg_color": "#ffffff",
-        "padding_top": 40,
-        "padding_bottom": 40,
-        "mobile_padding_top": 24,
-        "mobile_padding_bottom": 28
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
       }
     },
     "joy_pickup_locations_rLaDgq": {
