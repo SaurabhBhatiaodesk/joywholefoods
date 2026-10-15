@@ -375,6 +375,9 @@
         const matchedVariant = getMatchedVariant();
         const addLabel = button.dataset.addLabel || 'Add to cart';
         const notifyLabel = button.dataset.notifyLabel || 'Notify me';
+        const isConfirmed = confirmDirectAdd && matchedVariant && matchedVariant.available
+          && String(addedVariantId) === String(matchedVariant.id);
+        button.classList.toggle('joy-pdp-added-state', !!isConfirmed);
 
         if (!matchedVariant || !matchedVariant.id) {
           variantInput.value = '';
@@ -397,7 +400,7 @@
           else button.removeAttribute('aria-disabled');
           button.classList.remove('joy-pdp-notify-state');
           setPaymentButtonVisibility(true);
-          if (buttonText) buttonText.textContent = confirmDirectAdd && String(addedVariantId) === String(matchedVariant.id)
+          if (buttonText) buttonText.textContent = isConfirmed
             ? (button.dataset.addedLabel || 'Added to cart') : addLabel;
         } else {
           button.disabled = false;
@@ -753,3 +756,18 @@
     document.addEventListener('shopify:section:load', initAllDirectATCWrappers);
   })();
 </script>
+
+{% stylesheet %}
+  .main-product-os .direct-add-to-cart-btn.joy-pdp-added-state {
+    background-color: #fff;
+    color: #0b6b41;
+    border: 1px solid #0b6b41;
+    --color-button: 255, 255, 255;
+    --color-button-text: 11, 107, 65;
+  }
+
+  .main-product-os .direct-add-to-cart-btn.joy-pdp-added-state::before,
+  .main-product-os .direct-add-to-cart-btn.joy-pdp-added-state::after {
+    box-shadow: none;
+  }
+{% endstylesheet %}

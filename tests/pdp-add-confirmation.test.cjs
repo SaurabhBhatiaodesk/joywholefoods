@@ -8,9 +8,18 @@ const script = fs.readFileSync('snippets/buy-buttons.liquid', 'utf8')
   .match(/<script>([\s\S]*?)<\/script>/)[1];
 
 function element() {
+  const classes = new Set();
   return {
     dataset: {}, listeners: {}, value: '', textContent: '', hidden: true,
-    classList: { add() {}, remove() {} },
+    classList: {
+      add(...names) { names.forEach(name => classes.add(name)); },
+      remove(...names) { names.forEach(name => classes.delete(name)); },
+      contains(name) { return classes.has(name); },
+      toggle(name, force) {
+        if (force) classes.add(name);
+        else classes.delete(name);
+      }
+    },
     setAttribute() {}, removeAttribute() {},
     querySelector() { return null; }, querySelectorAll() { return []; },
     addEventListener(type, listener) { (this.listeners[type] ||= []).push(listener); },
@@ -95,6 +104,7 @@ test('successful main or sticky add confirms both buttons after finally and perm
   await page.click();
   for (const item of page.wrappers) {
     assert.equal(item.label.textContent, 'Added to cart');
+    assert.equal(item.button.classList.contains('joy-pdp-added-state'), true);
     assert.equal(item.button.disabled, false);
   }
   await page.click(1);
@@ -117,6 +127,7 @@ test('both buttons reset after three seconds without adding or removing cart ite
   assert.ok(page.wrappers.every(item => item.label.textContent === 'Added to cart'));
   page.advance(1);
   assert.ok(page.wrappers.every(item => item.label.textContent === 'Add to cart'));
+  assert.ok(page.wrappers.every(item => !item.button.classList.contains('joy-pdp-added-state')));
   assert.equal(page.adds, 1);
 });
 
@@ -137,6 +148,7 @@ for (const failure of ['addError', 'networkError']) {
     const page = setup({ [failure]: true });
     await page.click();
     assert.ok(page.wrappers.every(item => item.label.textContent === 'Add to cart'));
+    assert.ok(page.wrappers.every(item => !item.button.classList.contains('joy-pdp-added-state')));
     assert.equal(page.wrappers[0].button.disabled, false);
   });
 }
@@ -152,5 +164,6 @@ test('swap flow retains its existing independent Added label', async () => {
   await page.click();
   assert.equal(page.adds, 0);
   assert.equal(page.wrappers[0].label.textContent, 'Added');
+  assert.ok(page.wrappers.every(item => !item.button.classList.contains('joy-pdp-added-state')));
   assert.equal(page.wrappers[1].label.textContent, 'Add to cart');
 });
