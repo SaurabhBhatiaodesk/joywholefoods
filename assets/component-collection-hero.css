@@ -3,6 +3,17 @@
   flex-direction: column;
 }
 
+@media screen and (max-width: 767px) {
+  .collection-hero--meal-kits .collection-description-content {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .collection-hero--meal-kits .collection-description-content:not(.expanded) > :not(:first-child) {
+    display: none;
+  }
+}
+
 .collection-hero--with-image .collection-hero__inner {
   margin-bottom: 0;
   padding-bottom: 2rem;
