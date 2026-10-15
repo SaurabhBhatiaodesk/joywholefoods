@@ -99,6 +99,7 @@
             type="button"
             class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %} direct-add-to-cart-btn"
             data-add-label="{{ 'products.product.add_to_cart' | t }}"
+            data-added-label="{{ 'products.product.added_to_cart' | t | escape }}"
             data-notify-label="Notify me"
             data-current-variant-id="{{ current_variant.id }}"
             data-current-variant-available="{{ current_variant.available }}"
@@ -196,8 +197,28 @@
       const sellingPlanInput = form ? form.querySelector('.product-selling-plan-id') : null;
       const hiddenQtyInput = form ? form.querySelector('.product-quantity-hidden') : null;
       const swapEnabled = wrapper.dataset.swapEnabled === 'true';
+      const confirmationScope = wrapper.closest('.main-product-os');
+      const confirmDirectAdd = !swapEnabled && !!confirmationScope;
+      let addedVariantId = null;
+      let isAdding = false;
 
       if (!form || !button || !variantInput) return;
+
+      if (confirmDirectAdd && buttonText) buttonText.setAttribute('aria-live', 'polite');
+
+      function updateAddConfirmation(variantId) {
+        confirmationScope.dispatchEvent(new CustomEvent('joy:pdp-add-confirmed', {
+          detail: { productId: productId, variantId: variantId }
+        }));
+      }
+
+      if (confirmDirectAdd) {
+        confirmationScope.addEventListener('joy:pdp-add-confirmed', function(event) {
+          if (event.detail.productId !== productId) return;
+          addedVariantId = event.detail.variantId;
+          syncButtonState();
+        });
+      }
 
       function showError(message) {
         if (errorMessage) errorMessage.textContent = message;
@@ -354,6 +375,7 @@
           button.classList.remove('joy-pdp-notify-state');
           setPaymentButtonVisibility(false);
           if (buttonText) buttonText.textContent = addLabel;
+          addedVariantId = null;
           return;
         }
 
@@ -362,11 +384,13 @@
         button.dataset.currentVariantAvailable = matchedVariant.available ? 'true' : 'false';
 
         if (matchedVariant.available) {
-          button.disabled = false;
-          button.removeAttribute('aria-disabled');
+          button.disabled = isAdding;
+          if (isAdding) button.setAttribute('aria-disabled', 'true');
+          else button.removeAttribute('aria-disabled');
           button.classList.remove('joy-pdp-notify-state');
           setPaymentButtonVisibility(true);
-          if (buttonText) buttonText.textContent = addLabel;
+          if (buttonText) buttonText.textContent = confirmDirectAdd && String(addedVariantId) === String(matchedVariant.id)
+            ? (button.dataset.addedLabel || 'Added to cart') : addLabel;
         } else {
           button.disabled = false;
           button.removeAttribute('aria-disabled');
@@ -614,6 +638,8 @@
           return;
         }
 
+        if (confirmDirectAdd) updateAddConfirmation(null);
+        isAdding = true;
         button.disabled = true;
         button.setAttribute('aria-disabled', 'true');
         button.classList.add('loading');
@@ -643,12 +669,22 @@
             throw new Error(data.description || data.message || 'Unable to add to cart.');
           }
 
-          await refreshCartUI();
-          showSuccessState();
+          if (confirmDirectAdd) {
+            updateAddConfirmation(matchedVariant.id);
+            try {
+              await refreshCartUI();
+            } catch (refreshError) {
+              console.warn('Item added, but cart refresh failed:', refreshError);
+            }
+          } else {
+            await refreshCartUI();
+            showSuccessState();
+          }
         } catch (error) {
           showError(error.message || 'Something went wrong while adding to cart.');
           syncButtonState();
         } finally {
+          isAdding = false;
           button.classList.remove('loading');
           if (spinner) spinner.classList.add('hidden');
           syncButtonState();
@@ -661,13 +697,17 @@
       const picker = radiosPicker || selectsPicker;
 
       if (picker) {
-        picker.addEventListener('change', syncButtonState);
+        picker.addEventListener('change', function() {
+          if (confirmDirectAdd) updateAddConfirmation(null);
+          syncButtonState();
+        });
       }
 
       const qtyInput = scope.querySelector('.sticky__mainquantity, input[name="quantity"][form], input[name="quantity"]');
       if (qtyInput) {
         qtyInput.addEventListener('change', function() {
           if (hiddenQtyInput) hiddenQtyInput.value = getSelectedQuantity();
+          if (confirmDirectAdd) updateAddConfirmation(null);
         });
         qtyInput.addEventListener('input', function() {
           if (hiddenQtyInput) hiddenQtyInput.value = getSelectedQuantity();
@@ -681,6 +721,7 @@
             if (sellingPlanInput) {
               sellingPlanInput.value = getSelectedSellingPlan();
             }
+            if (confirmDirectAdd) updateAddConfirmation(null);
           });
         });
       }
