@@ -50,6 +50,25 @@
         "padding_bottom": 52
       }
     },
+    "joy_delivery_hero_3pwCnM": {
+      "type": "joy-delivery-hero",
+      "name": "Joy delivery hero",
+      "settings": {
+        "hero_title": "Pick up & delivery",
+        "hero_text": "Fresh food from local farmers, delivered to your door or a community pick up point.",
+        "postcode_button": "Check your delivery options",
+        "delivery_checker_url": "",
+        "green": "#086C3F",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
     "joy_delivery_faqs_ypGTkQ": {
       "type": "joy-delivery-faqs",
       "blocks": {
@@ -635,6 +654,7 @@
   "order": [
     "main",
     "rich_text_dTaFeB",
+    "joy_delivery_hero_3pwCnM",
     "joy_delivery_faqs_ypGTkQ",
     "joy_delivery_cta_pmqDW3",
     "image_with_text_jV7zEV",
