@@ -93,7 +93,8 @@
                           <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
                           <div class="predictive-search__item-vendor caption-with-letter-spacing">{{ product.vendor }}</div>
                         {%- endif -%}
-                        <p class="predictive-search__item-heading h5">{{ product.title }}<br>
+                        {%- capture search_product_title -%}{%- render 'product-display-title', product: product -%}{%- endcapture -%}
+                        <p class="predictive-search__item-heading h5">{{ search_product_title | escape }}<br>
                           <small>From: {{ product.vendor }}</small>
                         </p>
                         {%- if settings.predictive_search_show_price -%}

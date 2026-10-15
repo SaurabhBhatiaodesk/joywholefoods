@@ -1,4 +1,5 @@
 
+{%- capture product_display_title -%}{%- render 'product-display-title', product: product -%}{%- endcapture -%}
 {% assign enableUpsells = section.settings.enableUpsells %}
 {% if product.metafields.custom.upsell_products == blank %}
   {% assign enableUpsells = false %}
@@ -201,7 +202,7 @@
         {% endfor %}
 
       {% endif %}
-      <li>{{ product.title }}</li>
+      <li>{{ product_display_title | escape }}</li>
     </ul>
   </div>
   {% endif %}
@@ -254,10 +255,10 @@
               </p>
             {%- when 'title' -%}
               <div class="product__title" {{ block.shopify_attributes }}>
-                <h1>{{ product.title | escape }}</h1>
+                <h1>{{ product_display_title | escape }}</h1>
                 <a href="{{ product.url }}" class="product__title">
                   <h2 class="h1">
-                    {{ product.title | escape }}
+                    {{ product_display_title | escape }}
                   </h2>
                 </a>
               </div>
@@ -778,7 +779,7 @@
                       <img src="{{ product.featured_image | image_url }}" alt="" width="" height="">
                     </div>
                     <div class="sticky-addToCart-content-os">
-                      <p>{{ product.title }}</p>          
+                      <p>{{ product_display_title | escape }}</p>
                       <p data-joy-pdp-sticky-price>
                         {%- if product.has_only_default_variant -%}
                           {{ product.price_min | money }}

@@ -37,6 +37,8 @@
   endif
 -%}
 
+{%- unless product.metafields.custom.hide_from_listings.value == true -%}
+{%- capture product_display_title -%}{%- render 'product-display-title', product: product -%}{%- endcapture -%}
 {% comment %} TODO: assign `product.selected_or_first_available_variant` to variable and replace usage to reduce verbosity {% endcomment %}
 
 {%- assign first_3d_model = product.media | where: 'media_type', 'model' | first -%}
@@ -162,7 +164,7 @@
               {%- when 'title' -%}
                 <h2 class="product__title {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
                   {%- if product.title != blank -%}
-                    {{ product.title | escape }}
+                    {{ product_display_title | escape }}
                   {%- else -%}
                     {{ 'onboarding.product_title' | t }}
                   {%- endif -%}
@@ -704,6 +706,7 @@
   <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
 {% endif %}
 
+{%- endunless -%}
 {% schema %}
 {
   "name": "t:sections.featured-product.name",
