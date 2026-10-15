@@ -1,150 +1,518 @@
-{% comment %} Standalone Shopify section — Joy pickup locations {% endcomment %}
-<section id="joy-delivery-{{ section.id }}" class="joy-delivery" style="--jd-green:{{ section.settings.green }};--jd-lime:{{ section.settings.lime }};--jd-cream:{{ section.settings.cream }};--jd-text:{{ section.settings.text_color }};--jd-bg:{{ section.settings.bg_color }};--jd-top:{{ section.settings.padding_top }}px;--jd-bottom:{{ section.settings.padding_bottom }}px">
-<div class="jd-container">
-    <div class="jd-pickups" data-pickups>
-      <h2>{{ section.settings.pickups_title | escape }}</h2>
-      <div class="jd-filter-bar">
-        <label class="jd-filter-search"><span aria-hidden="true">⌕</span><input data-pickup-search type="search" placeholder="Search suburb or postcode" aria-label="Search pickup locations"></label>
-        <div class="jd-filter-days" role="group" aria-label="Filter pickup day">
-          <button type="button" class="is-active" data-day="all" aria-pressed="true">All days</button>
-          <button type="button" data-day="wednesday" aria-pressed="false">Wednesday</button>
-          <button type="button" data-day="thursday" aria-pressed="false">Thursday</button>
-          <button type="button" data-day="friday" aria-pressed="false">Friday</button>
-          <button type="button" data-day="saturday" aria-pressed="false">Saturday</button>
-        </div>
+
+{% comment %}
+  Joy Wholefoods - Pickup Locations
+  Search, day filters, view all, optional JSON feed
+{% endcomment %}
+
+<section
+  id="joy-pickup-{{ section.id }}"
+  class="joy-pickup-section"
+  style="
+    --jp-green: {{ section.settings.green }};
+    --jp-cream: {{ section.settings.cream }};
+    --jp-text: {{ section.settings.text_color }};
+    --jp-bg: {{ section.settings.bg_color }};
+  "
+>
+  <div class="jp-container">
+
+    <h2 class="jp-heading">
+      {{ section.settings.pickups_title }}
+    </h2>
+
+    <div class="jp-filters">
+
+      <label class="jp-search">
+        <span aria-hidden="true">⌕</span>
+        <input
+          type="search"
+          data-pickup-search
+          placeholder="Search suburb or postcode"
+          aria-label="Search pickup locations"
+        >
+      </label>
+
+      <div class="jp-days" role="group" aria-label="Pickup day">
+        <button type="button" data-day="all" class="active">All days</button>
+        <button type="button" data-day="wednesday">Wednesday</button>
+        <button type="button" data-day="thursday">Thursday</button>
+        <button type="button" data-day="friday">Friday</button>
+        <button type="button" data-day="saturday">Saturday</button>
       </div>
-      <div class="jd-pickup-list">
-        {% for block in section.blocks %}{% if block.type == 'pickup' %}
-          <article class="jd-pickup-item" data-pickup data-day="{{ block.settings.day | downcase | escape }}" data-search="{{ block.settings.suburb | append: ' ' | append: block.settings.postcode | append: ' ' | append: block.settings.address | downcase | escape }}" {{ block.shopify_attributes }}>
-            <div><h3>{{ block.settings.suburb | escape }}</h3><p>{{ block.settings.day | escape }} · {{ block.settings.hours | escape }}</p><span>{{ block.settings.address | escape }}</span></div>
-            {% if block.settings.map_link != blank %}<a href="{{ block.settings.map_link }}" target="_blank" rel="noopener noreferrer">♧ &nbsp; Get directions</a>{% endif %}
-          </article>
-        {% endif %}{% endfor %}
-        <p class="jd-empty" data-empty hidden>No pickup points match your search.</p>
-      </div>
-      <button type="button" class="jd-view-all" data-show-all hidden>View all locations <span aria-hidden="true">→</span></button>
-      {% if section.settings.pickups_note != blank %}<p class="jd-pickups-note">{{ section.settings.pickups_note | escape }}</p>{% endif %}
+
     </div>
 
+    <p class="jp-status" data-status hidden></p>
 
-</div>
+    <div class="jp-list" data-pickup-list>
+
+      {% for block in section.blocks %}
+        {% if block.type == 'pickup' %}
+          <article
+            class="jp-item"
+            data-pickup
+            data-day="{{ block.settings.day | downcase | escape }}"
+            data-search="{{ block.settings.suburb | append: ' ' | append: block.settings.postcode | append: ' ' | append: block.settings.address | downcase | escape }}"
+            {{ block.shopify_attributes }}
+          >
+            <div>
+              <h3>{{ block.settings.suburb | escape }}</h3>
+              <p>
+                {{ block.settings.day | escape }}
+                · {{ block.settings.hours | escape }}
+              </p>
+              <span>{{ block.settings.address | escape }}</span>
+            </div>
+
+            {% if block.settings.map_link != blank %}
+              <a
+                href="{{ block.settings.map_link }}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Get directions →
+              </a>
+            {% endif %}
+          </article>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+
+    <p class="jp-empty" data-empty hidden>
+      No pickup locations match your search.
+    </p>
+
+    <button type="button" class="jp-view-all" data-show-all hidden>
+      View all locations →
+    </button>
+
+    {% if section.settings.pickups_note != blank %}
+      <p class="jp-note">
+        {{ section.settings.pickups_note | escape }}
+      </p>
+    {% endif %}
+
+  </div>
 </section>
+
 <style>
+#joy-pickup-{{ section.id }} {
+  background: var(--jp-bg);
+  color: var(--jp-text);
+  padding:
+    {{ section.settings.padding_top }}px
+    20px
+    {{ section.settings.padding_bottom }}px;
+}
 
-#joy-delivery-{{ section.id }}{background:var(--jd-bg);color:var(--jd-text);padding:var(--jd-top) 20px var(--jd-bottom);font-family:inherit}
-#joy-delivery-{{ section.id }} *{box-sizing:border-box}
-#joy-delivery-{{ section.id }} [hidden]{display:none!important}
-#joy-delivery-{{ section.id }} .jd-container{max-width:1200px;margin:auto}
-#joy-delivery-{{ section.id }} h1,#joy-delivery-{{ section.id }} h2,#joy-delivery-{{ section.id }} h3{color:var(--jd-green);font-weight:800;letter-spacing:-.035em;line-height:1.13;margin:0}
-#joy-delivery-{{ section.id }} h2{font-size:clamp(25px,2.5vw,34px)}
-#joy-delivery-{{ section.id }} p{margin:0}
-#joy-delivery-{{ section.id }} .jd-hero{text-align:center;margin:0 auto 30px}
-#joy-delivery-{{ section.id }} .jd-hero h1{font-size:clamp(38px,5vw,64px)}
-#joy-delivery-{{ section.id }} .jd-hero>p{font-size:clamp(16px,1.65vw,22px);line-height:1.4;margin:8px auto 20px;max-width:680px}
-#joy-delivery-{{ section.id }} .jd-postcode{display:flex;align-items:center;gap:12px;max-width:740px;margin:auto;position:relative}
-#joy-delivery-{{ section.id }} .jd-postcode input{width:54%;min-width:0;border:1px solid #dfe3e0;border-radius:10px;padding:15px 15px 15px 43px;background:#fff;color:var(--jd-text);height:54px;font:inherit}
-#joy-delivery-{{ section.id }} .jd-pin{position:absolute;left:17px;top:13px;font-size:24px}
-#joy-delivery-{{ section.id }} button,#joy-delivery-{{ section.id }} a{transition:background-color .2s,border-color .2s}
-#joy-delivery-{{ section.id }} .jd-postcode button{flex:1;border:0;background:var(--jd-lime);color:#082f21;border-radius:9px;height:54px;padding:0 14px;font-weight:800;cursor:pointer}
-#joy-delivery-{{ section.id }} .jd-check-feedback{max-width:740px;margin:9px auto 0;font-size:13px;text-align:left}
-#joy-delivery-{{ section.id }} .jd-service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-#joy-delivery-{{ section.id }} .jd-service-card{background:var(--jd-cream);border-radius:8px;padding:20px 24px 25px;text-align:center;min-width:0}
-#joy-delivery-{{ section.id }} .jd-icon{width:86px;height:86px;border-radius:100%;background:#e8f3c8;color:var(--jd-green);display:grid;place-items:center;margin:0 auto 10px;font-size:48px;flex-shrink:0}
-#joy-delivery-{{ section.id }} .jd-icon svg{width:56px;height:56px}
-#joy-delivery-{{ section.id }} .jd-service-card h2{font-size:clamp(22px,2.1vw,28px);margin:0 0 12px}
-#joy-delivery-{{ section.id }} .jd-copy{font-size:16px;line-height:1.42}
-#joy-delivery-{{ section.id }} .jd-card-details{border-top:1px solid #ddd8ce;margin-top:18px;padding-top:17px;font-size:15px;line-height:1.5}
-#joy-delivery-{{ section.id }} .jd-card-highlight{background:#fff3ca;border-radius:6px;padding:13px;margin-top:18px;font-size:15px;font-weight:650;line-height:1.35}
-#joy-delivery-{{ section.id }} .jd-copy p,#joy-delivery-{{ section.id }} .jd-card-details p{margin:0 0 10px}
-#joy-delivery-{{ section.id }} .jd-levy{text-align:center;margin:14px 0 20px;font-size:15px}
-#joy-delivery-{{ section.id }} .jd-cutoff-panel{background:var(--jd-cream);border-radius:8px;padding:19px 22px 15px;display:grid;grid-template-columns:230px 1fr;align-items:center;gap:14px}
-#joy-delivery-{{ section.id }} .jd-cutoff-panel h2{font-size:30px}
-#joy-delivery-{{ section.id }} .jd-cutoffs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
-#joy-delivery-{{ section.id }} .jd-cutoff{text-align:center;border-left:1px solid #ded5c8;padding:4px 6px;display:flex;flex-direction:column;font-size:14px}
-#joy-delivery-{{ section.id }} .jd-cutoff strong{color:var(--jd-green);font-size:16px}
-#joy-delivery-{{ section.id }} .jd-cutoff-panel>p{grid-column:1/-1;text-align:center;font-size:12px}
-#joy-delivery-{{ section.id }} a{color:var(--jd-green)}
-#joy-delivery-{{ section.id }} .jd-pickups{margin-top:26px}
-#joy-delivery-{{ section.id }} .jd-pickups>h2{margin-bottom:12px}
-#joy-delivery-{{ section.id }} .jd-filter-bar{display:grid;grid-template-columns:minmax(200px,1fr) auto;gap:12px;margin-bottom:12px}
-#joy-delivery-{{ section.id }} .jd-filter-search{position:relative}
-#joy-delivery-{{ section.id }} .jd-filter-search span{position:absolute;top:9px;left:14px;font-size:25px}
-#joy-delivery-{{ section.id }} .jd-filter-search input{width:100%;height:42px;border:1px solid #dfe3e0;border-radius:10px;background:white;padding:0 14px 0 45px;font:inherit}
-#joy-delivery-{{ section.id }} .jd-filter-days{display:flex;gap:6px;flex-wrap:wrap}
-#joy-delivery-{{ section.id }} .jd-filter-days button{border:1px solid #dcd8ce;background:var(--jd-cream);border-radius:22px;min-height:42px;padding:0 17px;color:var(--jd-text);font-size:13px;cursor:pointer}
-#joy-delivery-{{ section.id }} .jd-filter-days button.is-active{background:var(--jd-green);border-color:var(--jd-green);color:#fff}
-#joy-delivery-{{ section.id }} .jd-pickup-list{display:grid;gap:8px}
-#joy-delivery-{{ section.id }} .jd-pickup-item{border:1px solid #e0e4e2;background:#fff;border-radius:8px;padding:11px 18px;display:flex;justify-content:space-between;align-items:center;gap:18px}
-#joy-delivery-{{ section.id }} .jd-pickup-item h3{font-size:18px;margin-bottom:3px}
-#joy-delivery-{{ section.id }} .jd-pickup-item p{font-size:14px;line-height:1.45}
-#joy-delivery-{{ section.id }} .jd-pickup-item span{font-size:13px;color:#506278}
-#joy-delivery-{{ section.id }} .jd-pickup-item a{font-size:13px;white-space:nowrap;font-weight:750}
-#joy-delivery-{{ section.id }} .jd-view-all{width:100%;margin-top:10px;border:1px solid var(--jd-green);border-radius:30px;background:transparent;color:var(--jd-green);height:40px;font-weight:700;cursor:pointer}
-#joy-delivery-{{ section.id }} .jd-empty{padding:16px;text-align:center}
-#joy-delivery-{{ section.id }} .jd-pickups-note{text-align:center;font-size:12px;color:#617087;margin-top:10px}
-#joy-delivery-{{ section.id }} .jd-packaging{margin-top:22px;background:var(--jd-cream);border-radius:8px;padding:20px 24px 27px}
-#joy-delivery-{{ section.id }} .jd-packaging>h2{text-align:center;margin-bottom:22px}
-#joy-delivery-{{ section.id }} .jd-packaging-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
-#joy-delivery-{{ section.id }} .jd-packaging-item{display:flex;gap:15px;padding:0 20px;border-right:1px solid #ddd8ce}
-#joy-delivery-{{ section.id }} .jd-packaging-item:first-child{padding-left:0}
-#joy-delivery-{{ section.id }} .jd-packaging-item:last-child{border-right:0;padding-right:0}
-#joy-delivery-{{ section.id }} .jd-icon-small{width:68px;height:68px;font-size:35px;margin:0}
-#joy-delivery-{{ section.id }} .jd-packaging-item h3{font-size:17px;margin:8px 0}
-#joy-delivery-{{ section.id }} .jd-packaging-item div div{font-size:13px;line-height:1.5}
-#joy-delivery-{{ section.id }} .jd-faq{display:grid;grid-template-columns:1fr 1.2fr;gap:22px;margin-top:25px}
-#joy-delivery-{{ section.id }} .jd-faq-list{display:grid;gap:8px}
-#joy-delivery-{{ section.id }} .jd-faq details{border:1px solid #dfe3e0;border-radius:9px;background:white;padding:0 16px}
-#joy-delivery-{{ section.id }} .jd-faq summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;padding:12px 0;font-size:14px}
-#joy-delivery-{{ section.id }} .jd-faq summary::-webkit-details-marker{display:none}
-#joy-delivery-{{ section.id }} .jd-faq details[open] summary span{transform:rotate(180deg)}
-#joy-delivery-{{ section.id }} .jd-faq details>div{font-size:13px;line-height:1.6;padding:0 0 14px}
-#joy-delivery-{{ section.id }} .jd-interest{background:var(--jd-cream);border-radius:8px;margin-top:22px;padding:16px 22px;display:flex;align-items:center;gap:20px}
-#joy-delivery-{{ section.id }} .jd-interest>div{flex:1}
-#joy-delivery-{{ section.id }} .jd-interest h2{font-size:22px;margin-bottom:5px}
-#joy-delivery-{{ section.id }} .jd-interest p{font-size:14px;line-height:1.5}
-#joy-delivery-{{ section.id }} .jd-interest>a,#joy-delivery-{{ section.id }} .jd-outline{border:1px solid var(--jd-green);border-radius:11px;text-decoration:none;padding:12px 22px;font-weight:750;text-align:center;font-size:14px}
-#joy-delivery-{{ section.id }} .jd-bottom{text-align:center;margin:24px 0 0;border-top:1px solid #e2e5e0;padding-top:19px}
-#joy-delivery-{{ section.id }} .jd-bottom p{margin:7px 0 16px;font-size:15px}
-#joy-delivery-{{ section.id }} .jd-bottom>div{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-#joy-delivery-{{ section.id }} .jd-bottom a{text-decoration:none;min-width:210px;padding:12px 22px;border-radius:24px;font-weight:800;font-size:14px}
-#joy-delivery-{{ section.id }} .jd-primary{background:var(--jd-lime);color:#092b22}
-#joy-delivery-{{ section.id }} .jd-visually-hidden{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden}
-@media(max-width:990px){#joy-delivery-{{ section.id }} .jd-service-card{padding:18px 14px}#joy-delivery-{{ section.id }} .jd-filter-bar{grid-template-columns:1fr}#joy-delivery-{{ section.id }} .jd-cutoff-panel{grid-template-columns:1fr}#joy-delivery-{{ section.id }} .jd-cutoff-panel h2{text-align:center}#joy-delivery-{{ section.id }} .jd-packaging-item{flex-direction:column}}
-@media(max-width:749px){#joy-delivery-{{ section.id }}{padding:{{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px}#joy-delivery-{{ section.id }} .jd-hero h1{font-size:39px}#joy-delivery-{{ section.id }} .jd-postcode{flex-direction:column}#joy-delivery-{{ section.id }} .jd-postcode input,#joy-delivery-{{ section.id }} .jd-postcode button{width:100%;flex:none}#joy-delivery-{{ section.id }} .jd-service-grid,#joy-delivery-{{ section.id }} .jd-packaging-grid,#joy-delivery-{{ section.id }} .jd-faq{grid-template-columns:1fr}#joy-delivery-{{ section.id }} .jd-service-card{padding:22px}#joy-delivery-{{ section.id }} .jd-packaging-item{flex-direction:row;border:0;border-bottom:1px solid #ddd8ce;padding:15px 0}#joy-delivery-{{ section.id }} .jd-packaging-item:last-child{border:0}#joy-delivery-{{ section.id }} .jd-cutoffs{grid-template-columns:repeat(3,minmax(0,1fr))}#joy-delivery-{{ section.id }} .jd-cutoff strong{font-size:13px}#joy-delivery-{{ section.id }} .jd-cutoff{font-size:12px}#joy-delivery-{{ section.id }} .jd-filter-days button{padding:0 12px}#joy-delivery-{{ section.id }} .jd-interest{flex-wrap:wrap}#joy-delivery-{{ section.id }} .jd-interest>a{width:100%}}
-@media(max-width:390px){#joy-delivery-{{ section.id }} .jd-cutoffs{grid-template-columns:1fr}#joy-delivery-{{ section.id }} .jd-cutoff{border-left:0;border-bottom:1px solid #ddd8ce}#joy-delivery-{{ section.id }} .jd-pickup-item{align-items:flex-start;flex-direction:column;gap:7px}}
+#joy-pickup-{{ section.id }} *,
+#joy-pickup-{{ section.id }} *::before,
+#joy-pickup-{{ section.id }} *::after {
+  box-sizing: border-box;
+}
 
+#joy-pickup-{{ section.id }} [hidden] {
+  display: none !important;
+}
+
+#joy-pickup-{{ section.id }} .jp-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#joy-pickup-{{ section.id }} .jp-heading {
+  font-size: clamp(25px, 2.5vw, 34px);
+  font-weight: 800;
+  color: var(--jp-green);
+  margin: 0 0 14px;
+  line-height: 1.2;
+}
+
+#joy-pickup-{{ section.id }} .jp-filters {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+#joy-pickup-{{ section.id }} .jp-search {
+  position: relative;
+  display: block;
+}
+
+#joy-pickup-{{ section.id }} .jp-search span {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  font-size: 26px;
+  pointer-events: none;
+}
+
+#joy-pickup-{{ section.id }} .jp-search input {
+  width: 100%;
+  height: 46px;
+  padding: 0 15px 0 45px;
+  border: 1px solid #dfe3e0;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--jp-text);
+  font: inherit;
+  box-shadow: none;
+  outline: none;
+}
+
+#joy-pickup-{{ section.id }} .jp-search input:focus {
+  border-color: var(--jp-green);
+}
+
+#joy-pickup-{{ section.id }} .jp-days {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+#joy-pickup-{{ section.id }} .jp-days button {
+  min-height: 44px;
+  padding: 9px 17px;
+  border: 1px solid #ded8cc;
+  border-radius: 25px;
+  background: var(--jp-cream);
+  color: var(--jp-text);
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+#joy-pickup-{{ section.id }} .jp-days button.active {
+  background: var(--jp-green);
+  border-color: var(--jp-green);
+  color: #fff;
+}
+
+#joy-pickup-{{ section.id }} .jp-list {
+  display: grid;
+  gap: 9px;
+}
+
+#joy-pickup-{{ section.id }} .jp-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  padding: 14px 19px;
+  border: 1px solid #e0e4e2;
+  border-radius: 9px;
+  background: #fff;
+}
+
+#joy-pickup-{{ section.id }} .jp-item h3 {
+  margin: 0 0 4px;
+  color: var(--jp-green);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+#joy-pickup-{{ section.id }} .jp-item p {
+  margin: 0 0 3px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+#joy-pickup-{{ section.id }} .jp-item span {
+  font-size: 13px;
+  color: #526278;
+}
+
+#joy-pickup-{{ section.id }} .jp-item a {
+  color: var(--jp-green);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: underline;
+}
+
+#joy-pickup-{{ section.id }} .jp-view-all {
+  display: block;
+  width: 100%;
+  min-height: 42px;
+  margin-top: 12px;
+  border: 1px solid var(--jp-green);
+  border-radius: 25px;
+  background: #fff;
+  color: var(--jp-green);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#joy-pickup-{{ section.id }} .jp-view-all:hover {
+  background: var(--jp-cream);
+}
+
+#joy-pickup-{{ section.id }} .jp-empty,
+#joy-pickup-{{ section.id }} .jp-status {
+  padding: 12px;
+  font-size: 13px;
+  text-align: center;
+}
+
+#joy-pickup-{{ section.id }} .jp-note {
+  margin: 13px 0 0;
+  color: #617087;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 990px) {
+  #joy-pickup-{{ section.id }} .jp-filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 749px) {
+  #joy-pickup-{{ section.id }} {
+    padding:
+      {{ section.settings.mobile_padding_top }}px
+      16px
+      {{ section.settings.mobile_padding_bottom }}px;
+  }
+
+  #joy-pickup-{{ section.id }} .jp-days {
+    gap: 6px;
+  }
+
+  #joy-pickup-{{ section.id }} .jp-days button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  #joy-pickup-{{ section.id }} .jp-item {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  #joy-pickup-{{ section.id }} .jp-item h3 {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  #joy-pickup-{{ section.id }} .jp-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
 </style>
 
 <script>
-(function(){
- const root=document.getElementById('joy-delivery-{{ section.id }}');
- if(!root || root.dataset.jdInitialized==='true') return;
- root.dataset.jdInitialized='true';
+(function () {
+  const root = document.getElementById(
+    'joy-pickup-{{ section.id }}'
+  );
+
+  if (!root || root.dataset.initialized === 'true') return;
+
+  root.dataset.initialized = 'true';
+
   const search = root.querySelector('[data-pickup-search]');
-  const dayButtons = Array.from(root.querySelectorAll('[data-day]'));
-  const pickups = Array.from(root.querySelectorAll('[data-pickup]'));
+  const list = root.querySelector('[data-pickup-list]');
+  const buttons = Array.from(root.querySelectorAll('[data-day]'));
   const showAll = root.querySelector('[data-show-all]');
   const empty = root.querySelector('[data-empty]');
-  let day = 'all', expanded = false;
+  const status = root.querySelector('[data-status]');
+
+  let pickups = Array.from(root.querySelectorAll('[data-pickup]'));
+  let selectedDay = 'all';
+  let expanded = false;
+
   const visibleLimit = {{ section.settings.initial_locations | json }};
-  function update(){
+
+  function update() {
     const query = (search.value || '').trim().toLowerCase();
-    const matches = pickups.filter(node => (day === 'all' || node.dataset.day === day) && (node.dataset.search || '').includes(query));
-    pickups.forEach(node => node.hidden = !matches.includes(node) || (!expanded && matches.indexOf(node) >= visibleLimit));
-    empty.hidden = matches.length !== 0;
+
+    const matches = pickups.filter(item => {
+      const matchDay =
+        selectedDay === 'all' ||
+        item.dataset.day === selectedDay;
+
+      const matchSearch =
+        (item.dataset.search || '').includes(query);
+
+      return matchDay && matchSearch;
+    });
+
+    pickups.forEach(item => {
+      const index = matches.indexOf(item);
+
+      item.hidden =
+        index === -1 ||
+        (!expanded && index >= visibleLimit);
+    });
+
+    empty.hidden = matches.length > 0;
     showAll.hidden = matches.length <= visibleLimit;
-    showAll.innerHTML = expanded ? 'Show fewer locations ↑' : 'View all ' + matches.length + ' locations →';
+
+    showAll.textContent = expanded
+      ? 'Show fewer locations ↑'
+      : 'View all ' + matches.length + ' locations →';
   }
-  search.addEventListener('input', () => {expanded = false; update();});
-  dayButtons.forEach(btn => btn.addEventListener('click', () => {
-    day = btn.dataset.day; expanded = false;
-    dayButtons.forEach(item => {const active = item === btn; item.classList.toggle('is-active',active); item.setAttribute('aria-pressed',String(active));});
+
+  search.addEventListener('input', function () {
+    expanded = false;
     update();
-  }));
-  showAll.addEventListener('click', () => {expanded = !expanded; update();});
+  });
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function () {
+      selectedDay = button.dataset.day;
+      expanded = false;
+
+      buttons.forEach(btn => {
+        const active = btn === button;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+
+      update();
+    });
+  });
+
+  showAll.addEventListener('click', function () {
+    expanded = !expanded;
+    update();
+  });
+
   update();
+
+  // Optional public JSON feed.
+  // Example:
+  // [
+  //   {
+  //     "name": "Alderley",
+  //     "address": "100 Mornington Street",
+  //     "postcode": "4051",
+  //     "day": "Wednesday",
+  //     "hours": "9am to noon",
+  //     "map_url": "https://example.com"
+  //   }
+  // ]
+
+  const endpoint = {{ section.settings.locations_json_url | json }};
+
+  if (!endpoint) return;
+
+  status.hidden = false;
+  status.textContent = 'Loading pickup locations…';
+
+  fetch(endpoint, {
+    headers: { Accept: 'application/json' }
+  })
+  .then(response => {
+    if (!response.ok) throw new Error('Location feed unavailable');
+    return response.json();
+  })
+  .then(json => {
+    const locations = Array.isArray(json)
+      ? json
+      : json.locations || json.pickup_locations || json.data;
+
+    if (!Array.isArray(locations)) {
+      throw new Error('Invalid location data');
+    }
+
+    const fragment = document.createDocumentFragment();
+    let validCount = 0;
+
+    locations.forEach(location => {
+      if (!location || typeof location !== 'object') return;
+
+      const name = String(
+        location.suburb || location.name || location.title || ''
+      );
+
+      if (!name) return;
+
+      const address = String(
+        location.address || location.full_address || ''
+      );
+
+      const postcode = String(
+        location.postcode || location.zip || ''
+      );
+
+      const day = String(
+        location.day || location.pickup_day || ''
+      );
+
+      const hours = String(
+        location.hours || location.pickup_time || ''
+      );
+
+      const mapURL = String(
+        location.map_url || location.map_link || ''
+      );
+
+      const item = document.createElement('article');
+      item.className = 'jp-item';
+      item.setAttribute('data-pickup', '');
+
+      item.dataset.day = day.toLowerCase();
+      item.dataset.search =
+        [name, postcode, address].join(' ').toLowerCase();
+
+      const details = document.createElement('div');
+      const heading = document.createElement('h3');
+      const time = document.createElement('p');
+      const addressNode = document.createElement('span');
+
+      heading.textContent = name;
+      time.textContent = [day, hours].filter(Boolean).join(' · ');
+      addressNode.textContent = address;
+
+      details.append(heading, time, addressNode);
+      item.append(details);
+
+      if (/^https:\/\//i.test(mapURL)) {
+        const link = document.createElement('a');
+        link.href = mapURL;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'Get directions →';
+        item.append(link);
+      }
+
+      fragment.append(item);
+      validCount++;
+    });
+
+    if (!validCount) {
+      throw new Error('No valid locations');
+    }
+
+    pickups.forEach(item => item.remove());
+    list.append(fragment);
+
+    pickups = Array.from(list.querySelectorAll('[data-pickup]'));
+
+    status.hidden = true;
+    expanded = false;
+    update();
+  })
+  .catch(error => {
+    console.warn('Joy Pickup Locations:', error);
+    status.textContent =
+      'Live locations unavailable. Showing configured locations.';
+    status.hidden = false;
+  });
 })();
 </script>
+
 {% schema %}
 {
   "name": "Joy pickup locations",
@@ -152,13 +520,19 @@
     {
       "type": "text",
       "id": "pickups_title",
-      "label": "Title",
+      "label": "Heading",
       "default": "Find your local pick up point"
+    },
+    {
+      "type": "text",
+      "id": "locations_json_url",
+      "label": "Locations JSON endpoint",
+      "info": "Optional public JSON URL. Leave blank to use pickup blocks."
     },
     {
       "type": "range",
       "id": "initial_locations",
-      "label": "Locations initially shown",
+      "label": "Initially visible locations",
       "min": 1,
       "max": 20,
       "step": 1,
@@ -167,7 +541,7 @@
     {
       "type": "text",
       "id": "pickups_note",
-      "label": "Pickup note",
+      "label": "Bottom note",
       "default": "Times shown are estimated driver arrival times. Please wait for your ready to collect SMS."
     },
     {
@@ -178,26 +552,20 @@
     },
     {
       "type": "color",
-      "id": "lime",
-      "label": "Lime buttons",
-      "default": "#c4eb70"
-    },
-    {
-      "type": "color",
       "id": "cream",
-      "label": "Cream card backgrounds",
+      "label": "Cream background",
       "default": "#f8f5ed"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Body text",
+      "label": "Text color",
       "default": "#18253a"
     },
     {
       "type": "color",
       "id": "bg_color",
-      "label": "Page background",
+      "label": "Section background",
       "default": "#ffffff"
     },
     {
@@ -207,7 +575,6 @@
       "min": 0,
       "max": 120,
       "step": 4,
-      "unit": "px",
       "default": 40
     },
     {
@@ -217,7 +584,6 @@
       "min": 0,
       "max": 120,
       "step": 4,
-      "unit": "px",
       "default": 40
     },
     {
@@ -227,7 +593,6 @@
       "min": 0,
       "max": 100,
       "step": 4,
-      "unit": "px",
       "default": 24
     },
     {
@@ -237,7 +602,6 @@
       "min": 0,
       "max": 100,
       "step": 4,
-      "unit": "px",
       "default": 28
     }
   ],
@@ -249,13 +613,13 @@
         {
           "type": "text",
           "id": "suburb",
-          "label": "Suburb / pickup name",
+          "label": "Suburb",
           "default": "Taringa"
         },
         {
           "type": "text",
           "id": "postcode",
-          "label": "Postcode (for search)",
+          "label": "Postcode",
           "default": "4068"
         },
         {
@@ -263,22 +627,10 @@
           "id": "day",
           "label": "Pickup day",
           "options": [
-            {
-              "value": "Wednesday",
-              "label": "Wednesday"
-            },
-            {
-              "value": "Thursday",
-              "label": "Thursday"
-            },
-            {
-              "value": "Friday",
-              "label": "Friday"
-            },
-            {
-              "value": "Saturday",
-              "label": "Saturday"
-            }
+            {"value": "Wednesday", "label": "Wednesday"},
+            {"value": "Thursday", "label": "Thursday"},
+            {"value": "Friday", "label": "Friday"},
+            {"value": "Saturday", "label": "Saturday"}
           ],
           "default": "Wednesday"
         },
@@ -297,7 +649,7 @@
         {
           "type": "url",
           "id": "map_link",
-          "label": "Google Maps directions URL"
+          "label": "Directions URL"
         }
       ]
     }
