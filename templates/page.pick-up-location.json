@@ -187,6 +187,64 @@
         "mobile_padding_bottom": 28
       }
     },
+    "joy_pickup_locations_rLaDgq": {
+      "type": "joy-pickup-locations",
+      "blocks": {
+        "pickup_kQeLKm": {
+          "type": "pickup",
+          "settings": {
+            "suburb": "Taringa",
+            "postcode": "4068",
+            "day": "Wednesday",
+            "hours": "9am to noon",
+            "address": "203 Taringa Parade",
+            "map_link": ""
+          }
+        },
+        "pickup_6baQxy": {
+          "type": "pickup",
+          "settings": {
+            "suburb": "Pimpama",
+            "postcode": "4209",
+            "day": "Thursday",
+            "hours": "12:30pm to 3:30pm",
+            "address": "48/7 Angela Way",
+            "map_link": ""
+          }
+        },
+        "pickup_7YTxC6": {
+          "type": "pickup",
+          "settings": {
+            "suburb": "Samford",
+            "postcode": "4520",
+            "day": "Saturday",
+            "hours": "8am to 10am",
+            "address": "6 Church Street",
+            "map_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "pickup_kQeLKm",
+        "pickup_6baQxy",
+        "pickup_7YTxC6"
+      ],
+      "name": "Joy pickup locations",
+      "settings": {
+        "pickups_title": "Find your local pick up point",
+        "initial_locations": 3,
+        "pickups_note": "Times shown are estimated driver arrival times. Please wait for your ready to collect SMS.",
+        "green": "#064633",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#18253a",
+        "bg_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
     "joy_packaging_care_HwkMNn": {
       "type": "joy-packaging-care",
       "blocks": {
@@ -823,6 +881,7 @@
     "joy_delivery_methods_WgREAy",
     "joy_order_cutoffs_6giLyF",
     "joy_pickup_interest_zMRTWJ",
+    "joy_pickup_locations_rLaDgq",
     "joy_packaging_care_HwkMNn",
     "joy_delivery_faqs_ypGTkQ",
     "joy_delivery_cta_pmqDW3",
