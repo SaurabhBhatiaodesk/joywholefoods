@@ -168,6 +168,53 @@
         "mobile_padding_bottom": 28
       }
     },
+    "joy_packaging_care_HwkMNn": {
+      "type": "joy-packaging-care",
+      "blocks": {
+        "packaging_zdkPt9": {
+          "type": "packaging",
+          "settings": {
+            "icon": "recycle",
+            "title": "Recycled boxes",
+            "body": "<p>We reuse boxes wherever we can. They might look a little loved, but they're all about sustainability! For local orders, please return your boxes so we can use them again.</p>"
+          }
+        },
+        "packaging_VXncDR": {
+          "type": "packaging",
+          "settings": {
+            "icon": "cold",
+            "title": "Local orders",
+            "body": "<p>If your order includes cold items, we use styrofoam to help keep them cold. You can select your fresh produce packaging preference in the cart.</p>"
+          }
+        },
+        "packaging_PYzCRg": {
+          "type": "packaging",
+          "settings": {
+            "icon": "box",
+            "title": "Courier orders",
+            "body": "<p>We use cardboard boxes and insulated packaging for courier deliveries.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "packaging_zdkPt9",
+        "packaging_VXncDR",
+        "packaging_PYzCRg"
+      ],
+      "name": "Joy packaging care",
+      "settings": {
+        "packaging_title": "Packed with care, reused with joy",
+        "green": "#064633",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#18253a",
+        "bg_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
     "joy_delivery_faqs_ypGTkQ": {
       "type": "joy-delivery-faqs",
       "blocks": {
@@ -756,6 +803,7 @@
     "joy_delivery_hero_3pwCnM",
     "joy_delivery_methods_WgREAy",
     "joy_order_cutoffs_6giLyF",
+    "joy_packaging_care_HwkMNn",
     "joy_delivery_faqs_ypGTkQ",
     "joy_delivery_cta_pmqDW3",
     "image_with_text_jV7zEV",
