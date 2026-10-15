@@ -122,6 +122,52 @@
         "mobile_padding_bottom": 28
       }
     },
+    "joy_order_cutoffs_6giLyF": {
+      "type": "joy-order-cutoffs",
+      "blocks": {
+        "cutoff_BCcPPx": {
+          "type": "cutoff",
+          "settings": {
+            "day": "Wednesday",
+            "deadline": "Monday 10am"
+          }
+        },
+        "cutoff_9x4jPK": {
+          "type": "cutoff",
+          "settings": {
+            "day": "Thursday",
+            "deadline": "Tuesday 10am"
+          }
+        },
+        "cutoff_r68p3n": {
+          "type": "cutoff",
+          "settings": {
+            "day": "Friday & Saturday",
+            "deadline": "Wednesday 10am"
+          }
+        }
+      },
+      "block_order": [
+        "cutoff_BCcPPx",
+        "cutoff_9x4jPK",
+        "cutoff_r68p3n"
+      ],
+      "name": "Joy order cutoffs",
+      "settings": {
+        "cutoffs_title": "Order cutoffs",
+        "cutoffs_note": "<p>Missed the cutoff? See if we can help with a late order.</p>",
+        "contact_link": "",
+        "green": "#064633",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#18253a",
+        "bg_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
     "joy_delivery_faqs_ypGTkQ": {
       "type": "joy-delivery-faqs",
       "blocks": {
@@ -709,6 +755,7 @@
     "rich_text_dTaFeB",
     "joy_delivery_hero_3pwCnM",
     "joy_delivery_methods_WgREAy",
+    "joy_order_cutoffs_6giLyF",
     "joy_delivery_faqs_ypGTkQ",
     "joy_delivery_cta_pmqDW3",
     "image_with_text_jV7zEV",
