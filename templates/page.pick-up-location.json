@@ -58,10 +58,63 @@
         "hero_text": "Fresh food from local farmers, delivered to your door or a community pick up point.",
         "postcode_button": "Check your delivery options",
         "delivery_checker_url": "",
-        "green": "#086C3F",
+        "green": "#086c3f",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
         "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
+    "joy_delivery_methods_WgREAy": {
+      "type": "joy-delivery-methods",
+      "blocks": {
+        "service_mYBQbF": {
+          "type": "service",
+          "settings": {
+            "icon": "truck",
+            "title": "Local home delivery",
+            "description": "<p>Our three delivery vans bring fresh food to your door from Wednesday to Saturday. Your delivery day depends on your suburb.</p>",
+            "highlight": "",
+            "details": "<p>$50 minimum order, or $100 for southern Gold Coast.</p><p>$12.50 delivery. Free delivery on orders over $200. Temporary $2 fuel levy applies.</p>"
+          }
+        },
+        "service_CeUbwf": {
+          "type": "service",
+          "settings": {
+            "icon": "box",
+            "title": "Refrigerated courier delivery",
+            "description": "<p>For areas outside our local runs, we pack your order at our Rocklea warehouse and send it with a refrigerated courier. Available days depend on your postcode.</p>",
+            "highlight": "",
+            "details": "<p>$150 minimum order.</p><p>$12.50 delivery plus a temporary $4 fuel levy.</p><p>Refrigerate chilled items promptly when your order arrives.</p>"
+          }
+        },
+        "service_VkXPfk": {
+          "type": "service",
+          "settings": {
+            "icon": "people",
+            "title": "Community pick up",
+            "description": "<p>$50 minimum order.<br>No delivery fee. Temporary $2 fuel levy applies.</p>",
+            "highlight": "<p>These locations are hosted by our wonderful customers who open their homes or businesses to help make fresh food more accessible in their community.</p>",
+            "details": "<p>Pick up points are customers' homes or businesses, rather than staffed shops.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "service_mYBQbF",
+        "service_CeUbwf",
+        "service_VkXPfk"
+      ],
+      "name": "Joy delivery methods",
+      "settings": {
+        "levy_note": "Our fuel levy is temporary. We hope to remove it when diesel prices come back down.",
+        "green": "#064633",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#18253a",
         "bg_color": "#ffffff",
         "padding_top": 40,
         "padding_bottom": 40,
@@ -94,7 +147,7 @@
       "name": "Joy delivery FAQs",
       "settings": {
         "faq_title": "Frequently asked questions",
-        "green": "#086C3F",
+        "green": "#086c3f",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
         "text_color": "#18253a",
@@ -655,6 +708,7 @@
     "main",
     "rich_text_dTaFeB",
     "joy_delivery_hero_3pwCnM",
+    "joy_delivery_methods_WgREAy",
     "joy_delivery_faqs_ypGTkQ",
     "joy_delivery_cta_pmqDW3",
     "image_with_text_jV7zEV",
