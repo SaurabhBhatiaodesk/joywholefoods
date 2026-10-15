@@ -2143,7 +2143,7 @@ h2.related-products__heading.inline-richtext {
   }
   
   .collection-hero__inner {
-      padding-top: 40px;
+      padding: 40px 0;
   }
   
   .collection.page-width {
