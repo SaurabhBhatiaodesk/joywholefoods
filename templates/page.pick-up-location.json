@@ -312,7 +312,7 @@
         "green": "#086c3f",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
-        "text_color": "#18253a",
+        "text_color": "#000000",
         "bg_color": "#ffffff",
         "padding_top": 0,
         "padding_bottom": 0,
