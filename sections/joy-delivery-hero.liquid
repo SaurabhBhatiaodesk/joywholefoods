@@ -91,6 +91,43 @@
 #joy-delivery-{{ section.id }} .jd-check-feedback{color:#aa3028;text-align:center}
 #joy-delivery-{{ section.id }} .jd-postcode input[aria-invalid="true"]{border-color:#be3029}
 @media(max-width:749px){#joy-delivery-{{ section.id }} .jd-result-card{padding:17px}}
+
+/* FIX: autocomplete results must not inherit the lime submit-button styling */
+#joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions {
+  background: #ffffff !important;
+  border: 1px solid #e2e6e2;
+  border-radius: 10px;
+  overflow: auto;
+}
+#joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion {
+  display: flex;
+  width: 100%;
+  height: auto;
+  min-height: 46px;
+  flex: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 15px;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid #ecefeb;
+  border-radius: 0;
+  background: #ffffff !important;
+  color: var(--jd-text);
+  font-weight: 400;
+  text-align: left;
+  box-shadow: none;
+}
+#joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion:last-child { border-bottom: 0; }
+#joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion:hover,
+#joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion:focus-visible {
+  background: #f5f8f4 !important;
+  outline: 2px solid var(--jd-green);
+  outline-offset: -2px;
+}
+#joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion strong { color: var(--jd-green); }
+#joy-delivery-{{ section.id }} .jd-postcode .jd-suggestions .jd-suggestion small { color: #53675b; }
+
 </style>
 
 <script>
