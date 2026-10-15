@@ -43,7 +43,12 @@
     font-size: 20px;
     line-height: 30px;
 }
-.swap-check input.swap-box {
+.swap-check .swap-box {
+    box-sizing: border-box;
+    height: 100px;
+    padding: 12px 10px 16px;
+    resize: vertical;
+    font-family: "DM Sans 9pt", sans-serif;
     max-width: 90%;
     background: transparent;
     border: none;
@@ -58,30 +63,30 @@
     width: 100%;
     text-align: center;
 }
-.swap-check input.swap-box::placeholder{
+.swap-check .swap-box::placeholder{
   color:#fff;
   opacity:0.6;
 }
-.swap-check input.swap-box::-webkit-placeholder{
+.swap-check .swap-box::-webkit-placeholder{
   color:#fff;
   opacity:0.6;
 }
-.swap-check input.swap-box::-moz-placeholder{
+.swap-check .swap-box::-moz-placeholder{
   color:#fff;
   opacity:0.6;
 }
 .swap-check input.checkbox {
     width: 22px;
 }
-.swap-check input.swap-box::placeholder {
+.swap-check .swap-box::placeholder {
     word-wrap: break-word;
     white-space: normal;
 }
-.swap-check input.swap-box::-webkit-placeholder {
+.swap-check .swap-box::-webkit-placeholder {
     word-wrap: break-word;
     white-space: normal;
 }
-.swap-check input.swap-box::-moz-placeholder {
+.swap-check .swap-box::-moz-placeholder {
     word-wrap: break-word;
     white-space: normal;
 }
@@ -277,13 +282,20 @@
   }
 }
 @media screen and (max-width:600px) {
+  .swap-check .swap-box {
+    height: 124px;
+    min-height: 124px;
+  }
    .swap-popup h1 {
       font-size: 20px;
       line-height: 30px;
       max-width: 100%;
   }
   .swap-popup {
-    max-width: 85%; 
+    box-sizing: border-box;
+    max-width: calc(100% - 32px);
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
   }
   .cart__note.field .swap-item-display {
     flex-wrap:wrap;

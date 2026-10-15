@@ -35,6 +35,14 @@
 {%- style -%}
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
+  {% if collection.handle == 'organic-spray-free-farm-fresh-fruit-and-veg-box-delivery-brisbane-gold-coast' %}
+    #shopify-section-{{ section.id }} #product-grid .card-wrapper-os .swap-product-btn-os {
+      background-color: #086c3f;
+      color: #ffffff;
+      --color-button: 8, 108, 63;
+      --color-button-text: 255, 255, 255;
+    }
+  {% endif %}
   html,
   body {
     max-width: 100%;
