@@ -12,7 +12,7 @@
           {% if block.type == 'cutoff' %}
             <div class="jd-cutoff" {{ block.shopify_attributes }}>
               <strong>{{ block.settings.day | escape }}</strong>
-              <p>{{ block.settings.deadline | escape }}</p>
+              <span>{{ block.settings.deadline | escape }}</span>
             </div>
           {% endif %}
         {% endfor %}
