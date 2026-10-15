@@ -177,25 +177,6 @@
         "mobile_padding_bottom": 28
       }
     },
-    "joy_pickup_interest_zMRTWJ": {
-      "type": "joy-pickup-interest",
-      "name": "Joy pickup interest",
-      "settings": {
-        "interest_title": "Want a pick up point in your area?",
-        "interest_text": "Request a location or apply to host at your home or business. We'll review demand and delivery routes before adding new points.",
-        "interest_button": "Register your interest",
-        "interest_link": "",
-        "green": "#086C3F",
-        "lime": "#c4eb70",
-        "cream": "#f8f5ed",
-        "text_color": "#000000",
-        "bg_color": "#ffffff",
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "mobile_padding_top": 0,
-        "mobile_padding_bottom": 0
-      }
-    },
     "joy_pickup_locations_rLaDgq": {
       "type": "joy-pickup-locations",
       "blocks": {
@@ -243,15 +224,34 @@
         "pickups_title": "Find your local pick up point",
         "initial_locations": 3,
         "pickups_note": "Times shown are estimated driver arrival times. Please wait for your ready to collect SMS.",
-        "green": "#064633",
+        "green": "#086C3F",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
-        "text_color": "#18253a",
+        "text_color": "#000000",
         "bg_color": "#ffffff",
-        "padding_top": 40,
-        "padding_bottom": 40,
+        "padding_top": 0,
+        "padding_bottom": 0,
         "mobile_padding_top": 24,
         "mobile_padding_bottom": 28
+      }
+    },
+    "joy_pickup_interest_zMRTWJ": {
+      "type": "joy-pickup-interest",
+      "name": "Joy pickup interest",
+      "settings": {
+        "interest_title": "Want a pick up point in your area?",
+        "interest_text": "Request a location or apply to host at your home or business. We'll review demand and delivery routes before adding new points.",
+        "interest_button": "Register your interest",
+        "interest_link": "",
+        "green": "#086C3F",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
       }
     },
     "joy_packaging_care_HwkMNn": {
@@ -889,8 +889,8 @@
     "joy_delivery_hero_3pwCnM",
     "joy_delivery_methods_WgREAy",
     "joy_order_cutoffs_6giLyF",
-    "joy_pickup_interest_zMRTWJ",
     "joy_pickup_locations_rLaDgq",
+    "joy_pickup_interest_zMRTWJ",
     "joy_packaging_care_HwkMNn",
     "joy_delivery_faqs_ypGTkQ",
     "joy_delivery_cta_pmqDW3",
