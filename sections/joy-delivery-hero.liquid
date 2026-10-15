@@ -25,12 +25,17 @@
       </div>
       <div data-postcode-data hidden>
         {% for block in section.blocks %}
-          {% if block.type == 'postcode_area' and block.settings.postcodes != blank %}
-            <div data-postcode-area data-codes="{{ block.settings.postcodes | escape }}" data-name="{{ block.settings.location_name | escape }}" {{ block.shopify_attributes }}>
-              <div data-area-description>{% assign current_date = 'now' | date: '%d/%m/%Y' %}{{ block.settings.postcode_text | replace: '[date]', current_date }}</div>
+          {% if block.type == 'postcode' and block.settings.postcodes != blank %}
+            <div data-postcode-area data-codes="{{ block.settings.postcodes | escape }}" data-name="{{ block.settings.locationName | escape }}" {{ block.shopify_attributes }}>
+              <div data-area-description>{% assign current_date = 'now' | date: '%d/%m/%Y' %}{{ block.settings.postcodeText | replace: '[date]', current_date }}</div>
             </div>
           {% endif %}
         {% endfor %}
+        <div class="jd-result-card" data-result-toowoomba hidden>
+          <h2>Toowoomba &amp; surrounds</h2>
+          <p class="jd-result-postcodes">Postcodes: 4350, 4358</p>
+          <div class="jd-result-message"><p><strong>Monday / Wednesday / Friday delivery</strong></p><p>Your next delivery date is Monday.</p><p>Order by midnight for Monday, Wednesday or Friday. $50 minimum order. (Select your delivery day)</p><p><strong>FREE DELIVERY</strong></p><p>*Some 4352 suburbs including Cabarlah, Geham, Merrits Creek, Hampton and Pechey have a $5 delivery fee.</p><p>*Exclusions include Postmans Ridge and Murphys Creek.</p></div>
+        </div>
       </div>
     </header>
 
@@ -146,10 +151,11 @@
   const results=root.querySelector('[data-postcode-results]');
   const matched=root.querySelector('[data-result-match]');
   const fallback=root.querySelector('[data-result-fallback]');
+  const toowoomba=root.querySelector('[data-result-toowoomba]');
   const areas=Array.from(root.querySelectorAll('[data-postcode-area]'));
   function reset(){
     feedback.hidden=true; feedback.textContent='';
-    results.hidden=true; matched.hidden=true; fallback.hidden=true;
+    results.hidden=true; matched.hidden=true; fallback.hidden=true; toowoomba.hidden=true;
     input.setCustomValidity('');input.removeAttribute('aria-invalid');
   }
   input.addEventListener('input',reset);
@@ -203,10 +209,28 @@
       "label": "Postcode button",
       "default": "Check your delivery options"
     },
-    {"type":"header","content":"No postcode match"},
-    {"type":"text","id":"pickup_label","label":"Fallback heading","default":"Community pick up"},
-    {"type":"text","id":"pickup_message","label":"Fallback message","default":"There are currently no delivery schedules available for your postcode."},
-    {"type":"richtext","id":"pickup_text","label":"Pickup details","default":"<p>You may still be able to collect an order from a community pick up point. Please contact us to confirm availability.</p>"},
+    {
+      "type": "header",
+      "content": "No postcode match"
+    },
+    {
+      "type": "text",
+      "id": "pickup_label",
+      "label": "Fallback heading",
+      "default": "Community pick up"
+    },
+    {
+      "type": "text",
+      "id": "pickup_message",
+      "label": "Fallback message",
+      "default": "There are currently no delivery schedules available for your postcode."
+    },
+    {
+      "type": "richtext",
+      "id": "pickup_text",
+      "label": "Pickup details",
+      "default": "<p>You may still be able to collect an order from a community pick up point. Please contact us to confirm availability.</p>"
+    },
     {
       "type": "color",
       "id": "green",
@@ -276,16 +300,75 @@
       "step": 4,
       "unit": "px",
       "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Legacy postcode settings"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Legacy subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Legacy heading"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Legacy label"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Legacy description"
+    },
+    {
+      "type": "text",
+      "id": "postCodeLabel",
+      "label": "Legacy postcode label"
+    },
+    {
+      "type": "text",
+      "id": "pickupLabel",
+      "label": "Legacy pickup heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "pickupMessage",
+      "label": "Legacy pickup message"
+    },
+    {
+      "type": "richtext",
+      "id": "pickupText",
+      "label": "Legacy pickup text"
     }
   ],
   "blocks": [
     {
-      "type": "postcode_area",
+      "type": "postcode",
       "name": "Postcode delivery area",
       "settings": [
-        {"type":"textarea","id":"postcodes","label":"Postcodes (comma separated)","info":"Example: 4350, 4358. Exact 4-digit matches only."},
-        {"type":"text","id":"location_name","label":"Area name","default":"Delivery area"},
-        {"type":"richtext","id":"postcode_text","label":"Delivery schedule / details","info":"You may use [date] for today's date."}
+        {
+          "type": "textarea",
+          "id": "postcodes",
+          "label": "Postcodes (comma separated)",
+          "info": "Example: 4350, 4358. Exact 4-digit matches only."
+        },
+        {
+          "type": "text",
+          "id": "locationName",
+          "label": "Area name",
+          "default": "Delivery area"
+        },
+        {
+          "type": "richtext",
+          "id": "postcodeText",
+          "label": "Delivery schedule / details",
+          "info": "You may use [date] for today's date."
+        }
       ]
     }
   ],
