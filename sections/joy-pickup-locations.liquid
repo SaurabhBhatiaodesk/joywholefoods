@@ -1,625 +1,129 @@
-
 {% comment %}
-  JOY WHOLEFOODS - PICKUP LOCATIONS
-  Standalone Shopify OS 2.0 Section
-
-  Features:
-  - Existing visual layout
-  - Dynamic pickup blocks
-  - Optional live JSON endpoint
-  - Suburb / postcode search
-  - Day filtering
-  - View all / show fewer
-  - Google Maps directions
-  - Mobile responsive
+  Joy Pickup Locations — Bird data mapping, independent informational section.
+  Location addresses below are from Bird advanced scripting snapshot supplied by store.
+  NOT the Bird live location feed. Days/times must come from an approved JSON feed
+  or from matching Theme Editor pickup blocks. Never updates Bird/cart.
 {% endcomment %}
-
-<section
-  id="joy-pickups-{{ section.id }}"
-  class="joy-pickups-section"
-  style="
-    --jp-green: {{ section.settings.green }};
-    --jp-cream: {{ section.settings.cream }};
-    --jp-bg: {{ section.settings.background }};
-    --jp-text: {{ section.settings.text_color }};
-  "
->
-  <div class="jp-container">
-
-    <h2 class="jp-heading">
-      {{ section.settings.heading | escape }}
-    </h2>
-
-    <div class="jp-filter-bar">
-      <div class="jp-search-wrap">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="7"></circle>
-          <path d="m20 20-4-4"></path>
-        </svg>
-
-        <input
-          type="search"
-          data-jp-search
-          placeholder="Search suburb or postcode"
-          aria-label="Search pickup locations"
-        >
-      </div>
-
-      <div class="jp-day-filters" role="group" aria-label="Filter pickup locations by day">
-        <button
-          type="button"
-          class="active"
-          data-jp-day="all"
-          aria-pressed="true"
-        >
-          All days
-        </button>
-
-        <button type="button" data-jp-day="wednesday" aria-pressed="false">
-          Wednesday
-        </button>
-
-        <button type="button" data-jp-day="thursday" aria-pressed="false">
-          Thursday
-        </button>
-
-        <button type="button" data-jp-day="friday" aria-pressed="false">
-          Friday
-        </button>
-
-        <button type="button" data-jp-day="saturday" aria-pressed="false">
-          Saturday
-        </button>
-      </div>
-    </div>
-
-    <p data-jp-status class="jp-status" hidden></p>
-
-    <div class="jp-location-list" data-jp-list>
-
-      {% for block in section.blocks %}
-        {% if block.type == 'pickup' %}
-          <article
-            class="jp-location"
-            data-jp-location
-            data-day="{{ block.settings.day | downcase | escape }}"
-            data-search="{{ block.settings.suburb | append: ' ' | append: block.settings.postcode | append: ' ' | append: block.settings.address | downcase | escape }}"
-            {{ block.shopify_attributes }}
-          >
-            <div class="jp-location-info">
-              <h3>{{ block.settings.suburb | escape }}</h3>
-
-              <p>
-                {{ block.settings.day | escape }}
-                {% if block.settings.hours != blank %}
-                  · {{ block.settings.hours | escape }}
-                {% endif %}
-              </p>
-
-              <span>{{ block.settings.address | escape }}</span>
-            </div>
-
-            {% assign directions_url = block.settings.map_link %}
-
-            {% if directions_url != blank %}
-              <a
-                class="jp-directions"
-                href="{{ directions_url }}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
-                  <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-                Get directions
-              </a>
-            {% endif %}
-          </article>
-        {% endif %}
-      {% endfor %}
-    </div>
-
-    <p class="jp-empty" data-jp-empty hidden>
-      No pickup locations match your search.
-    </p>
-
-    <button
-      type="button"
-      class="jp-view-all"
-      data-jp-view-all
-      hidden
-    >
-      View all locations →
-    </button>
-
-    {% if section.settings.note != blank %}
-      <p class="jp-note">
-        {{ section.settings.note | escape }}
-      </p>
-    {% endif %}
-
+<section id="joy-pickups-{{ section.id }}" class="jpl-section" style="--jpl-green:{{ section.settings.green }};--jpl-cream:{{ section.settings.cream }};--jpl-bg:{{ section.settings.bg_color }};padding:{{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px">
+ <div class="jpl-wrap">
+  <h2>{{ section.settings.pickups_title | escape }}</h2>
+  <div class="jpl-toolbar">
+   <label class="jpl-search"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/></svg><input type="search" data-search aria-label="Search suburb or postcode" placeholder="Search suburb or postcode"></label>
+   <div class="jpl-days" role="group" aria-label="Filter pickup day">
+    <button type="button" data-day="all" class="is-active" aria-pressed="true">All days</button>
+    <button type="button" data-day="wednesday" aria-pressed="false">Wednesday</button>
+    <button type="button" data-day="thursday" aria-pressed="false">Thursday</button>
+    <button type="button" data-day="friday" aria-pressed="false">Friday</button>
+    <button type="button" data-day="saturday" aria-pressed="false">Saturday</button>
+   </div>
   </div>
+  <div class="jpl-status" data-status role="status" aria-live="polite" hidden></div>
+  <div class="jpl-list" data-list></div>
+  <p class="jpl-empty" data-empty hidden>No matching pickup locations.</p>
+  <button class="jpl-view" type="button" data-more hidden></button>
+  {% if section.settings.pickups_note != blank %}<p class="jpl-note">{{ section.settings.pickups_note | escape }}</p>{% endif %}
+  <script type="application/json" data-bird-snapshot>[{"id": "109014", "name": "NARANGBA", "address": "21 Matterhorn Drive, Narangba", "day": "", "hours": ""}, {"id": "109015", "name": "DAYBORO", "address": "3468 Mount Mee Road, Dayboro", "day": "", "hours": ""}, {"id": "109016", "name": "EATONS HILL", "address": "14 Queen Elizabeth Drive, Eatons Hill", "day": "", "hours": ""}, {"id": "109017", "name": "CAPALABA", "address": "69 Killarney Crescent, Capalaba", "day": "", "hours": ""}, {"id": "109018", "name": "WYNNUM WEST", "address": "1/203 Randall Road, Wynnum West", "day": "", "hours": ""}, {"id": "109019", "name": "CARINDALE", "address": "79 Kilmorey Street, Carindale", "day": "", "hours": ""}, {"id": "109020", "name": "BALMORAL", "address": "3 Walkers Drive, Balmoral", "day": "", "hours": ""}, {"id": "109021", "name": "ROCHEDALE SOUTH", "address": "6 Bawden Court, Rochedale South", "day": "", "hours": ""}, {"id": "109022", "name": "TARRAGINDI", "address": "27 Kogarah Street, Tarragindi", "day": "", "hours": ""}, {"id": "109023", "name": "SAMFORD", "address": "6 Church Street, Samford Village", "day": "", "hours": ""}, {"id": "109024", "name": "KEPERRA", "address": "58 Glengarry Rd, Keperra", "day": "", "hours": ""}, {"id": "109025", "name": "WOOLOOWIN", "address": "11 Owen Street, Wooloowin", "day": "", "hours": ""}, {"id": "109026", "name": "PIMPAMA", "address": "48/7 Angela Way, Pimpama", "day": "", "hours": ""}, {"id": "109027", "name": "EDENS LANDING", "address": "10 Jonath Court, Edens Landing", "day": "", "hours": ""}, {"id": "109028", "name": "KARANA DOWNS", "address": "2 Kyuna Court, Karana Downs", "day": "", "hours": ""}, {"id": "109029", "name": "ROCKLEA", "address": "34 Reginald Street, Rocklea", "day": "", "hours": ""}, {"id": "109030", "name": "ALDERLEY", "address": "100 Mornington Street, Alderley", "day": "", "hours": ""}, {"id": "109031", "name": "KEDRON", "address": "23 Eddowes Street, Kedron", "day": "", "hours": ""}, {"id": "109032", "name": "KENMORE", "address": "45 Twilight Street, Kenmore", "day": "", "hours": ""}, {"id": "109033", "name": "TARINGA", "address": "203 Taringa Parade, Taringa", "day": "", "hours": ""}, {"id": "109034", "name": "FOREST LAKE", "address": "10 Allen Close, Forest Lake", "day": "", "hours": ""}, {"id": "109035", "name": "PULLENVALE", "address": "2447 Moggill Road, Pullenvale", "day": "", "hours": ""}, {"id": "112786", "name": "BRIBIE ISLAND", "address": "10 Aylward Rd, Ningi", "day": "", "hours": ""}]</script>
+  <script type="application/json" data-manual>{%- capture block_data -%}[
+  {%- for block in section.blocks -%}{%- if block.type == 'pickup' -%}
+  {"id":{{ block.settings.bird_id | json }},"name":{{ block.settings.suburb | json }},"address":{{ block.settings.address | json }},"postcode":{{ block.settings.postcode | json }},"day":{{ block.settings.day | json }},"hours":{{ block.settings.hours | json }},"map_url":{{ block.settings.map_link | json }}}{% unless forloop.last %},{% endunless %}
+  {%- endif -%}{%- endfor -%}]{%- endcapture -%}{{ block_data | strip }}</script>
+ </div>
 </section>
-
 <style>
-#joy-pickups-{{ section.id }} {
-  padding:
-    {{ section.settings.padding_top }}px
-    20px
-    {{ section.settings.padding_bottom }}px;
-  background: var(--jp-bg);
-  color: var(--jp-text);
-  font-family: 'DM Sans', sans-serif;
-}
-
-#joy-pickups-{{ section.id }} *,
-#joy-pickups-{{ section.id }} *::before,
-#joy-pickups-{{ section.id }} *::after {
-  box-sizing: border-box;
-}
-
-#joy-pickups-{{ section.id }} [hidden] {
-  display: none !important;
-}
-
-#joy-pickups-{{ section.id }} .jp-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-#joy-pickups-{{ section.id }} .jp-heading {
-  margin: 0 0 14px;
-  color: var(--jp-green);
-  font-family: 'Holiday Journey', cursive;
-  font-size: clamp(26px, 2.6vw, 36px);
-  font-weight: 400;
-  line-height: 1.2;
-}
-
-#joy-pickups-{{ section.id }} .jp-filter-bar {
-  display: grid;
-  grid-template-columns: minmax(200px, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 13px;
-}
-
-#joy-pickups-{{ section.id }} .jp-search-wrap {
-  position: relative;
-  min-width: 0;
-}
-
-#joy-pickups-{{ section.id }} .jp-search-wrap svg {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: var(--jp-green);
-}
-
-#joy-pickups-{{ section.id }} .jp-search-wrap input {
-  display: block;
-  width: 100%;
-  height: 46px;
-  border: 1px solid #dce1de;
-  border-radius: 10px;
-  background: #fff;
-  padding: 0 15px 0 45px;
-  color: var(--jp-text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  outline: none;
-  box-shadow: none;
-}
-
-#joy-pickups-{{ section.id }} .jp-search-wrap input:focus {
-  border-color: var(--jp-green);
-}
-
-#joy-pickups-{{ section.id }} .jp-day-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  align-items: center;
-}
-
-#joy-pickups-{{ section.id }} .jp-day-filters button {
-  min-height: 44px;
-  border: 1px solid #ded8cb;
-  border-radius: 25px;
-  background: var(--jp-cream);
-  color: var(--jp-text);
-  padding: 8px 17px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.4;
-  cursor: pointer;
-  transition: background .2s, color .2s;
-}
-
-#joy-pickups-{{ section.id }} .jp-day-filters button.active {
-  color: #fff;
-  background: var(--jp-green);
-  border-color: var(--jp-green);
-}
-
-#joy-pickups-{{ section.id }} .jp-location-list {
-  display: grid;
-  gap: 8px;
-}
-
-#joy-pickups-{{ section.id }} .jp-location {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  min-width: 0;
-  padding: 12px 18px;
-  background: #fff;
-  border: 1px solid #e1e5e3;
-  border-radius: 9px;
-}
-
-#joy-pickups-{{ section.id }} .jp-location-info {
-  min-width: 0;
-}
-
-#joy-pickups-{{ section.id }} .jp-location h3 {
-  color: var(--jp-green);
-  font-family: 'Holiday Journey', cursive;
-  font-size: 19px;
-  font-weight: 400;
-  line-height: 1.2;
-  margin: 0 0 4px;
-}
-
-#joy-pickups-{{ section.id }} .jp-location p {
-  margin: 0 0 4px;
-  color: var(--jp-text);
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-#joy-pickups-{{ section.id }} .jp-location-info span {
-  display: block;
-  color: #526278;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-#joy-pickups-{{ section.id }} .jp-directions {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  flex-shrink: 0;
-  color: var(--jp-green);
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  white-space: nowrap;
-}
-
-#joy-pickups-{{ section.id }} .jp-directions svg {
-  width: 20px;
-  height: 20px;
-}
-
-#joy-pickups-{{ section.id }} .jp-view-all {
-  display: block;
-  width: 100%;
-  min-height: 42px;
-  margin-top: 10px;
-  border: 1px solid var(--jp-green);
-  border-radius: 25px;
-  background: #fff;
-  color: var(--jp-green);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background .2s;
-}
-
-#joy-pickups-{{ section.id }} .jp-view-all:hover {
-  background: var(--jp-cream);
-}
-
-#joy-pickups-{{ section.id }} .jp-empty,
-#joy-pickups-{{ section.id }} .jp-status {
-  padding: 15px;
-  text-align: center;
-  color: var(--jp-text);
-  font-size: 13px;
-}
-
-#joy-pickups-{{ section.id }} .jp-note {
-  margin: 11px 0 0;
-  color: #617087;
-  font-size: 12px;
-  line-height: 1.5;
-  text-align: center;
-}
-
-@media (max-width: 990px) {
-  #joy-pickups-{{ section.id }} .jp-filter-bar {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 749px) {
-  #joy-pickups-{{ section.id }} {
-    padding:
-      {{ section.settings.mobile_padding_top }}px
-      16px
-      {{ section.settings.mobile_padding_bottom }}px;
-  }
-
-  #joy-pickups-{{ section.id }} .jp-day-filters {
-    gap: 6px;
-  }
-
-  #joy-pickups-{{ section.id }} .jp-day-filters button {
-    min-height: 40px;
-    padding: 7px 12px;
-    font-size: 12px;
-  }
-
-  #joy-pickups-{{ section.id }} .jp-location {
-    padding: 12px 14px;
-    gap: 12px;
-  }
-
-  #joy-pickups-{{ section.id }} .jp-location h3 {
-    font-size: 17px;
-  }
-}
-
-@media (max-width: 430px) {
-  #joy-pickups-{{ section.id }} .jp-location {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
+#joy-pickups-{{ section.id }}{background:var(--jpl-bg);font-family:'DM Sans',sans-serif;color:#18253a}
+#joy-pickups-{{ section.id }} *{box-sizing:border-box}
+#joy-pickups-{{ section.id }} [hidden]{display:none!important}
+#joy-pickups-{{ section.id }} .jpl-wrap{max-width:1200px;margin:auto}
+#joy-pickups-{{ section.id }} h2,#joy-pickups-{{ section.id }} h3{font-family:'Holiday Journey',sans-serif;color:var(--jpl-green);font-weight:400}
+#joy-pickups-{{ section.id }} h2{font-size:clamp(26px,2.6vw,36px);line-height:1.2;margin:0 0 14px}
+#joy-pickups-{{ section.id }} .jpl-toolbar{display:grid;grid-template-columns:minmax(240px,1fr) auto;align-items:center;gap:12px;margin-bottom:13px}
+#joy-pickups-{{ section.id }} .jpl-search{position:relative;display:block}
+#joy-pickups-{{ section.id }} .jpl-search svg{position:absolute;left:14px;top:50%;width:20px;height:20px;transform:translateY(-50%);pointer-events:none;color:var(--jpl-green)}
+#joy-pickups-{{ section.id }} .jpl-search input{width:100%;height:46px;padding:0 14px 0 44px;border:1px solid #dce1de;border-radius:10px;background:white;color:#18253a;font:inherit;outline:none}
+#joy-pickups-{{ section.id }} .jpl-search input:focus{border-color:var(--jpl-green)}
+#joy-pickups-{{ section.id }} .jpl-days{display:flex;gap:7px;flex-wrap:wrap}
+#joy-pickups-{{ section.id }} .jpl-days button{background:var(--jpl-cream);border:1px solid #ded8cb;border-radius:24px;min-height:44px;padding:8px 17px;color:#18253a;cursor:pointer;font-size:13px}
+#joy-pickups-{{ section.id }} .jpl-days button.is-active{background:var(--jpl-green);border-color:var(--jpl-green);color:white}
+#joy-pickups-{{ section.id }} .jpl-list{display:grid;gap:8px}
+#joy-pickups-{{ section.id }} .jpl-card{border:1px solid #e1e5e3;border-radius:9px;background:white;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:12px 18px}
+#joy-pickups-{{ section.id }} .jpl-card h3{font-size:19px;line-height:1.2;margin:0 0 4px}
+#joy-pickups-{{ section.id }} .jpl-card p{font-size:14px;margin:0 0 4px}
+#joy-pickups-{{ section.id }} .jpl-card span{font-size:13px;color:#526278}
+#joy-pickups-{{ section.id }} .jpl-card a{white-space:nowrap;color:var(--jpl-green);font-size:13px;font-weight:700;text-decoration:underline}
+#joy-pickups-{{ section.id }} .jpl-view{margin-top:10px;width:100%;min-height:42px;border:1px solid var(--jpl-green);background:white;border-radius:24px;color:var(--jpl-green);font-weight:700;cursor:pointer}
+#joy-pickups-{{ section.id }} .jpl-note{font-size:12px;color:#617087;text-align:center;margin:12px 0 0}
+#joy-pickups-{{ section.id }} .jpl-status,#joy-pickups-{{ section.id }} .jpl-empty{font-size:13px;text-align:center;padding:12px}
+@media(max-width:990px){#joy-pickups-{{ section.id }} .jpl-toolbar{grid-template-columns:1fr}}
+@media(max-width:749px){#joy-pickups-{{ section.id }}{padding:{{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px!important}#joy-pickups-{{ section.id }} .jpl-days button{font-size:12px;min-height:40px;padding:7px 12px}#joy-pickups-{{ section.id }} .jpl-card{padding:12px}}
+@media(max-width:430px){#joy-pickups-{{ section.id }} .jpl-card{align-items:flex-start;flex-direction:column;gap:8px}}
 </style>
-
 <script>
-(function () {
-  const root = document.getElementById(
-    'joy-pickups-{{ section.id }}'
-  );
-
-  if (!root || root.dataset.initialized === 'true') return;
-  root.dataset.initialized = 'true';
-
-  const search = root.querySelector('[data-jp-search]');
-  const list = root.querySelector('[data-jp-list]');
-  const filters = Array.from(
-    root.querySelectorAll('[data-jp-day]')
-  );
-  const viewAll = root.querySelector('[data-jp-view-all]');
-  const empty = root.querySelector('[data-jp-empty]');
-  const status = root.querySelector('[data-jp-status]');
-
-  let locations = Array.from(
-    root.querySelectorAll('[data-jp-location]')
-  );
-  let currentDay = 'all';
-  let expanded = false;
-
-  const visibleLimit =
-    {{ section.settings.initial_locations | json }};
-
-  function render() {
-    const query = (search.value || '').trim().toLowerCase();
-
-    const matching = locations.filter(item => {
-      const dayMatches =
-        currentDay === 'all' ||
-        item.dataset.day === currentDay;
-
-      const searchMatches =
-        (item.dataset.search || '').includes(query);
-
-      return dayMatches && searchMatches;
-    });
-
-    locations.forEach(item => {
-      const index = matching.indexOf(item);
-
-      item.hidden =
-        index === -1 ||
-        (!expanded && index >= visibleLimit);
-    });
-
-    empty.hidden = matching.length !== 0;
-    viewAll.hidden = matching.length <= visibleLimit;
-
-    viewAll.textContent = expanded
-      ? 'Show fewer locations ↑'
-      : 'View all ' + matching.length + ' locations →';
-  }
-
-  search.addEventListener('input', function () {
-    expanded = false;
-    render();
+(function(){
+ const root=document.getElementById('joy-pickups-{{ section.id }}');
+ if(!root || root.dataset.initialized==='yes')return; root.dataset.initialized='yes';
+ const input=root.querySelector('[data-search]'),list=root.querySelector('[data-list]'),empty=root.querySelector('[data-empty]'),more=root.querySelector('[data-more]'),status=root.querySelector('[data-status]'),btns=Array.from(root.querySelectorAll('[data-day]'));
+ const parse=(sel)=>{try{return JSON.parse(root.querySelector(sel).textContent)}catch(e){return []}};
+ const snapshot=parse('[data-bird-snapshot]'),manual=parse('[data-manual]');
+ const endpoint={{ section.settings.locations_json_url | json }};
+ const limit={{ section.settings.initial_locations | json }};
+ let data=[],day='all',expanded=false;
+ const string=x=>x===null||x===undefined?'':String(x);
+ function normalize(entry){
+  if(!entry||typeof entry!=='object')return null;
+  const name=string(entry.name||entry.suburb||entry.title).trim();if(!name)return null;
+  return {id:string(entry.id||entry.locationId),name,address:string(entry.address||entry.full_address),postcode:string(entry.postcode||entry.zip),day:string(entry.day||entry.pickup_day),hours:string(entry.hours||entry.pickup_time),map_url:string(entry.map_url||entry.map_link)};
+ }
+ function merge(){
+  const byId=new Map();
+  snapshot.concat(manual).forEach(raw=>{const rec=normalize(raw);if(!rec)return;const key=rec.id||rec.name.toLowerCase();byId.set(key,Object.assign({},byId.get(key)||{},Object.fromEntries(Object.entries(rec).filter(([k,v])=>v!==''))))});
+  data=Array.from(byId.values());render();
+ }
+ function render(){
+  const query=input.value.trim().toLowerCase();
+  const matched=data.filter(x=>(day==='all'||x.day.toLowerCase().split(/[^a-z]+/).includes(day))&&[x.name,x.postcode,x.address].join(' ').toLowerCase().includes(query));
+  list.replaceChildren();
+  matched.slice(0,expanded?matched.length:limit).forEach(x=>{
+   const article=document.createElement('article');article.className='jpl-card';
+   const info=document.createElement('div');const h=document.createElement('h3');h.textContent=x.name;info.append(h);
+   if(x.day||x.hours){const time=document.createElement('p');time.textContent=[x.day,x.hours].filter(Boolean).join(' · ');info.append(time)}
+   const address=document.createElement('span');address.textContent=x.address;info.append(address);article.append(info);
+   if(x.address){const a=document.createElement('a');a.textContent='♧ Get directions';a.target='_blank';a.rel='noopener noreferrer';a.href=/^https:\/\//.test(x.map_url)?x.map_url:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.address+', Queensland, Australia');article.append(a)}
+   list.append(article);
   });
-
-  filters.forEach(button => {
-    button.addEventListener('click', function () {
-      currentDay = button.dataset.jpDay;
-      expanded = false;
-
-      filters.forEach(other => {
-        const active = other === button;
-        other.classList.toggle('active', active);
-        other.setAttribute('aria-pressed', String(active));
-      });
-
-      render();
-    });
-  });
-
-  viewAll.addEventListener('click', function () {
-    expanded = !expanded;
-    render();
-  });
-
-  render();
-
-  /*
-   * Optional JSON source.
-   * Actual cart pickup app endpoint must be configured.
-   * No live app data is invented.
-   */
-
-  const endpoint =
-    {{ section.settings.locations_json_url | json }};
-
-  if (!endpoint) return;
-
-  status.hidden = false;
-  status.textContent = 'Loading pickup locations…';
-
-  fetch(endpoint, {
-    headers: { 'Accept': 'application/json' }
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Location endpoint failed');
-    }
-    return response.json();
-  })
-  .then(json => {
-    const records = Array.isArray(json)
-      ? json
-      : json.locations || json.pickup_locations || json.data;
-
-    if (!Array.isArray(records)) {
-      throw new Error('Unsupported location response');
-    }
-
-    const fragment = document.createDocumentFragment();
-    let added = 0;
-
-    records.forEach(record => {
-      if (!record || typeof record !== 'object') return;
-
-      const suburb = String(
-        record.suburb || record.name || record.title || ''
-      );
-      if (!suburb) return;
-
-      const address = String(
-        record.address || record.full_address || ''
-      );
-      const postcode = String(
-        record.postcode || record.zip || ''
-      );
-      const day = String(
-        record.day || record.pickup_day || ''
-      );
-      const hours = String(
-        record.hours || record.pickup_time || ''
-      );
-      const mapUrl = String(
-        record.map_url || record.map_link || ''
-      );
-
-      const item = document.createElement('article');
-      item.className = 'jp-location';
-      item.setAttribute('data-jp-location', '');
-      item.dataset.day = day.toLowerCase();
-      item.dataset.search =
-        [suburb, postcode, address].join(' ').toLowerCase();
-
-      const info = document.createElement('div');
-      info.className = 'jp-location-info';
-
-      const heading = document.createElement('h3');
-      heading.textContent = suburb;
-
-      const times = document.createElement('p');
-      times.textContent =
-        [day, hours].filter(Boolean).join(' · ');
-
-      const addressElement = document.createElement('span');
-      addressElement.textContent = address;
-
-      info.append(heading, times, addressElement);
-      item.append(info);
-
-      if (/^https:\/\//i.test(mapUrl)) {
-        const link = document.createElement('a');
-        link.className = 'jp-directions';
-        link.href = mapUrl;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = 'Get directions →';
-        item.append(link);
-      }
-
-      fragment.append(item);
-      added++;
-    });
-
-    if (!added) {
-      throw new Error('No valid locations found');
-    }
-
-    locations.forEach(item => item.remove());
-    list.append(fragment);
-
-    locations = Array.from(
-      list.querySelectorAll('[data-jp-location]')
-    );
-
-    expanded = false;
-    status.hidden = true;
-    render();
-  })
-  .catch(error => {
-    console.warn('Pickup locations:', error);
-    status.textContent =
-      'Live locations unavailable. Showing configured pickup points.';
-    status.hidden = false;
-  });
+  empty.hidden=matched.length>0;
+  more.hidden=matched.length<=limit;
+  more.textContent=expanded?'Show fewer locations ↑':'View all '+matched.length+' locations →';
+  if(day!=='all' && !data.some(x=>x.day)){status.hidden=false;status.textContent='Pickup days are not included in the Bird location mapping. Connect a schedule feed or set days in the Theme Editor.'}else if(!endpoint){status.hidden=true}
+ }
+ input.addEventListener('input',()=>{expanded=false;render()});
+ btns.forEach(b=>b.addEventListener('click',()=>{day=b.dataset.day;expanded=false;btns.forEach(other=>{const active=other===b;other.classList.toggle('is-active',active);other.setAttribute('aria-pressed',String(active))});render()}));
+ more.addEventListener('click',()=>{expanded=!expanded;render()});
+ merge();
+ if(endpoint){status.hidden=false;status.textContent='Loading pickup locations…';
+  fetch(endpoint,{headers:{Accept:'application/json'}}).then(r=>{if(!r.ok)throw new Error('Request failed');return r.json()}).then(json=>{
+   const arr=Array.isArray(json)?json:json.locations||json.pickup_locations||json.data;
+   if(!Array.isArray(arr))throw new Error('Unknown response shape');
+   const cleaned=arr.map(normalize).filter(Boolean);if(!cleaned.length)throw new Error('Empty location list');
+   data=cleaned;expanded=false;status.hidden=true;render();
+  }).catch(e=>{status.hidden=false;status.textContent='Live location feed unavailable; showing Bird location mapping snapshot.';console.warn('Pickup location feed:',e)})
+ }
 })();
 </script>
-
 {% schema %}
 {
   "name": "Joy pickup locations",
   "settings": [
     {
       "type": "text",
-      "id": "heading",
+      "id": "pickups_title",
       "label": "Heading",
       "default": "Find your local pick up point"
     },
     {
       "type": "text",
       "id": "locations_json_url",
-      "label": "Locations JSON URL",
-      "info": "Optional public JSON feed for dynamic locations. Leave blank to use blocks."
+      "label": "Public locations JSON URL",
+      "info": "Optional. Bird advanced scripting does not expose an endpoint. Only enter a verified public read-only feed URL."
     },
     {
       "type": "range",
@@ -632,31 +136,25 @@
     },
     {
       "type": "text",
-      "id": "note",
-      "label": "Bottom note",
+      "id": "pickups_note",
+      "label": "Note",
       "default": "Times shown are estimated driver arrival times. Please wait for your ready to collect SMS."
     },
     {
       "type": "color",
       "id": "green",
       "label": "Dark green",
-      "default": "#064633"
+      "default": "#086c3f"
     },
     {
       "type": "color",
       "id": "cream",
-      "label": "Cream background",
+      "label": "Cream",
       "default": "#f8f5ed"
     },
     {
       "type": "color",
-      "id": "text_color",
-      "label": "Text color",
-      "default": "#18253a"
-    },
-    {
-      "type": "color",
-      "id": "background",
+      "id": "bg_color",
       "label": "Background",
       "default": "#ffffff"
     },
@@ -700,87 +198,69 @@
   "blocks": [
     {
       "type": "pickup",
-      "name": "Pickup location",
+      "name": "Pickup location override",
       "settings": [
         {
           "type": "text",
+          "id": "bird_id",
+          "label": "Bird location ID (optional)"
+        },
+        {
+          "type": "text",
           "id": "suburb",
-          "label": "Suburb",
+          "label": "Suburb / location name",
           "default": "Taringa"
         },
         {
           "type": "text",
           "id": "postcode",
-          "label": "Postcode",
-          "default": "4068"
+          "label": "Postcode"
         },
         {
           "type": "select",
           "id": "day",
           "label": "Pickup day",
           "options": [
-            {"value": "Wednesday", "label": "Wednesday"},
-            {"value": "Thursday", "label": "Thursday"},
-            {"value": "Friday", "label": "Friday"},
-            {"value": "Saturday", "label": "Saturday"}
+            {
+              "value": "Wednesday",
+              "label": "Wednesday"
+            },
+            {
+              "value": "Thursday",
+              "label": "Thursday"
+            },
+            {
+              "value": "Friday",
+              "label": "Friday"
+            },
+            {
+              "value": "Saturday",
+              "label": "Saturday"
+            }
           ],
           "default": "Wednesday"
         },
         {
           "type": "text",
           "id": "hours",
-          "label": "Pickup hours",
-          "default": "9am to noon"
+          "label": "Pickup hours"
         },
         {
           "type": "text",
           "id": "address",
-          "label": "Address",
-          "default": "203 Taringa Parade"
+          "label": "Full address"
         },
         {
           "type": "url",
           "id": "map_link",
-          "label": "Google Maps URL"
+          "label": "Directions URL"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Joy pickup locations",
-      "blocks": [
-        {
-          "type": "pickup",
-          "settings": {
-            "suburb": "Taringa",
-            "postcode": "4068",
-            "day": "Wednesday",
-            "hours": "9am to noon",
-            "address": "203 Taringa Parade"
-          }
-        },
-        {
-          "type": "pickup",
-          "settings": {
-            "suburb": "Pimpama",
-            "postcode": "4209",
-            "day": "Thursday",
-            "hours": "12:30pm to 3:30pm",
-            "address": "48/7 Angela Way"
-          }
-        },
-        {
-          "type": "pickup",
-          "settings": {
-            "suburb": "Samford",
-            "postcode": "4520",
-            "day": "Saturday",
-            "hours": "8am to 10am",
-            "address": "6 Church Street"
-          }
-        }
-      ]
+      "name": "Joy pickup locations"
     }
   ]
 }
