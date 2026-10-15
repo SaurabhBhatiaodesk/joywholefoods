@@ -1,8 +1,9 @@
 {% comment %}
   Joy Pickup Locations — Bird data mapping, independent informational section.
   Location addresses below are from Bird advanced scripting snapshot supplied by store.
-  NOT the Bird live location feed. Days/times must come from an approved JSON feed
-  or from matching Theme Editor pickup blocks. Never updates Bird/cart.
+  NOT the Bird live location feed. Days/times from the user-supplied pickup schedule screenshot (21 rows).
+  Two locations have no supplied schedule and remain All days only.
+  This is a Bird script snapshot, NOT automatically synced live Bird data. Never updates Bird/cart.
 {% endcomment %}
 <section id="joy-pickups-{{ section.id }}" class="jpl-section" style="--jpl-green:{{ section.settings.green }};--jpl-cream:{{ section.settings.cream }};--jpl-bg:{{ section.settings.bg_color }};padding:{{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px">
  <div class="jpl-wrap">
@@ -22,7 +23,7 @@
   <p class="jpl-empty" data-empty hidden>No matching pickup locations.</p>
   <button class="jpl-view" type="button" data-more hidden></button>
   {% if section.settings.pickups_note != blank %}<p class="jpl-note">{{ section.settings.pickups_note | escape }}</p>{% endif %}
-  <script type="application/json" data-bird-snapshot>[{"id": "109014", "name": "NARANGBA", "address": "21 Matterhorn Drive, Narangba", "day": "", "hours": ""}, {"id": "109015", "name": "DAYBORO", "address": "3468 Mount Mee Road, Dayboro", "day": "", "hours": ""}, {"id": "109016", "name": "EATONS HILL", "address": "14 Queen Elizabeth Drive, Eatons Hill", "day": "", "hours": ""}, {"id": "109017", "name": "CAPALABA", "address": "69 Killarney Crescent, Capalaba", "day": "", "hours": ""}, {"id": "109018", "name": "WYNNUM WEST", "address": "1/203 Randall Road, Wynnum West", "day": "", "hours": ""}, {"id": "109019", "name": "CARINDALE", "address": "79 Kilmorey Street, Carindale", "day": "", "hours": ""}, {"id": "109020", "name": "BALMORAL", "address": "3 Walkers Drive, Balmoral", "day": "", "hours": ""}, {"id": "109021", "name": "ROCHEDALE SOUTH", "address": "6 Bawden Court, Rochedale South", "day": "", "hours": ""}, {"id": "109022", "name": "TARRAGINDI", "address": "27 Kogarah Street, Tarragindi", "day": "", "hours": ""}, {"id": "109023", "name": "SAMFORD", "address": "6 Church Street, Samford Village", "day": "", "hours": ""}, {"id": "109024", "name": "KEPERRA", "address": "58 Glengarry Rd, Keperra", "day": "", "hours": ""}, {"id": "109025", "name": "WOOLOOWIN", "address": "11 Owen Street, Wooloowin", "day": "", "hours": ""}, {"id": "109026", "name": "PIMPAMA", "address": "48/7 Angela Way, Pimpama", "day": "", "hours": ""}, {"id": "109027", "name": "EDENS LANDING", "address": "10 Jonath Court, Edens Landing", "day": "", "hours": ""}, {"id": "109028", "name": "KARANA DOWNS", "address": "2 Kyuna Court, Karana Downs", "day": "", "hours": ""}, {"id": "109029", "name": "ROCKLEA", "address": "34 Reginald Street, Rocklea", "day": "", "hours": ""}, {"id": "109030", "name": "ALDERLEY", "address": "100 Mornington Street, Alderley", "day": "", "hours": ""}, {"id": "109031", "name": "KEDRON", "address": "23 Eddowes Street, Kedron", "day": "", "hours": ""}, {"id": "109032", "name": "KENMORE", "address": "45 Twilight Street, Kenmore", "day": "", "hours": ""}, {"id": "109033", "name": "TARINGA", "address": "203 Taringa Parade, Taringa", "day": "", "hours": ""}, {"id": "109034", "name": "FOREST LAKE", "address": "10 Allen Close, Forest Lake", "day": "", "hours": ""}, {"id": "109035", "name": "PULLENVALE", "address": "2447 Moggill Road, Pullenvale", "day": "", "hours": ""}, {"id": "112786", "name": "BRIBIE ISLAND", "address": "10 Aylward Rd, Ningi", "day": "", "hours": ""}]</script>
+  <script type="application/json" data-bird-snapshot>[{"id":"109014","name":"NARANGBA","address":"21 Matterhorn Drive, Narangba","day":"Friday","hours":"12:30 - 3:30pm"},{"id":"109015","name":"DAYBORO","address":"3468 Mount Mee Road, Dayboro","day":"Friday","hours":"12:30 - 3:30pm"},{"id":"109016","name":"EATONS HILL","address":"14 Queen Elizabeth Drive, Eatons Hill","day":"Friday","hours":"9am - 12 noon"},{"id":"109017","name":"CAPALABA","address":"69 Killarney Crescent, Capalaba","day":"Friday","hours":"12:30 - 3:30pm"},{"id":"109018","name":"WYNNUM WEST","address":"1/203 Randall Road, Wynnum West","day":"Friday","hours":"11am - 2pm"},{"id":"109019","name":"CARINDALE","address":"79 Kilmorey Street, Carindale","day":"Saturday","hours":"7 - 9am"},{"id":"109020","name":"BALMORAL","address":"3 Walkers Drive, Balmoral","day":"Saturday","hours":"7 - 9am"},{"id":"109021","name":"ROCHEDALE SOUTH","address":"6 Bawden Court, Rochedale South","day":"Saturday","hours":"8 - 10am"},{"id":"109022","name":"TARRAGINDI","address":"27 Kogarah Street, Tarragindi","day":"Saturday","hours":"7 - 9am"},{"id":"109023","name":"SAMFORD","address":"6 Church Street, Samford Village","day":"Saturday","hours":"8 - 10am"},{"id":"109024","name":"KEPERRA","address":"58 Glengarry Rd, Keperra","day":"Saturday","hours":"7 - 9am"},{"id":"109025","name":"WOOLOOWIN","address":"11 Owen Street, Wooloowin","day":"Wednesday","hours":"7am - 9am"},{"id":"109026","name":"PIMPAMA","address":"48/7 Angela Way, Pimpama","day":"Thursday","hours":"12:30 - 3:30pm"},{"id":"109027","name":"EDENS LANDING","address":"10 Jonath Court, Edens Landing","day":"Thursday","hours":"9am - 12 noon"},{"id":"109028","name":"KARANA DOWNS","address":"2 Kyuna Court, Karana Downs","day":"Thursday","hours":"12:30 - 3:30pm"},{"id":"109029","name":"ROCKLEA","address":"34 Reginald Street, Rocklea","day":"Wednesday / Thursday","hours":"8am - 12pm"},{"id":"109030","name":"ALDERLEY","address":"100 Mornington Street, Alderley","day":"Wednesday","hours":"9am - 12 noon"},{"id":"109031","name":"KEDRON","address":"23 Eddowes Street, Kedron","day":"Wednesday","hours":"9am - 12 noon"},{"id":"109032","name":"KENMORE","address":"45 Twilight Street, Kenmore","day":"","hours":""},{"id":"109033","name":"TARINGA","address":"203 Taringa Parade, Taringa","day":"Wednesday","hours":"9am - 12 noon"},{"id":"109034","name":"FOREST LAKE","address":"10 Allen Close, Forest Lake","day":"Thursday","hours":"9am - 12 noon"},{"id":"109035","name":"PULLENVALE","address":"2447 Moggill Road, Pullenvale","day":"Wednesday","hours":"1 - 4pm"},{"id":"112786","name":"BRIBIE ISLAND","address":"10 Aylward Rd, Ningi","day":"","hours":""}]</script>
   <script type="application/json" data-manual>{%- capture block_data -%}[
   {%- for block in section.blocks -%}{%- if block.type == 'pickup' -%}
   {"id":{{ block.settings.bird_id | json }},"name":{{ block.settings.suburb | json }},"address":{{ block.settings.address | json }},"postcode":{{ block.settings.postcode | json }},"day":{{ block.settings.day | json }},"hours":{{ block.settings.hours | json }},"map_url":{{ block.settings.map_link | json }}}{% unless forloop.last %},{% endunless %}
@@ -75,12 +76,12 @@
  }
  function merge(){
   const byId=new Map();
-  snapshot.concat(manual).forEach(raw=>{const rec=normalize(raw);if(!rec)return;const key=rec.id||rec.name.toLowerCase();byId.set(key,Object.assign({},byId.get(key)||{},Object.fromEntries(Object.entries(rec).filter(([k,v])=>v!==''))))});
-  data=Array.from(byId.values());render();
+  snapshot.forEach(raw=>{const rec=normalize(raw);if(rec)byId.set(rec.id||rec.name.toLowerCase(),rec)});manual.forEach(raw=>{const rec=normalize(raw);if(!rec)return;const existing=[...byId.entries()].find(([key,v])=>key===rec.id||v.name.toLowerCase()===rec.name.toLowerCase());const key=existing?existing[0]:(rec.id||rec.name.toLowerCase());const prev=byId.get(key)||{};byId.set(key,Object.assign({},prev,Object.fromEntries(Object.entries(rec).filter(([k,v])=>v!==''))))});
+  data=Array.from(byId.values()).sort((a,b)=>{const order={'wednesday':0,'thursday':1,'friday':2,'saturday':3};const sortDay=x=>Math.min(...x.day.toLowerCase().split(/[^a-z]+/).map(k=>order[k]??9));return sortDay(a)-sortDay(b)||a.name.localeCompare(b.name)});render();
  }
  function render(){
   const query=input.value.trim().toLowerCase();
-  const matched=data.filter(x=>(day==='all'||x.day.toLowerCase().split(/[^a-z]+/).includes(day))&&[x.name,x.postcode,x.address].join(' ').toLowerCase().includes(query));
+  const matched=data.filter(x=>{const days=x.day.toLowerCase().split(/[^a-z]+/).filter(Boolean);return (day==='all'||days.includes(day))&&[x.name,x.postcode,x.address].join(' ').toLowerCase().includes(query)});
   list.replaceChildren();
   matched.slice(0,expanded?matched.length:limit).forEach(x=>{
    const article=document.createElement('article');article.className='jpl-card';
@@ -93,7 +94,7 @@
   empty.hidden=matched.length>0;
   more.hidden=matched.length<=limit;
   more.textContent=expanded?'Show fewer locations ↑':'View all '+matched.length+' locations →';
-  if(day!=='all' && !data.some(x=>x.day)){status.hidden=false;status.textContent='Pickup days are not included in the Bird location mapping. Connect a schedule feed or set days in the Theme Editor.'}else if(!endpoint){status.hidden=true}
+  if(!endpoint){status.hidden=true}
  }
  input.addEventListener('input',()=>{expanded=false;render()});
  btns.forEach(b=>b.addEventListener('click',()=>{day=b.dataset.day;expanded=false;btns.forEach(other=>{const active=other===b;other.classList.toggle('is-active',active);other.setAttribute('aria-pressed',String(active))});render()}));
@@ -104,7 +105,7 @@
    const arr=Array.isArray(json)?json:json.locations||json.pickup_locations||json.data;
    if(!Array.isArray(arr))throw new Error('Unknown response shape');
    const cleaned=arr.map(normalize).filter(Boolean);if(!cleaned.length)throw new Error('Empty location list');
-   data=cleaned;expanded=false;status.hidden=true;render();
+   const known=new Map(snapshot.map(raw=>[String(raw.id),normalize(raw)])); const knownByName=new Map(snapshot.map(raw=>[String(raw.name).toLowerCase(),normalize(raw)])); data=cleaned.map(rec=>{const old=known.get(rec.id)||knownByName.get(rec.name.toLowerCase());return old?Object.assign({},old,Object.fromEntries(Object.entries(rec).filter(([k,v])=>v!==''))):rec});expanded=false;status.hidden=true;render();
   }).catch(e=>{status.hidden=false;status.textContent='Live location feed unavailable; showing Bird location mapping snapshot.';console.warn('Pickup location feed:',e)})
  }
 })();
