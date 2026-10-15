@@ -50,27 +50,6 @@
         "padding_bottom": 52
       }
     },
-    "joy_delivery_cta_pmqDW3": {
-      "type": "joy-delivery-cta",
-      "name": "Joy delivery CTA",
-      "settings": {
-        "bottom_title": "Ready to get started?",
-        "bottom_text": "Order once or build a subscription with your favourites.",
-        "shop_label": "Shop now",
-        "shop_link": "",
-        "subscription_label": "Build a subscription",
-        "subscription_link": "",
-        "green": "#086c3f",
-        "lime": "#c4eb70",
-        "cream": "#f8f5ed",
-        "text_color": "#18253a",
-        "bg_color": "#ffffff",
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "mobile_padding_top": 24,
-        "mobile_padding_bottom": 28
-      }
-    },
     "joy_delivery_faqs_ypGTkQ": {
       "type": "joy-delivery-faqs",
       "blocks": {
@@ -96,13 +75,34 @@
       "name": "Joy delivery FAQs",
       "settings": {
         "faq_title": "Frequently asked questions",
-        "green": "#064633",
+        "green": "#086C3F",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
         "text_color": "#18253a",
         "bg_color": "#ffffff",
         "padding_top": 40,
         "padding_bottom": 40,
+        "mobile_padding_top": 24,
+        "mobile_padding_bottom": 28
+      }
+    },
+    "joy_delivery_cta_pmqDW3": {
+      "type": "joy-delivery-cta",
+      "name": "Joy delivery CTA",
+      "settings": {
+        "bottom_title": "Ready to get started?",
+        "bottom_text": "Order once or build a subscription with your favourites.",
+        "shop_label": "Shop now",
+        "shop_link": "",
+        "subscription_label": "Build a subscription",
+        "subscription_link": "",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#18253a",
+        "bg_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 0,
         "mobile_padding_top": 24,
         "mobile_padding_bottom": 28
       }
