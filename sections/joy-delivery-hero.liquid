@@ -18,9 +18,14 @@
           <div class="jd-result-message" data-result-message></div>
         </div>
         <div class="jd-result-card" data-result-fallback hidden>
-          <h2>{{ section.settings.pickup_label | escape }}</h2>
-          <p class="jd-fallback-warning">{{ section.settings.pickup_message | escape }}</p>
-          <div class="jd-result-message">{{ section.settings.pickup_text }}</div>
+          <h2>{{ section.settings.pickupLabel | escape }}</h2>
+          <p class="jd-fallback-warning">{{ section.settings.pickupMessage }}</p>
+          <div class="jd-result-message">{{ section.settings.pickupText }}</div>
+        </div>
+        <div class="jd-result-card" data-result-toowoomba hidden>
+          <h2>Toowoomba &amp; surrounds</h2>
+          <p class="jd-result-postcodes">Postcodes: 4350, 4358</p>
+          <div class="jd-result-message"><p><strong>Monday / Wednesday / Friday delivery</strong></p><p>Your next delivery date is Monday.</p><p>Order by midnight for Monday, Wednesday or Friday. $50 minimum order. (Select your delivery day)</p><p><strong>FREE DELIVERY</strong></p><p>*Some 4352 suburbs including Cabarlah, Geham, Merrits Creek, Hampton and Pechey have a $5 delivery fee.</p><p>*Exclusions include Postmans Ridge and Murphys Creek.</p></div>
         </div>
       </div>
       <div data-postcode-data hidden>
@@ -31,11 +36,7 @@
             </div>
           {% endif %}
         {% endfor %}
-        <div class="jd-result-card" data-result-toowoomba hidden>
-          <h2>Toowoomba &amp; surrounds</h2>
-          <p class="jd-result-postcodes">Postcodes: 4350, 4358</p>
-          <div class="jd-result-message"><p><strong>Monday / Wednesday / Friday delivery</strong></p><p>Your next delivery date is Monday.</p><p>Order by midnight for Monday, Wednesday or Friday. $50 minimum order. (Select your delivery day)</p><p><strong>FREE DELIVERY</strong></p><p>*Some 4352 suburbs including Cabarlah, Geham, Merrits Creek, Hampton and Pechey have a $5 delivery fee.</p><p>*Exclusions include Postmans Ridge and Murphys Creek.</p></div>
-        </div>
+
       </div>
     </header>
 
@@ -44,7 +45,7 @@
 </section>
 <style>
 
-#joy-delivery-{{ section.id }}{background:var(--jd-bg);color:var(--jd-text);padding:var(--jd-top) 20px var(--jd-bottom);font-family:inherit}
+#joy-delivery-{{ section.id }}{background:var(--jd-bg);color:var(--jd-text);padding:var(--jd-top) 20px var(--jd-bottom);font-family:'DM Sans',sans-serif}
 #joy-delivery-{{ section.id }} *{box-sizing:border-box}
 #joy-delivery-{{ section.id }} [hidden]{display:none!important}
 #joy-delivery-{{ section.id }} .jd-container{max-width:1200px;margin:auto}
@@ -189,192 +190,166 @@
 </script>
 {% schema %}
 {
-  "name": "Joy delivery hero",
+  "name": "Postcode Search",
   "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Delivery Schedule"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Want to know if we deliver to you?"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Delivery Schedule Postcode Search"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Enter you postcode to search delivery schedules in your area."
+    },
+    {
+      "type": "text",
+      "id": "postCodeLabel",
+      "label": "Postcode Label",
+      "default": "Postcode:"
+    },
+    {
+      "type": "header",
+      "content": "Pickup"
+    },
+    {
+      "type": "text",
+      "id": "pickupLabel",
+      "label": "Pickup Label",
+      "default": "Pickup"
+    },
+    {
+      "type": "inline_richtext",
+      "label": "Pickup Message",
+      "id": "pickupMessage",
+      "default": "There are currently no delivery schedules available for your postcode."
+    },
+    {
+      "type": "richtext",
+      "id": "pickupText",
+      "label": "Pickup Text"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "New hero design"
+    },
     {
       "type": "text",
       "id": "hero_title",
-      "label": "Title",
+      "label": "Hero heading",
       "default": "Pick up & delivery"
     },
     {
       "type": "textarea",
       "id": "hero_text",
-      "label": "Description",
+      "label": "Hero description",
       "default": "Fresh food from local farmers, delivered to your door or a community pick up point."
     },
     {
       "type": "text",
       "id": "postcode_button",
-      "label": "Postcode button",
+      "label": "Search button",
       "default": "Check your delivery options"
-    },
-    {
-      "type": "header",
-      "content": "No postcode match"
-    },
-    {
-      "type": "text",
-      "id": "pickup_label",
-      "label": "Fallback heading",
-      "default": "Community pick up"
-    },
-    {
-      "type": "text",
-      "id": "pickup_message",
-      "label": "Fallback message",
-      "default": "There are currently no delivery schedules available for your postcode."
-    },
-    {
-      "type": "richtext",
-      "id": "pickup_text",
-      "label": "Pickup details",
-      "default": "<p>You may still be able to collect an order from a community pick up point. Please contact us to confirm availability.</p>"
     },
     {
       "type": "color",
       "id": "green",
-      "label": "Dark green",
-      "default": "#064633"
+      "label": "Heading green",
+      "default": "#086C3F"
     },
     {
       "type": "color",
       "id": "lime",
-      "label": "Lime buttons",
+      "label": "Button lime",
       "default": "#c4eb70"
     },
     {
       "type": "color",
       "id": "cream",
-      "label": "Cream card backgrounds",
+      "label": "Result card background",
       "default": "#f8f5ed"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Body text",
+      "label": "Text color",
       "default": "#18253a"
     },
     {
       "type": "color",
       "id": "bg_color",
-      "label": "Page background",
+      "label": "Background",
       "default": "#ffffff"
-    },
+    }
+  ],
+  "presets": [
     {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Desktop top padding",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Desktop bottom padding",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding_top",
-      "label": "Mobile top padding",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "default": 24
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding_bottom",
-      "label": "Mobile bottom padding",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "default": 28
-    },
-    {
-      "type": "header",
-      "content": "Legacy postcode settings"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "Legacy subheading"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Legacy heading"
-    },
-    {
-      "type": "text",
-      "id": "label",
-      "label": "Legacy label"
-    },
-    {
-      "type": "text",
-      "id": "text",
-      "label": "Legacy description"
-    },
-    {
-      "type": "text",
-      "id": "postCodeLabel",
-      "label": "Legacy postcode label"
-    },
-    {
-      "type": "text",
-      "id": "pickupLabel",
-      "label": "Legacy pickup heading"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "pickupMessage",
-      "label": "Legacy pickup message"
-    },
-    {
-      "type": "richtext",
-      "id": "pickupText",
-      "label": "Legacy pickup text"
+      "name": "Postcode Search"
     }
   ],
   "blocks": [
     {
       "type": "postcode",
-      "name": "Postcode delivery area",
+      "name": "Block",
       "settings": [
         {
           "type": "textarea",
           "id": "postcodes",
-          "label": "Postcodes (comma separated)",
-          "info": "Example: 4350, 4358. Exact 4-digit matches only."
+          "label": "Please list all postcodes",
+          "info": "Separate with comma (,)"
         },
         {
           "type": "text",
           "id": "locationName",
-          "label": "Area name",
-          "default": "Delivery area"
+          "label": "Location Name"
         },
         {
           "type": "richtext",
           "id": "postcodeText",
-          "label": "Delivery schedule / details",
-          "info": "You may use [date] for today's date."
+          "label": "Postcodes Text",
+          "info": "use [date] to show date."
         }
       ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Joy delivery hero"
     }
   ]
 }
