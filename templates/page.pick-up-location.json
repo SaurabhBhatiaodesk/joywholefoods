@@ -348,7 +348,7 @@
         "shop_label": "Shop now",
         "shop_link": "shopify://collections/all",
         "subscription_label": "Build a subscription",
-        "subscription_link": "shopify://collections/all",
+        "subscription_link": "shopify://pages/build-your-subscription",
         "green": "#086c3f",
         "lime": "#c4eb70",
         "cream": "#f8f5ed",
