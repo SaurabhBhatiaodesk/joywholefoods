@@ -226,6 +226,7 @@
       "settings": {
         "pickups_title": "Find your local pick up point",
         "locations_json_url": "",
+        "postcode_lookup_url": "",
         "initial_locations": 3,
         "pickups_note": "Times shown are estimated driver arrival times. Please wait for your ready to collect SMS.",
         "green": "#086c3f",
@@ -394,7 +395,7 @@
       "disabled": true,
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify://shop_images/1-free-pick-up-organic-food-brisbane-gold-coast.jpg",
+        "image": "shopify://shop_images/Joy_Van_-_David_packing2.heic",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",
