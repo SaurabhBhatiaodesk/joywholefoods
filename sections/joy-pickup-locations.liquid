@@ -284,7 +284,7 @@
    const address=x.address.trim();
    if(!address)return '';
    // Do not manufacture postcodes. Add QLD + postcode only when a source supplies the postcode.
-   if(!x.postcode || /\b(?:QLD\s*)?\d{4}\b/i.test(address))return address;
+   if(!x.postcode || /\bQLD\s*\d{4}\s*$/i.test(address) || /,\s*\d{4}\s*$/.test(address))return address;
    return address+' QLD '+x.postcode;
   }
  // Address lookups use a server-side API proxy. Never expose your geocoding key in Liquid.
