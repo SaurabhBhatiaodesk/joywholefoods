@@ -1,9 +1,11 @@
 {% comment %}
-  Joy Pickup Locations — Bird data mapping, independent informational section.
-  Location addresses below are from Bird advanced scripting snapshot supplied by store.
-  NOT the Bird live location feed. Days/times from the user-supplied pickup schedule screenshot (21 rows).
-  Two locations have no supplied schedule and remain All days only.
-  This is a Bird script snapshot, NOT automatically synced live Bird data. Never updates Bird/cart.
+  Joy Pickup Locations — LIVE Bird data.
+  Locations (id, name, address, suburb, postcode) are fetched live from the Bird Pickup & Delivery API:
+  POST https://picdel.birdchime.com/api/v3/pickup/locations
+  New / removed locations and address / postcode changes update automatically.
+  The Bird locations API does NOT return pickup day/hours (those need the cart-based calendar endpoint),
+  so day/hours come from the snapshot below (matched by Bird ID) or from "Pickup location override" blocks.
+  If the live API fails, the snapshot is shown as a fallback. Never updates Bird/cart.
 {% endcomment %}
 <section id="joy-pickups-{{ section.id }}" class="jpl-section" style="--jpl-green:{{ section.settings.green }};--jpl-cream:{{ section.settings.cream }};--jpl-bg:{{ section.settings.bg_color }};padding:{{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px">
  <div class="jpl-wrap">
@@ -258,59 +260,51 @@
  const input=root.querySelector('[data-search]'),list=root.querySelector('[data-list]'),empty=root.querySelector('[data-empty]'),more=root.querySelector('[data-more]'),status=root.querySelector('[data-status]'),btns=Array.from(root.querySelectorAll('[data-day]'));
  const parse=(sel)=>{try{return JSON.parse(root.querySelector(sel).textContent)}catch(e){return []}};
  const snapshot=parse('[data-bird-snapshot]'),manual=parse('[data-manual]');
- const endpoint={{ section.settings.locations_json_url | json }};
- const postcodeEndpoint={{ section.settings.postcode_lookup_url | json }};
+ const shop={{ section.settings.bird_shop | default: shop.permanent_domain | json }};
+ const apiUrl='https://picdel.birdchime.com/api/v3/pickup/locations';
  const limit={{ section.settings.initial_locations | json }};
  let data=[],day='all',expanded=false;
  const string=x=>x===null||x===undefined?'':String(x);
+ function buildAddress(entry){
+  if(entry.address||entry.full_address)return string(entry.address||entry.full_address);
+  const street=[entry.address1,entry.address2].map(string).map(s=>s.trim()).filter(Boolean).join(', ');
+  const city=string(entry.city).trim();
+  const parts=[street];
+  if(city && !street.toLowerCase().includes(city.toLowerCase()))parts.push(city);
+  return parts.filter(Boolean).join(', ');
+ }
  function normalize(entry){
   if(!entry||typeof entry!=='object')return null;
   const name=string(entry.name||entry.suburb||entry.title).trim();if(!name)return null;
-  return {id:string(entry.id||entry.locationId),name,address:string(entry.address||entry.full_address),postcode:string(entry.postcode||entry.zip),day:string(entry.day||entry.pickup_day),hours:string(entry.hours||entry.pickup_time),map_url:string(entry.map_url||entry.map_link)};
+  return {id:string(entry.id||entry.locationId),name,address:buildAddress(entry),postcode:string(entry.postcode||entry.zip),day:string(entry.day||entry.pickup_day),hours:string(entry.hours||entry.pickup_time),map_url:string(entry.map_url||entry.map_link)};
  }
- function merge(){
+ const known=new Map(),knownByName=new Map();
+ snapshot.forEach(raw=>{const rec=normalize(raw);if(rec){known.set(rec.id,rec);knownByName.set(rec.name.toLowerCase(),rec)}});
+ const nonEmpty=obj=>Object.fromEntries(Object.entries(obj).filter(([k,v])=>v!==''));
+ function build(live){
   const byId=new Map();
-  snapshot.forEach(raw=>{const rec=normalize(raw);if(rec)byId.set(rec.id||rec.name.toLowerCase(),rec)});manual.forEach(raw=>{const rec=normalize(raw);if(!rec)return;const existing=[...byId.entries()].find(([key,v])=>key===rec.id||v.name.toLowerCase()===rec.name.toLowerCase());const key=existing?existing[0]:(rec.id||rec.name.toLowerCase());const prev=byId.get(key)||{};byId.set(key,Object.assign({},prev,Object.fromEntries(Object.entries(rec).filter(([k,v])=>v!==''))))});
-  data=Array.from(byId.values()).sort((a,b)=>{const order={'wednesday':0,'thursday':1,'friday':2,'saturday':3};const sortDay=x=>Math.min(...x.day.toLowerCase().split(/[^a-z]+/).map(k=>order[k]??9));return sortDay(a)-sortDay(b)||a.name.localeCompare(b.name)});render();
-   enrichPostcodes();
+  if(live){
+   live.forEach(rec=>{const old=known.get(rec.id)||knownByName.get(rec.name.toLowerCase())||{};byId.set(rec.id||rec.name.toLowerCase(),Object.assign({},rec,{day:rec.day||old.day||'',hours:rec.hours||old.hours||''}))});
+  }else{
+   known.forEach(rec=>byId.set(rec.id||rec.name.toLowerCase(),rec));
+  }
+  manual.forEach(raw=>{const rec=normalize(raw);if(!rec)return;const existing=[...byId.entries()].find(([key,v])=>key===rec.id||v.name.toLowerCase()===rec.name.toLowerCase());const key=existing?existing[0]:(rec.id||rec.name.toLowerCase());byId.set(key,Object.assign({},byId.get(key)||{},nonEmpty(rec)))});
+  const order={'wednesday':0,'thursday':1,'friday':2,'saturday':3};
+  const sortDay=x=>Math.min(...x.day.toLowerCase().split(/[^a-z]+/).map(k=>order[k]??9));
+  data=Array.from(byId.values()).sort((a,b)=>sortDay(a)-sortDay(b)||a.name.localeCompare(b.name));
+  render();
  }
-  function formatHours(raw){
-   const str=string(raw).trim().toLowerCase().replace(/12\s*noon/g,'12pm');
-   const match=str.match(/^(\d{1,2}(?::\d{2})?)\s*(am|pm)?\s*[-–]\s*(\d{1,2}(?::\d{2})?)\s*(am|pm)$/);
-   if(!match)return string(raw);
-   return match[1]+(match[2]||match[4])+' - '+match[3]+match[4];
-  }
-  function displayAddress(x){
-   const address=x.address.trim();
-   if(!address)return '';
-   // Do not manufacture postcodes. Add QLD + postcode only when a source supplies the postcode.
-   if(!x.postcode || /\bQLD\s*\d{4}\s*$/i.test(address) || /,\s*\d{4}\s*$/.test(address))return address;
-   return address+' QLD '+x.postcode;
-  }
- // Address lookups use a server-side API proxy. Never expose your geocoding key in Liquid.
- // Only a precise QLD street + suburb match is accepted by the backend.
- async function enrichPostcodes(){
-  if(!postcodeEndpoint)return;
-  const missing=data.filter(x=>x.address && !/^\d{4}$/.test(x.postcode) && !/\bQLD\s+\d{4}\b/i.test(x.address));
-  if(!missing.length)return;
-  const pending=missing.slice();
-  const worker=async()=>{
-   while(pending.length){
-    const x=pending.shift();
-    try{
-     const url=new URL(postcodeEndpoint,window.location.origin);
-     url.searchParams.set('address',x.address);
-     const response=await fetch(url.toString(),{headers:{Accept:'application/json'}});
-     if(!response.ok)continue;
-     const result=await response.json();
-     if(result.verified === true && /^[0-9]{4}$/.test(String(result.postcode||'')) && result.state==='QLD'){
-       x.postcode=String(result.postcode);
-       render();
-     }
-    }catch(err){console.warn('Postcode lookup:',err)}
-   }
-  };
-  await Promise.all(Array.from({length:Math.min(3,pending.length)},()=>worker()));
+ function formatHours(raw){
+  const str=string(raw).trim().toLowerCase().replace(/12\s*noon/g,'12pm');
+  const match=str.match(/^(\d{1,2}(?::\d{2})?)\s*(am|pm)?\s*[-–]\s*(\d{1,2}(?::\d{2})?)\s*(am|pm)$/);
+  if(!match)return string(raw);
+  return match[1]+(match[2]||match[4])+' - '+match[3]+match[4];
+ }
+ function displayAddress(x){
+  const address=x.address.trim();
+  if(!address)return '';
+  if(!x.postcode || /\bQLD\s*\d{4}\s*$/i.test(address) || /,\s*\d{4}\s*$/.test(address))return address;
+  return address+' QLD '+x.postcode;
  }
  function render(){
   const query=input.value.trim().toLowerCase();
@@ -331,23 +325,25 @@
    }
    list.append(article);
   });
-  empty.hidden=matched.length>0;
+  empty.hidden=matched.length>0 || !data.length;
   more.hidden=matched.length<=limit;
   more.textContent=expanded?'Show fewer locations ↑':'View all '+matched.length+' locations →';
-  if(!endpoint && !postcodeEndpoint){status.hidden=true}
  }
  input.addEventListener('input',()=>{expanded=false;render()});
  btns.forEach(b=>b.addEventListener('click',()=>{day=b.dataset.day;expanded=false;btns.forEach(other=>{const active=other===b;other.classList.toggle('is-active',active);other.setAttribute('aria-pressed',String(active))});render()}));
  more.addEventListener('click',()=>{expanded=!expanded;render()});
- merge();
- if(endpoint){status.hidden=false;status.textContent='Loading pickup locations…';
-  fetch(endpoint,{headers:{Accept:'application/json'}}).then(r=>{if(!r.ok)throw new Error('Request failed');return r.json()}).then(json=>{
-   const arr=Array.isArray(json)?json:json.locations||json.pickup_locations||json.data;
+
+ status.hidden=false;status.textContent='Loading pickup locations…';
+ fetch(apiUrl,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({shop:shop})})
+  .then(r=>{if(!r.ok)throw new Error('Request failed '+r.status);return r.json()})
+  .then(json=>{
+   const arr=Array.isArray(json)?json:json.data||json.locations;
    if(!Array.isArray(arr))throw new Error('Unknown response shape');
-   const cleaned=arr.map(normalize).filter(Boolean);if(!cleaned.length)throw new Error('Empty location list');
-   const known=new Map(snapshot.map(raw=>[String(raw.id),normalize(raw)])); const knownByName=new Map(snapshot.map(raw=>[String(raw.name).toLowerCase(),normalize(raw)])); data=cleaned.map(rec=>{const old=known.get(rec.id)||knownByName.get(rec.name.toLowerCase());return old?Object.assign({},old,Object.fromEntries(Object.entries(rec).filter(([k,v])=>v!==''))):rec});expanded=false;status.hidden=true;render();enrichPostcodes();
-  }).catch(e=>{status.hidden=false;status.textContent='Live location feed unavailable; showing Bird location mapping snapshot.';console.warn('Pickup location feed:',e)})
- }
+   const cleaned=arr.map(normalize).filter(Boolean);
+   if(!cleaned.length)throw new Error('Empty location list');
+   status.hidden=true;build(cleaned);
+  })
+  .catch(e=>{status.hidden=false;status.textContent='Live location feed unavailable; showing saved pickup locations.';console.warn('Pickup location feed:',e);build(null)});
 })();
 </script>
 {% schema %}
@@ -362,15 +358,10 @@
     },
     {
       "type": "text",
-      "id": "locations_json_url",
-      "label": "Public locations JSON URL",
-      "info": "Optional. Bird advanced scripting does not expose an endpoint. Only enter a verified public read-only feed URL."
-    },
-    {
-      "type": "url",
-      "id": "postcode_lookup_url",
-      "label": "Postcode lookup API URL",
-      "info": "Optional. Enter your server-side geocoding proxy URL (e.g. Cloudflare Worker). No API secret in the theme."
+      "id": "bird_shop",
+      "label": "Bird shop domain",
+      "info": "Used for the live Bird API. Leave blank to use this store's myshopify domain automatically.",
+      "default": "sprayfreefarmacy.myshopify.com"
     },
     {
       "type": "range",
