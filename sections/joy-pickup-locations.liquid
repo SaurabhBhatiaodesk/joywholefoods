@@ -3,8 +3,8 @@
   Locations (id, name, address, suburb, postcode) are fetched live from the Bird Pickup & Delivery API:
   POST https://picdel.birdchime.com/api/v3/pickup/locations
   New / removed locations and address / postcode changes update automatically.
-  The Bird locations API does NOT return pickup day/hours (those need the cart-based calendar endpoint),
-  so day/hours come from the snapshot below (matched by Bird ID) or from "Pickup location override" blocks.
+  Pickup DAYS are derived live from POST /api/v3/pickup/calendar (next 28 days, per location, using a sample cart item).
+  Bird returns full-day slots (00:00-23:59), so HOURS come from the snapshot below (matched by Bird ID) or from "Pickup location override" blocks.
   If the live API fails, the snapshot is shown as a fallback. Never updates Bird/cart.
 {% endcomment %}
 <section id="joy-pickups-{{ section.id }}" class="jpl-section" style="--jpl-green:{{ section.settings.green }};--jpl-cream:{{ section.settings.cream }};--jpl-bg:{{ section.settings.bg_color }};padding:{{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px">
@@ -281,10 +281,50 @@
  const known=new Map(),knownByName=new Map();
  snapshot.forEach(raw=>{const rec=normalize(raw);if(rec){known.set(rec.id,rec);knownByName.set(rec.name.toLowerCase(),rec)}});
  const nonEmpty=obj=>Object.fromEntries(Object.entries(obj).filter(([k,v])=>v!==''));
+ const sched=new Map();let liveCache=null;
+ const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+ const dayOrder=[1,2,3,4,5,6,0];
+ function fmt24(t){const m=string(t).match(/^(\d{1,2}):(\d{2})$/);if(!m)return '';let h=+m[1];const min=m[2];const ap=h>=12?'pm':'am';h=h%12||12;return h+(min==='00'?'':':'+min)+ap}
+ function scheduleFromCalendar(cal){
+  const days=new Set();let hours='';
+  (cal||[]).forEach(entry=>{
+   const d=new Date(string(entry.date)+'T00:00:00Z');if(isNaN(d))return;
+   days.add(d.getUTCDay());
+   (entry.slots||[]).forEach(s=>{if(!hours && s.from && s.to && !(s.from==='00:00'&&/^23:5\d$/.test(s.to)))hours=fmt24(s.from)+' - '+fmt24(s.to)});
+  });
+  if(!days.size)return null;
+  return {day:dayOrder.filter(n=>days.has(n)).map(n=>dayNames[n]).join(' / '),hours};
+ }
+ function isoDate(d){return d.toISOString().slice(0,10)}
+ async function getSampleProduct(){
+  const pid='{{ section.settings.sample_product_id }}',vid='{{ section.settings.sample_variant_id }}';
+  if(pid&&vid)return {product_id:pid,variant_id:vid};
+  const r=await fetch('/products.json?limit=1',{headers:{Accept:'application/json'}});
+  const p=(await r.json()).products[0];
+  return {product_id:String(p.id),variant_id:String(p.variants[0].id)};
+ }
+ async function enrichSchedules(){
+  if(!liveCache)return;
+  let item;try{item=await getSampleProduct()}catch(e){console.warn('Pickup schedule: no sample product',e);return}
+  const start=new Date(),end=new Date(Date.now()+28*864e5);
+  const pending=liveCache.filter(x=>/^\d+$/.test(x.id));
+  const worker=async()=>{
+   while(pending.length){
+    const x=pending.shift();
+    try{
+     const r=await fetch('https://picdel.birdchime.com/api/v3/pickup/calendar',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({shop:shop,location_id:Number(x.id),start_date:isoDate(start),end_date:isoDate(end),shopping_cart:[{variant_id:item.variant_id,product_id:item.product_id,quantity:1}]})});
+     if(!r.ok)continue;
+     const s=scheduleFromCalendar((await r.json()).calendar);
+     if(s){sched.set(x.id,s);build(liveCache)}
+    }catch(err){console.warn('Pickup calendar:',err)}
+   }
+  };
+  await Promise.all(Array.from({length:Math.min(6,pending.length)},()=>worker()));
+ }
  function build(live){
   const byId=new Map();
   if(live){
-   live.forEach(rec=>{const old=known.get(rec.id)||knownByName.get(rec.name.toLowerCase())||{};byId.set(rec.id||rec.name.toLowerCase(),Object.assign({},rec,{day:rec.day||old.day||'',hours:rec.hours||old.hours||''}))});
+   live.forEach(rec=>{const old=known.get(rec.id)||knownByName.get(rec.name.toLowerCase())||{};const s=sched.get(rec.id)||{};byId.set(rec.id||rec.name.toLowerCase(),Object.assign({},rec,{day:s.day||rec.day||old.day||'',hours:s.hours||rec.hours||old.hours||''}))});
   }else{
    known.forEach(rec=>byId.set(rec.id||rec.name.toLowerCase(),rec));
   }
@@ -341,7 +381,7 @@
    if(!Array.isArray(arr))throw new Error('Unknown response shape');
    const cleaned=arr.map(normalize).filter(Boolean);
    if(!cleaned.length)throw new Error('Empty location list');
-   status.hidden=true;build(cleaned);
+   status.hidden=true;liveCache=cleaned;build(cleaned);enrichSchedules();
   })
   .catch(e=>{status.hidden=false;status.textContent='Live location feed unavailable; showing saved pickup locations.';console.warn('Pickup location feed:',e);build(null)});
 })();
@@ -362,6 +402,17 @@
       "label": "Bird shop domain",
       "info": "Used for the live Bird API. Leave blank to use this store's myshopify domain automatically.",
       "default": "sprayfreefarmacy.myshopify.com"
+    },
+    {
+      "type": "text",
+      "id": "sample_product_id",
+      "label": "Sample product ID (for live pickup days)",
+      "info": "Optional. Bird's calendar API needs a cart item. Leave both blank to auto-use the first product of the store."
+    },
+    {
+      "type": "text",
+      "id": "sample_variant_id",
+      "label": "Sample variant ID (for live pickup days)"
     },
     {
       "type": "range",
