@@ -448,8 +448,8 @@
         "faq_QFaqPn": {
           "type": "faq",
           "settings": {
-            "question": "When can I collect my order?",
-            "answer": "<p>Please wait for your ready-to-collect SMS. Pickup times are estimated driver arrival times.</p>"
+            "question": "When can I collect my order from a pickup point?",
+            "answer": "<p>Please wait until you receive an SMS confirming your order has arrived before heading to your pickup point.&nbsp;</p><p>We’ll send you an estimated delivery time two days beforehand, another update when the driver leaves the warehouse that morning, and a final SMS once your order is ready to collect.&nbsp;</p><p>You don’t need to arrive at the exact delivery time, but please collect as soon as practical, especially if you have cold items. All orders must be collected on the delivery day, by 7pm at the latest.</p><p>Our pickup points are kindly hosted by local households and businesses. They aren’t staffed shops, and your boxes will be left outside in the designated collection area. Please take responsibility for collecting your order promptly, follow the instructions in your SMS and only take boxes labelled with your name. Next day collection isn’t available.<br/><br/></p>"
           }
         }
       },
