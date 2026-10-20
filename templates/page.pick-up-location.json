@@ -280,8 +280,8 @@
         "cream": "#f8f5ed",
         "text_color": "#000000",
         "bg_color": "#ffffff",
-        "padding_top": 40,
-        "padding_bottom": 40,
+        "padding_top": 32,
+        "padding_bottom": 32,
         "mobile_padding_top": 24,
         "mobile_padding_bottom": 28
       }
@@ -324,99 +324,6 @@
         "padding_bottom": 48,
         "mobile_padding_top": 24,
         "mobile_padding_bottom": 28
-      }
-    },
-    "image_with_text_jV7zEV": {
-      "type": "image-with-text",
-      "blocks": {
-        "heading_QeHVLB": {
-          "type": "heading",
-          "settings": {
-            "heading": "Free Pick Up",
-            "heading_size": "h1"
-          }
-        },
-        "text_xLU8D9": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Want to save on delivery fees?<br/>You can collect your order from one of our <strong>30+ pickup points across Brisbane with no delivery fee</strong>. The minimum order for pick-up is $50, and a $2 temporary fuel levy applies<br/></p><p>These locations are hosted by our wonderful customers who open their homes or businesses to help make fresh food more accessible in their community.</p><p>Each pickup location has a scheduled delivery day. We'll send you a text message before your collection day with an estimated delivery time and another message once your order has arrived.</p><p>If your order includes chilled or frozen items, we pack them carefully with ice packs to keep them cold until you collect.</p><p>We simply ask that you collect your box within <strong>a few hours of delivery</strong> to keep everything fresh.</p>",
-            "text_style": "body"
-          }
-        },
-        "button_TyT9eB": {
-          "type": "button",
-          "settings": {
-            "button_label": "How Pick-up works",
-            "button_link": "shopify://pages/collecting-from-a-pick-up-point",
-            "button_style_secondary": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_QeHVLB",
-        "text_xLU8D9",
-        "button_TyT9eB"
-      ],
-      "disabled": true,
-      "name": "t:sections.image-with-text.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/Joy_Van_-_David_packing2.heic",
-        "height": "adapt",
-        "desktop_image_width": "medium",
-        "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "",
-        "image_behavior": "none",
-        "mobile_content_alignment": "left",
-        "padding_top": 36,
-        "padding_bottom": 36,
-        "mobile_padding_top": 40,
-        "mobile_padding_bottom": 0
-      }
-    },
-    "3f91bc16-16e6-434a-8427-9cd5fc389355": {
-      "type": "gm-image-with-text",
-      "blocks": {
-        "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-heading-1": {
-          "type": "heading",
-          "settings": {
-            "heading": "Home delivery",
-            "heading_size": "h1"
-          }
-        },
-        "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-text-1": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Of course it's often more convenient to have your order delivered to your door so we offer that too.&nbsp;</p><p>We do our own deliveries in the Brisbane area from Wednesday to Saturday and use refrigerated couriers to deliver to the Sunshine Coast, the Gold Coast, Tweed Heads and Northern NSW.<br/><br/>Home delivery is a flat rate of $12.50. For Brisbane and northern Gold Coast customers, we offer free delivery on orders over $200. A temporary fuel levy also applies: $2 for local deliveries and $4 for refrigerated courier orders.<br/><br/>Frozen and cold items will be packed in Styrofoam or chilltainers with ice packs. Please arrange to take them inside quickly.</p>",
-            "text_style": "body"
-          }
-        }
-      },
-      "block_order": [
-        "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-heading-1",
-        "template--16844372279511__3f91bc16-16e6-434a-8427-9cd5fc389355-text-1"
-      ],
-      "disabled": true,
-      "custom_css": [
-        ".image-with-text {padding-top: 0;}",
-        "@media (max-width: 767px) {.gm {padding: 0px 0 20px; }}"
-      ],
-      "settings": {
-        "bg_color": "#ffffff",
-        "image": "shopify://shop_images/Trev_Home_Delivery_Van.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
-        "layout": "text_first",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "",
-        "image_behavior": "none",
-        "mobile_content_alignment": "left",
-        "padding_top": 36,
-        "padding_bottom": 36
       }
     },
     "e1a1623e-1c21-40b0-adf8-65cda35d3fc0": {
@@ -904,8 +811,6 @@
     "joy_packaging_care_HwkMNn",
     "joy_pickup_interest_zMRTWJ",
     "joy_delivery_cta_pmqDW3",
-    "image_with_text_jV7zEV",
-    "3f91bc16-16e6-434a-8427-9cd5fc389355",
     "e1a1623e-1c21-40b0-adf8-65cda35d3fc0",
     "joy_delivery_faqs_ypGTkQ",
     "table_columns_8PwV73",
