@@ -225,8 +225,9 @@
       "name": "Joy pickup locations",
       "settings": {
         "pickups_title": "Find your local pick up point",
-        "locations_json_url": "",
-        "postcode_lookup_url": "",
+        "bird_shop": "sprayfreefarmacy.myshopify.com",
+        "sample_product_id": "",
+        "sample_variant_id": "",
         "initial_locations": 3,
         "pickups_note": "Times shown are estimated driver arrival times. Please wait for your ready to collect SMS.",
         "green": "#086c3f",
@@ -285,42 +286,6 @@
         "mobile_padding_bottom": 28
       }
     },
-    "joy_delivery_faqs_ypGTkQ": {
-      "type": "joy-delivery-faqs",
-      "blocks": {
-        "faq_4RpeqB": {
-          "type": "faq",
-          "settings": {
-            "question": "What if I'm not home for delivery?",
-            "answer": "<p>Contact us to arrange a suitable delivery option. Availability depends on your local delivery route.</p>"
-          }
-        },
-        "faq_QFaqPn": {
-          "type": "faq",
-          "settings": {
-            "question": "When can I collect my order?",
-            "answer": "<p>Please wait for your ready-to-collect SMS. Pickup times are estimated driver arrival times.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "faq_4RpeqB",
-        "faq_QFaqPn"
-      ],
-      "name": "Joy delivery FAQs",
-      "settings": {
-        "faq_title": "Frequently asked questions",
-        "green": "#086c3f",
-        "lime": "#c4eb70",
-        "cream": "#f8f5ed",
-        "text_color": "#000000",
-        "bg_color": "#ffffff",
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "mobile_padding_top": 0,
-        "mobile_padding_bottom": 0
-      }
-    },
     "joy_pickup_interest_zMRTWJ": {
       "type": "joy-pickup-interest",
       "name": "Joy pickup interest",
@@ -356,7 +321,7 @@
         "text_color": "#18253a",
         "bg_color": "#ffffff",
         "padding_top": 0,
-        "padding_bottom": 0,
+        "padding_bottom": 48,
         "mobile_padding_top": 24,
         "mobile_padding_bottom": 28
       }
@@ -468,6 +433,42 @@
         "paragraph2": "<p><em>Please try to collect from our pick-up points within 5 hours to ensure your box isn't sitting out too long. It is your responsibility to remember to collect your order.</em></p>",
         "padding_top": 60,
         "padding_bottom": 60
+      }
+    },
+    "joy_delivery_faqs_ypGTkQ": {
+      "type": "joy-delivery-faqs",
+      "blocks": {
+        "faq_4RpeqB": {
+          "type": "faq",
+          "settings": {
+            "question": "Do I need to be home for delivery?",
+            "answer": "<p>No, you don’t need to be home! If you’ll be out, please leave delivery instructions at checkout so our driver knows where to put your order. A shaded, sheltered spot is best. We’ll keep you updated by SMS:</p><p>- Two days before delivery, with your anticipated delivery time.</p><p>- On delivery morning, when your order leaves the warehouse.</p><p>- Once your order has been delivered.</p><p>For local deliveries, cold items are packed in reusable Styrofoam boxes with an ice pack. These help keep your groceries cold while you’re out, but please bring them inside and refrigerate cold items as soon as practical. How long they stay cold will depend on the weather and where the box is left.For courier deliveries, your order travels with a refrigerated courier, and we use insulated packaging to help keep cold items cool after arrival. Please arrange to bring your order inside promptly, as courier packaging isn’t designed for extended periods outside.</p>"
+          }
+        },
+        "faq_QFaqPn": {
+          "type": "faq",
+          "settings": {
+            "question": "When can I collect my order?",
+            "answer": "<p>Please wait for your ready-to-collect SMS. Pickup times are estimated driver arrival times.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_4RpeqB",
+        "faq_QFaqPn"
+      ],
+      "name": "Joy delivery FAQs",
+      "settings": {
+        "faq_title": "Frequently asked questions",
+        "green": "#086c3f",
+        "lime": "#c4eb70",
+        "cream": "#f8f5ed",
+        "text_color": "#000000",
+        "bg_color": "#ffffff",
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "mobile_padding_top": 0,
+        "mobile_padding_bottom": 0
       }
     },
     "table_columns_8PwV73": {
@@ -901,12 +902,12 @@
     "joy_order_cutoffs_6giLyF",
     "joy_pickup_locations_rLaDgq",
     "joy_packaging_care_HwkMNn",
-    "joy_delivery_faqs_ypGTkQ",
     "joy_pickup_interest_zMRTWJ",
     "joy_delivery_cta_pmqDW3",
     "image_with_text_jV7zEV",
     "3f91bc16-16e6-434a-8427-9cd5fc389355",
     "e1a1623e-1c21-40b0-adf8-65cda35d3fc0",
+    "joy_delivery_faqs_ypGTkQ",
     "table_columns_8PwV73",
     "93b6770b-e6f8-490f-84ea-a3f971be577a",
     "rich_text_7kLYNU",
