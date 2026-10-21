@@ -132,6 +132,10 @@
     opacity: 0.45;
   }
 
+  #product-grid .card-wrapper-os [data-joy-card-quantity-label] {
+    cursor: pointer;
+  }
+
   #product-grid .card-wrapper-os .joy-card-quantity-value-os {
     display: flex;
     align-items: center;
@@ -1469,6 +1473,13 @@
     }
 
     function getCurrentVariantId(control) {
+      /* Products with a weight picker: until a weight is chosen there is no current
+         variant. Falling back to the default variant made +/- change a different weight
+         line than the one in the cart (looked like a lost click after a page reload). */
+      var item = control.closest('li');
+      var picker = item ? item.querySelector('[data-joy-card-product-variant-picker] select') : null;
+      if (picker && !picker.value) return 0;
+
       var addWrapper = getAddWrapper(control);
       var variantId = addWrapper && addWrapper.dataset.variantId
         ? addWrapper.dataset.variantId
@@ -1954,16 +1965,31 @@
     /* Each click is a relative change (+1 / -1) applied, one at a time, to a cart read
        fresh from Shopify inside the queue. A slow or stale cart copy can no longer
        overwrite a click, and overlapping writes can't undo each other. */
+    // Clicks on the same product that are still waiting in the queue are merged into one
+    // job (e.g. +1 +1 -1 becomes +1), so many quick taps don't build a long queue.
+    var waitingDeltaJobs = {};
+
     function requestDelta(variantId, delta, max) {
+      var waiting = waitingDeltaJobs[variantId];
+      if (waiting) {
+        waiting.delta += delta;
+        return waiting.job;
+      }
+
+      var entry = { delta: delta, job: null };
+      waitingDeltaJobs[variantId] = entry;
+      if (queuedCartJobs === 0) cartWriteFailed = false;
       queuedCartJobs += 1;
 
       var job = cartQueue.then(function () {
+        delete waitingDeltaJobs[variantId];
+        var totalDelta = entry.delta;
         cartWritesInFlight += 1;
 
         return readCart().then(function (cart) {
           var item = findCartItem(cart, variantId);
           var current = item ? number(item.quantity, 0) : 0;
-          var target = Math.max(0, Math.min(max, current + delta));
+          var target = Math.max(0, Math.min(max, current + totalDelta));
 
           if (target === current) return { cart: cart, quantity: current };
 
@@ -1984,18 +2010,17 @@
         }).then(function (result) {
           cartWritesInFlight -= 1;
           cartChangeCount += 1;
-          lastCartWriteAt = Date.now();
           setLatestCart(result.cart, true);
           return result;
         }, function (error) {
           cartWritesInFlight -= 1;
           cartChangeCount += 1;
-          lastCartWriteAt = Date.now();
           throw error;
         });
       });
 
-      cartQueue = job.catch(function () {}).then(function () {
+      entry.job = job;
+      cartQueue = job.catch(function () { cartWriteFailed = true; }).then(function () {
         queuedCartJobs -= 1;
       });
 
@@ -2014,15 +2039,22 @@
       var shown = Math.max(0, Math.min(max, base + delta));
 
       state.desired = shown;
+      state.variantId = variantId;
       state.pending = true;
       state.version += 1;
+      if (state.deltaVariantId !== variantId) {
+        state.deltaVariantId = variantId;
+        state.deltaJobs = 0;
+      }
       state.deltaJobs = (state.deltaJobs || 0) + 1;
 
       render(control, shown);
       setControlVisibility(control, shown);
 
       function finish(quantity) {
+        if (state.deltaVariantId !== variantId) return;
         state.deltaJobs -= 1;
+        if (getCurrentVariantId(control) !== variantId) return;
         if (state.deltaJobs > 0) return;
 
         state.confirmed = quantity;
@@ -2043,6 +2075,21 @@
           finish(number(state.confirmed, 0));
         });
       });
+    }
+
+    // Tapping the middle "Added: N items" adds one more, like the + button.
+    function handleLabelClick(event) {
+      var label = event.target.closest(LABEL_SELECTOR);
+      if (!label) return;
+
+      var control = label.closest(CONTROL_SELECTOR);
+      if (!control) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      queueDelta(control, getStep(control, getCurrentVariantId(control)));
     }
 
     function handleAddClick(event) {
@@ -2134,6 +2181,7 @@
 
     document.addEventListener('click', handleAddClick, true);
     document.addEventListener('click', handleQuantityClick, true);
+    document.addEventListener('click', handleLabelClick, true);
     document.addEventListener('change', handleVariantChange, true);
 
     /* External snapshots have no reliable request timestamp. Treat them as a signal
