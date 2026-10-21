@@ -39,7 +39,7 @@ test('an old weight response cannot overwrite a completed new weight update', as
 test('failed delta job is reported to the cart navigation guard', async () => {
   const context = {
     waitingDeltaJobs: {}, cartQueue: Promise.resolve(), queuedCartJobs: 0,
-    cartWritesInFlight: 0, cartChangeCount: 0, cartWriteFailed: false,
+    cartWritesInFlight: 0, cartChangeCount: 0, cartWriteFailed: false, latestCart: null,
     readCart: async () => { throw new Error('offline'); }
   };
   vm.createContext(context);
@@ -161,7 +161,9 @@ test('stale cart GETs cannot overwrite repeated increments on an existing line',
     waitingDeltaJobs: {}, cartQueue: Promise.resolve(), queuedCartJobs: 0,
     cartWritesInFlight: 0, cartChangeCount: 0, cartWriteFailed: false,
     number: (v, fallback) => Number.isFinite(Number(v)) ? Number(v) : fallback,
-    readCart: async () => staleCart(), setLatestCart() {},
+    latestCart: staleCart(),
+    readCart: async () => { throw new Error('Positive increments must not wait for a cart GET'); },
+    setLatestCart() {},
     postJson: async (url, body) => {
       assert.equal(url, '/cart/add.js', 'Never replace quantity using a stale GET');
       quantity += body.items[0].quantity;
