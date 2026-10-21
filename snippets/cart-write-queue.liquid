@@ -1,0 +1,34 @@
+<script>
+  (function () {
+    if (window.__joyCartWriteQueue) return;
+    window.__joyCartWriteQueue = true;
+    var originalFetch = window.fetch;
+    var queue = Promise.resolve();
+    var storeDomain = {{ shop.permanent_domain | json }};
+
+    function isCartWrite(input, options) {
+      try {
+        var url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
+        if (url.origin !== location.origin && url.hostname !== storeDomain) return false;
+        var method = String((options && options.method) || input.method || 'GET').toUpperCase();
+        if (method === 'GET' || method === 'HEAD') return false;
+        if (/\/cart\/(?:add|change|update|clear)(?:\.js|\.json)?\/?$/.test(url.pathname)) return true;
+        if (!/\/api\/[^/]+\/graphql\.json$/.test(url.pathname)) return false;
+        var body = options && options.body;
+        var query = typeof body === 'string' ? JSON.parse(body).query : '';
+        return /\bmutation\b/.test(query || '') && /\bcart[A-Z]\w*\s*\(/.test(query || '');
+      } catch (_) { return false; }
+    }
+
+    // Install before app scripts so their captured fetch also uses this queue.
+    // Preserve responses and errors; never retry an uncertain cart mutation.
+    window.fetch = function (input, options) {
+      if (!isCartWrite(input, options)) return originalFetch.apply(this, arguments);
+      var receiver = this;
+      var args = arguments;
+      var job = queue.then(function () { return originalFetch.apply(receiver, args); });
+      queue = job.then(function () {}, function () {});
+      return job;
+    };
+  })();
+</script>
