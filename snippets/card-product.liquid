@@ -1436,6 +1436,9 @@
     var states = new WeakMap();
     var latestCart = null;
     var cartRequest = null;
+    // Bumped every time an add/change request finishes. A /cart.js read that started
+    // before a change finished may return the old cart, so it must not overwrite it.
+    var cartChangeCount = 0;
 
     function number(value, fallback) {
       var parsed = Number(value);
@@ -1629,7 +1632,8 @@
       if (!force && latestCart) return Promise.resolve(latestCart);
       if (!force && cartRequest) return cartRequest;
 
-      cartRequest = fetch('/cart.js', {
+      var changeCountAtStart = cartChangeCount;
+      var request = fetch('/cart.js', {
         method: 'GET',
         headers: { Accept: 'application/json' }
       })
@@ -1638,13 +1642,17 @@
           return response.json();
         })
         .then(function (cart) {
+          // An add/change finished while this read was in flight: this copy can be
+          // older than latestCart, so keep the newer cart instead (slow mobile networks).
+          if (changeCountAtStart !== cartChangeCount && latestCart) return latestCart;
           return setLatestCart(cart, false);
         })
         .finally(function () {
-          cartRequest = null;
+          if (cartRequest === request) cartRequest = null;
         });
 
-      return cartRequest;
+      cartRequest = request;
+      return request;
     }
 
     function findCartItem(cart, variantId) {
@@ -1684,9 +1692,10 @@
     }
 
     function requestQuantity(variantId, quantity) {
-      /* Use the cart already loaded during initialization. This removes an
-         unnecessary /cart.js request before every quantity change. */
-      return fetchCart(false).then(function (cart) {
+      /* Read a fresh cart before every change. The cached cart can be stale (another
+         card, Bird or Joy Subscriptions may have changed the cart or its line keys),
+         and a stale copy made adds/changes go to the wrong line or get lost. */
+      return fetchCart(true).then(function (cart) {
         var item = findCartItem(cart, variantId);
 
         if (item) {
@@ -1736,6 +1745,12 @@
         }
 
         return response.json();
+      }).then(function (cart) {
+        cartChangeCount += 1;
+        return cart;
+      }, function (error) {
+        cartChangeCount += 1;
+        throw error;
       });
     }
 
