@@ -1454,6 +1454,12 @@
     var externalRefreshRequested = false;
     var gridObserver = null;
 
+    // Opt-in diagnostics contain only variant IDs and quantities, never cart tokens.
+    function traceCart(stage, detail) {
+      if (new URLSearchParams(window.location.search).get('joy_cart_debug') !== '1') return;
+      console.info('[Joy cart] ' + stage, JSON.stringify(detail));
+    }
+
     function number(value, fallback) {
       var parsed = Number(value);
       return Number.isFinite(parsed) ? parsed : fallback;
@@ -1800,6 +1806,7 @@
     }
 
     function postJson(url, body) {
+      traceCart('write', { url: url, body: body });
       return fetch(url, {
         method: 'POST',
         headers: {
@@ -1809,13 +1816,19 @@
         body: JSON.stringify(body)
       }).then(function (response) {
         if (!response.ok) {
+          traceCart('error', { url: url, status: response.status });
           return response.text().then(function (message) {
             var error = new Error(message || 'Quantity update failed');
             error.status = response.status;
             throw error;
           });
         }
-        return response.json();
+        return response.json().then(function (data) {
+          traceCart('response', { url: url, items: (data.items || []).map(function (item) {
+            return { variant: item.variant_id || item.id, quantity: item.quantity };
+          }) });
+          return data;
+        });
       });
     }
 
@@ -2047,6 +2060,7 @@
       var state = getState(control);
       var variantId = getCurrentVariantId(control);
       if (!variantId || !delta) return;
+      traceCart('click', { variant: variantId, delta: delta });
 
       var max = getMax(control, variantId);
       var base = state.pending && state.desired !== null

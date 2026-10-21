@@ -12,6 +12,7 @@ test('an old weight response cannot overwrite a completed new weight update', as
   const pending = new Map();
   const control = { id: 1, displayed: 0, state: { confirmed: 0, desired: 0, pending: false, version: 0 } };
   const context = {
+    traceCart() {},
     getState: c => c.state, getCurrentVariantId: c => c.id, getMax: () => Infinity,
     number: (v, fallback) => Number.isFinite(Number(v)) ? Number(v) : fallback,
     render: (c, qty) => { c.displayed = qty; }, setControlVisibility() {},
@@ -73,6 +74,7 @@ test('rapid changes across cards serialize writes and retain the last requested 
     desired: 0, confirmed: 0, pending: false, running: false, timer: null, version: 0
   } }));
   const context = {
+    traceCart() {},
     number: (value, fallback) => Number.isFinite(Number(value)) ? Number(value) : fallback,
     states: new WeakMap(), cartQueue: Promise.resolve(), queuedCartJobs: 0,
     cartWritesInFlight: 0, cartWriteFailed: false, cartChangeCount: 0,
