@@ -1737,68 +1737,85 @@
       })();
     }, true);
 
-    function runQuantityRequest(variantId, quantity) {
-      cartWritesInFlight += 1;
-
-      /* Read a fresh cart before every change (inside the queue, so it already includes
-         the previous card's change). The cached cart can be stale, and a stale copy
-         made adds/changes go to the wrong line or get lost. */
+    function readCart() {
       return fetch('/cart.js', {
         method: 'GET',
         headers: { Accept: 'application/json' }
       }).then(function (response) {
         if (!response.ok) throw new Error('Unable to read cart');
         return response.json();
-      }).then(function (cart) {
-        var item = findCartItem(cart, variantId);
+      });
+    }
 
-        if (item) {
-          return fetch('/cart/change.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            },
-            body: JSON.stringify({
-              id: item.key,
-              quantity: quantity
-            })
-          });
-        }
+    // cart/add.js only returns the added lines, so merge them into the cart we have.
+    function mergeAddedLines(cart, added) {
+      var merged = Object.assign({}, cart, { items: (cart.items || []).slice() });
 
-        if (quantity <= 0) {
-          return Promise.resolve({
-            ok: true,
-            json: function () { return Promise.resolve(cart); }
-          });
-        }
+      (added.items || []).forEach(function (line) {
+        var index = merged.items.findIndex(function (item) { return item.key === line.key; });
+        if (index > -1) merged.items[index] = line;
+        else merged.items.unshift(line);
+      });
 
-        return fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          },
-          body: JSON.stringify({
-            items: [{
-              id: variantId,
-              quantity: quantity
-            }]
-          })
-        }).then(function (response) {
-          if (!response.ok) return response;
-          return fetch('/cart.js', {
-            headers: { Accept: 'application/json' }
-          });
-        });
+      merged.item_count = merged.items.reduce(function (sum, item) { return sum + number(item.quantity, 0); }, 0);
+      merged.total_price = merged.items.reduce(function (sum, item) {
+        return sum + number(item.final_line_price != null ? item.final_line_price : item.line_price, 0);
+      }, 0);
+      merged.items_subtotal_price = merged.total_price;
+      return merged;
+    }
+
+    function postJson(url, body) {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(body)
       }).then(function (response) {
         if (!response.ok) {
           return response.text().then(function (message) {
-            throw new Error(message || 'Quantity update failed');
+            var error = new Error(message || 'Quantity update failed');
+            error.status = response.status;
+            throw error;
           });
         }
-
         return response.json();
+      });
+    }
+
+    function writeQuantity(cart, variantId, quantity) {
+      var item = findCartItem(cart, variantId);
+
+      if (item) {
+        return postJson('/cart/change.js', { id: item.key, quantity: quantity });
+      }
+
+      if (quantity <= 0) return Promise.resolve(cart);
+
+      return postJson('/cart/add.js', {
+        items: [{ id: variantId, quantity: quantity }]
+      }).then(function (added) {
+        return mergeAddedLines(cart, added);
+      });
+    }
+
+    function runQuantityRequest(variantId, quantity) {
+      cartWritesInFlight += 1;
+
+      /* Jobs run one at a time, so the cart left by the previous job is current and we
+         can write straight away. If that cart is missing or turns out to be stale (e.g.
+         Bird/Joy Subscriptions changed a line key), read a fresh cart and try once more. */
+      var start = latestCart ? Promise.resolve(latestCart) : readCart();
+
+      return start.then(function (cart) {
+        return writeQuantity(cart, variantId, quantity).catch(function (error) {
+          if (!latestCart || (error.status && error.status >= 500)) throw error;
+          return readCart().then(function (freshCart) {
+            return writeQuantity(freshCart, variantId, quantity);
+          });
+        });
       }).then(function (cart) {
         cartWritesInFlight -= 1;
         cartChangeCount += 1;
