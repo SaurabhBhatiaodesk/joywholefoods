@@ -1700,13 +1700,42 @@
       });
     }
 
+    var queuedCartJobs = 0;
+
     function requestQuantity(variantId, quantity) {
+      queuedCartJobs += 1;
       var job = cartQueue.then(function () {
         return runQuantityRequest(variantId, quantity);
       });
-      cartQueue = job.catch(function () {});
+      cartQueue = job.catch(function () {}).then(function () {
+        queuedCartJobs -= 1;
+      });
       return job;
     }
+
+    /* If the customer heads to the cart/checkout while card changes are still queued,
+       wait for them to reach Shopify first (max 8s) so nothing is left behind. */
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest('a[href]');
+      if (!link || queuedCartJobs === 0) return;
+
+      var href = link.getAttribute('href') || '';
+      if (!/^(https?:\/\/[^/]+)?\/(cart|checkout)(\/|\?|#|$)/.test(href)) return;
+
+      event.preventDefault();
+
+      var waited = 0;
+      var idleChecks = 0;
+      (function waitForQueue() {
+        idleChecks = queuedCartJobs === 0 ? idleChecks + 1 : 0;
+        if (idleChecks >= 2 || waited >= 8000) {
+          window.location.href = link.href;
+          return;
+        }
+        waited += 250;
+        window.setTimeout(waitForQueue, 250);
+      })();
+    }, true);
 
     function runQuantityRequest(variantId, quantity) {
       cartWritesInFlight += 1;
