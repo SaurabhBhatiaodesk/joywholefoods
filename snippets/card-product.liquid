@@ -1439,6 +1439,12 @@
     // Bumped every time an add/change request finishes. A /cart.js read that started
     // before a change finished may return the old cart, so it must not overwrite it.
     var cartChangeCount = 0;
+    // Cart writes from all cards run one at a time. Shopify can lose an update when two
+    // cart/add or cart/change requests overlap (one overwrites the other's quantity).
+    var cartQueue = Promise.resolve();
+    var cartWritesInFlight = 0;
+    var lastCartWriteAt = 0;
+    var gridObserver = null;
 
     function number(value, fallback) {
       var parsed = Number(value);
@@ -1565,6 +1571,10 @@
         plus.disabled = Number.isFinite(max) && safeQuantity >= max;
         plus.classList.toggle('disabled', plus.disabled);
       }
+
+      // These text updates are our own; don't let the grid observer treat them as new
+      // cards and re-read the cart (that caused a /cart.js request loop several times a second).
+      if (gridObserver) gridObserver.takeRecords();
     }
 
     function setControlVisibility(control, quantity) {
@@ -1642,9 +1652,9 @@
           return response.json();
         })
         .then(function (cart) {
-          // An add/change finished while this read was in flight: this copy can be
-          // older than latestCart, so keep the newer cart instead (slow mobile networks).
-          if (changeCountAtStart !== cartChangeCount && latestCart) return latestCart;
+          // An add/change was running or finished while this read was in flight: this copy
+          // can be older than latestCart, so keep the newer cart instead (slow mobile networks).
+          if ((changeCountAtStart !== cartChangeCount || cartWritesInFlight > 0) && latestCart) return latestCart;
           return setLatestCart(cart, false);
         })
         .finally(function () {
@@ -1691,65 +1701,131 @@
       });
     }
 
+    var queuedCartJobs = 0;
+
     function requestQuantity(variantId, quantity) {
-      /* Read a fresh cart before every change. The cached cart can be stale (another
-         card, Bird or Joy Subscriptions may have changed the cart or its line keys),
-         and a stale copy made adds/changes go to the wrong line or get lost. */
-      return fetchCart(true).then(function (cart) {
-        var item = findCartItem(cart, variantId);
+      queuedCartJobs += 1;
+      var job = cartQueue.then(function () {
+        return runQuantityRequest(variantId, quantity);
+      });
+      cartQueue = job.catch(function () {}).then(function () {
+        queuedCartJobs -= 1;
+      });
+      return job;
+    }
 
-        if (item) {
-          return fetch('/cart/change.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            },
-            body: JSON.stringify({
-              id: item.key,
-              quantity: quantity
-            })
-          });
+    /* If the customer heads to the cart/checkout while card changes are still queued,
+       wait for them to reach Shopify first (max 15s) so nothing is left behind. */
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest('a[href]');
+      if (!link || queuedCartJobs === 0) return;
+
+      var href = link.getAttribute('href') || '';
+      if (!/^(https?:\/\/[^/]+)?\/(cart|checkout)(\/|\?|#|$)/.test(href)) return;
+
+      event.preventDefault();
+
+      var waited = 0;
+      var idleChecks = 0;
+      (function waitForQueue() {
+        idleChecks = queuedCartJobs === 0 ? idleChecks + 1 : 0;
+        if (idleChecks >= 2 || waited >= 15000) {
+          window.location.href = link.href;
+          return;
         }
+        waited += 250;
+        window.setTimeout(waitForQueue, 250);
+      })();
+    }, true);
 
-        if (quantity <= 0) {
-          return Promise.resolve({
-            ok: true,
-            json: function () { return Promise.resolve(cart); }
-          });
-        }
+    function readCart() {
+      return fetch('/cart.js', {
+        method: 'GET',
+        headers: { Accept: 'application/json' }
+      }).then(function (response) {
+        if (!response.ok) throw new Error('Unable to read cart');
+        return response.json();
+      });
+    }
 
-        return fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          },
-          body: JSON.stringify({
-            items: [{
-              id: variantId,
-              quantity: quantity
-            }]
-          })
-        }).then(function (response) {
-          if (!response.ok) return response;
-          return fetch('/cart.js', {
-            headers: { Accept: 'application/json' }
-          });
-        });
+    // cart/add.js only returns the added lines, so merge them into the cart we have.
+    function mergeAddedLines(cart, added) {
+      var merged = Object.assign({}, cart, { items: (cart.items || []).slice() });
+
+      (added.items || []).forEach(function (line) {
+        var index = merged.items.findIndex(function (item) { return item.key === line.key; });
+        if (index > -1) merged.items[index] = line;
+        else merged.items.unshift(line);
+      });
+
+      merged.item_count = merged.items.reduce(function (sum, item) { return sum + number(item.quantity, 0); }, 0);
+      merged.total_price = merged.items.reduce(function (sum, item) {
+        return sum + number(item.final_line_price != null ? item.final_line_price : item.line_price, 0);
+      }, 0);
+      merged.items_subtotal_price = merged.total_price;
+      return merged;
+    }
+
+    function postJson(url, body) {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(body)
       }).then(function (response) {
         if (!response.ok) {
           return response.text().then(function (message) {
-            throw new Error(message || 'Quantity update failed');
+            var error = new Error(message || 'Quantity update failed');
+            error.status = response.status;
+            throw error;
           });
         }
-
         return response.json();
+      });
+    }
+
+    function writeQuantity(cart, variantId, quantity) {
+      var item = findCartItem(cart, variantId);
+
+      if (item) {
+        return postJson('/cart/change.js', { id: item.key, quantity: quantity });
+      }
+
+      if (quantity <= 0) return Promise.resolve(cart);
+
+      return postJson('/cart/add.js', {
+        items: [{ id: variantId, quantity: quantity }]
+      }).then(function (added) {
+        return mergeAddedLines(cart, added);
+      });
+    }
+
+    function runQuantityRequest(variantId, quantity) {
+      cartWritesInFlight += 1;
+
+      /* Jobs run one at a time, so the cart left by the previous job is current and we
+         can write straight away. If that cart is missing or turns out to be stale (e.g.
+         Bird/Joy Subscriptions changed a line key), read a fresh cart and try once more. */
+      var start = latestCart ? Promise.resolve(latestCart) : readCart();
+
+      return start.then(function (cart) {
+        return writeQuantity(cart, variantId, quantity).catch(function (error) {
+          if (!latestCart || (error.status && error.status >= 500)) throw error;
+          return readCart().then(function (freshCart) {
+            return writeQuantity(freshCart, variantId, quantity);
+          });
+        });
       }).then(function (cart) {
+        cartWritesInFlight -= 1;
         cartChangeCount += 1;
-        return cart;
+        lastCartWriteAt = Date.now();
+        return setLatestCart(cart, false);
       }, function (error) {
+        cartWritesInFlight -= 1;
         cartChangeCount += 1;
+        lastCartWriteAt = Date.now();
         throw error;
       });
     }
@@ -1930,24 +2006,27 @@
     document.addEventListener('click', handleQuantityClick, true);
     document.addEventListener('change', handleVariantChange, true);
 
+    /* Carts sent by other scripts (e.g. the collection section's own cart read) can be
+       older than our last write if their request started first. Ignore them while our
+       writes are queued and shortly after, so they can't undo a card change. */
+    function acceptExternalCart(cart) {
+      if (queuedCartJobs > 0 || cartWritesInFlight > 0 || Date.now() - lastCartWriteAt < 4000) return;
+      setLatestCart(cart, false);
+      syncAllControls(cart, false);
+    }
+
     document.addEventListener('cart:updated', function (event) {
       if (event.detail && event.detail.source === 'joy-isolated-card-quantity') return;
       var cart = event.detail && event.detail.cart ? event.detail.cart : null;
 
-      if (cart) {
-        setLatestCart(cart, false);
-        syncAllControls(cart, false);
-      }
+      if (cart) acceptExternalCart(cart);
     });
 
     document.addEventListener('cart:refresh', function (event) {
       if (event.detail && event.detail.source === 'joy-isolated-card-quantity') return;
       var cart = event.detail && event.detail.cart ? event.detail.cart : null;
 
-      if (cart) {
-        setLatestCart(cart, false);
-        syncAllControls(cart, false);
-      }
+      if (cart) acceptExternalCart(cart);
     });
 
     if (document.readyState === 'loading') {
@@ -1959,14 +2038,15 @@
     var grid = document.getElementById('ProductGridContainer');
     if (grid && window.MutationObserver) {
       var observerTimer = null;
-      new MutationObserver(function () {
+      gridObserver = new MutationObserver(function () {
         window.clearTimeout(observerTimer);
         observerTimer = window.setTimeout(function () {
           fetchCart(true).then(function (cart) {
             syncAllControls(cart, false);
           });
         }, 60);
-      }).observe(grid, { childList: true, subtree: true });
+      });
+      gridObserver.observe(grid, { childList: true, subtree: true });
     }
   })();
 </script>
