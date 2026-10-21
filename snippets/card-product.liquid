@@ -1443,7 +1443,10 @@
     // cart/add or cart/change requests overlap (one overwrites the other's quantity).
     var cartQueue = Promise.resolve();
     var cartWritesInFlight = 0;
-    var lastCartWriteAt = 0;
+    var cartWriteFailed = false;
+    var externalRefreshTimer = null;
+    var externalRefreshRunning = false;
+    var externalRefreshRequested = false;
     var gridObserver = null;
 
     function number(value, fallback) {
@@ -1703,22 +1706,31 @@
 
     var queuedCartJobs = 0;
 
+    function hasPendingCardChanges() {
+      if (queuedCartJobs > 0 || cartWritesInFlight > 0) return true;
+      return Array.from(document.querySelectorAll(CONTROL_SELECTOR)).some(function (control) {
+        var state = states.get(control);
+        return state && (state.pending || state.running);
+      });
+    }
+
     function requestQuantity(variantId, quantity) {
+      if (queuedCartJobs === 0) cartWriteFailed = false;
       queuedCartJobs += 1;
       var job = cartQueue.then(function () {
         return runQuantityRequest(variantId, quantity);
       });
-      cartQueue = job.catch(function () {}).then(function () {
+      cartQueue = job.catch(function () { cartWriteFailed = true; }).then(function () {
         queuedCartJobs -= 1;
       });
       return job;
     }
 
     /* If the customer heads to the cart/checkout while card changes are still queued,
-       wait for them to reach Shopify first (max 15s) so nothing is left behind. */
+       wait for them to reach Shopify first. A timeout must never discard queued writes. */
     document.addEventListener('click', function (event) {
       var link = event.target.closest('a[href]');
-      if (!link || queuedCartJobs === 0) return;
+      if (!link || !hasPendingCardChanges()) return;
 
       var href = link.getAttribute('href') || '';
       if (!/^(https?:\/\/[^/]+)?\/(cart|checkout)(\/|\?|#|$)/.test(href)) return;
@@ -1728,9 +1740,17 @@
       var waited = 0;
       var idleChecks = 0;
       (function waitForQueue() {
-        idleChecks = queuedCartJobs === 0 ? idleChecks + 1 : 0;
-        if (idleChecks >= 2 || waited >= 15000) {
+        idleChecks = !hasPendingCardChanges() ? idleChecks + 1 : 0;
+        if (idleChecks >= 2) {
+          if (cartWriteFailed) {
+            window.alert('Some cart changes could not be saved. Please review your quantities and try again.');
+            return;
+          }
           window.location.href = link.href;
+          return;
+        }
+        if (waited >= 15000) {
+          window.alert('Your cart is still saving. Please wait, then select Cart or Checkout again.');
           return;
         }
         waited += 250;
@@ -1820,12 +1840,10 @@
       }).then(function (cart) {
         cartWritesInFlight -= 1;
         cartChangeCount += 1;
-        lastCartWriteAt = Date.now();
         return setLatestCart(cart, false);
       }, function (error) {
         cartWritesInFlight -= 1;
         cartChangeCount += 1;
-        lastCartWriteAt = Date.now();
         throw error;
       });
     }
@@ -2006,13 +2024,30 @@
     document.addEventListener('click', handleQuantityClick, true);
     document.addEventListener('change', handleVariantChange, true);
 
-    /* Carts sent by other scripts (e.g. the collection section's own cart read) can be
-       older than our last write if their request started first. Ignore them while our
-       writes are queued and shortly after, so they can't undo a card change. */
-    function acceptExternalCart(cart) {
-      if (queuedCartJobs > 0 || cartWritesInFlight > 0 || Date.now() - lastCartWriteAt < 4000) return;
-      setLatestCart(cart, false);
-      syncAllControls(cart, false);
+    /* External snapshots have no reliable request timestamp. Treat them as a signal
+       to read Shopify after our queue settles, never as authoritative cart contents. */
+    function acceptExternalCart() {
+      externalRefreshRequested = true;
+      if (externalRefreshTimer !== null || externalRefreshRunning) return;
+      externalRefreshTimer = window.setTimeout(refreshExternalCart, 80);
+    }
+
+    function refreshExternalCart() {
+      externalRefreshTimer = null;
+      if (queuedCartJobs > 0 || cartWritesInFlight > 0) {
+        externalRefreshTimer = window.setTimeout(refreshExternalCart, 250);
+        return;
+      }
+      externalRefreshRequested = false;
+      externalRefreshRunning = true;
+      fetchCart(true).then(function (cart) {
+        syncAllControls(cart, false);
+      }).catch(function (error) {
+        console.warn('Unable to refresh collection cart:', error);
+      }).finally(function () {
+        externalRefreshRunning = false;
+        if (externalRefreshRequested) acceptExternalCart();
+      });
     }
 
     document.addEventListener('cart:updated', function (event) {
