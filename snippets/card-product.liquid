@@ -1657,6 +1657,7 @@
       var changeCountAtStart = cartChangeCount;
       var request = fetch('/cart.js', {
         method: 'GET',
+        cache: 'no-store',
         headers: { Accept: 'application/json' }
       })
         .then(function (response) {
@@ -1772,6 +1773,7 @@
     function readCart() {
       return fetch('/cart.js', {
         method: 'GET',
+        cache: 'no-store',
         headers: { Accept: 'application/json' }
       }).then(function (response) {
         if (!response.ok) throw new Error('Unable to read cart');
@@ -1962,9 +1964,8 @@
       }
     }
 
-    /* Each click is a relative change (+1 / -1) applied, one at a time, to a cart read
-       fresh from Shopify inside the queue. A slow or stale cart copy can no longer
-       overwrite a click, and overlapping writes can't undo each other. */
+    /* Serialize relative clicks. Positive changes use incremental adds and their
+       returned line quantity; decreases read the cart before changing its line. */
     // Clicks on the same product that are still waiting in the queue are merged into one
     // job (e.g. +1 +1 -1 becomes +1), so many quick taps don't build a long queue.
     var waitingDeltaJobs = {};
@@ -1986,12 +1987,27 @@
         var totalDelta = entry.delta;
         cartWritesInFlight += 1;
 
-        return readCart().then(function (cart) {
+        var baseline = totalDelta > 0 && latestCart
+          ? Promise.resolve(latestCart)
+          : readCart();
+        return baseline.then(function (cart) {
           var item = findCartItem(cart, variantId);
           var current = item ? number(item.quantity, 0) : 0;
           var target = Math.max(0, Math.min(max, current + totalDelta));
 
           if (target === current) return { cart: cart, quantity: current };
+
+          // Positive clicks are increments, never an absolute quantity derived
+          // from a GET snapshot. A stale read must not turn two +1 taps into 1.
+          if (totalDelta > 0) {
+            return postJson('/cart/add.js', {
+              items: [{ id: variantId, quantity: target - current }]
+            }).then(function (added) {
+              var newCart = mergeAddedLines(cart, added);
+              var line = findCartItem(newCart, variantId);
+              return { cart: newCart, quantity: line ? number(line.quantity, 0) : 0 };
+            });
+          }
 
           if (item) {
             return postJson('/cart/change.js', { id: item.key, quantity: target }).then(function (newCart) {
