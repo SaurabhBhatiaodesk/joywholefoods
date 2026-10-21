@@ -2237,6 +2237,9 @@
       mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (node) {
           if (!(node instanceof Element)) return;
+          // The "Added: <span>N</span> items" label is rewritten on every cart sync; reacting
+          // to it re-ran the cart sync and caused a /cart.js request loop.
+          if (node.closest('.custom-quantity-value-os')) return;
 
           initializeTabs(node);
           initializeVariantForms(node);

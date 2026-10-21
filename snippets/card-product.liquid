@@ -1993,7 +1993,8 @@
             syncAllControls(cart, false);
           });
         }, 60);
-      }).observe(grid, { childList: true, subtree: true });
+      });
+      gridObserver.observe(grid, { childList: true, subtree: true });
     }
   })();
 </script>
