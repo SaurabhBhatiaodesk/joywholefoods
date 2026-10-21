@@ -4,20 +4,30 @@
     if (window.__joyCartRequestDebug) return;
     window.__joyCartRequestDebug = true;
     var sequence = 0;
+    var storeDomain = {{ shop.permanent_domain | json }};
 
     function cartPath(value) {
       try {
         var url = new URL(value, location.href);
+        if ((url.origin === location.origin || url.hostname === storeDomain) &&
+            /\/api\/[^/]+\/graphql\.json$/.test(url.pathname)) return url.pathname;
         return url.origin === location.origin && /\/cart(?:\/(?:add|change|update|clear))?(?:\.js|\.json)?\/?$/.test(url.pathname)
           ? url.pathname : null;
       } catch (_) { return null; }
     }
 
-    function start(method, path, transport) {
+    function operationNames(body) {
+      try {
+        var query = JSON.parse(body).query || '';
+        return query.match(/\bcart(?:LinesAdd|LinesUpdate|LinesRemove|AttributesUpdate|BuyerIdentityUpdate|DeliveryAddressesReplace|MetafieldsSet|MetafieldDelete|DiscountCodesUpdate|NoteUpdate)\b/g) || [];
+      } catch (_) { return []; }
+    }
+
+    function start(method, path, transport, operations) {
       var id = ++sequence;
       // Exclude request bodies, query strings, headers, cart tokens and customer data.
       console.info('[Joy transport]', JSON.stringify({ id: id, method: method,
-        path: path, transport: transport, stage: 'start', caller: (new Error().stack || '')
+        path: path, transport: transport, operations: operations || [], stage: 'start', caller: (new Error().stack || '')
           .split('\n').slice(2, 7).join('\n').replace(/\?[^)\s]*/g, '') }));
       return id;
     }
@@ -26,7 +36,7 @@
     window.fetch = function (input, options) {
       var path = cartPath(typeof input === 'string' || input instanceof URL ? input : input.url);
       if (!path) return originalFetch.apply(this, arguments);
-      var id = start((options && options.method) || input.method || 'GET', path, 'fetch');
+      var id = start((options && options.method) || input.method || 'GET', path, 'fetch', operationNames(options && options.body));
       return originalFetch.apply(this, arguments).then(function (response) {
         console.info('[Joy transport]', JSON.stringify({ id: id, stage: 'end', status: response.status }));
         return response;
@@ -46,7 +56,7 @@
     XMLHttpRequest.prototype.send = function () {
       var request = requests.get(this);
       if (request && request.path) {
-        var id = start(request.method, request.path, 'xhr');
+        var id = start(request.method, request.path, 'xhr', operationNames(arguments[0]));
         this.addEventListener('loadend', function () {
           console.info('[Joy transport]', JSON.stringify({ id: id, stage: 'end', status: this.status }));
         }, { once: true });
