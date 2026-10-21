@@ -1954,16 +1954,30 @@
     /* Each click is a relative change (+1 / -1) applied, one at a time, to a cart read
        fresh from Shopify inside the queue. A slow or stale cart copy can no longer
        overwrite a click, and overlapping writes can't undo each other. */
+    // Clicks on the same product that are still waiting in the queue are merged into one
+    // job (e.g. +1 +1 -1 becomes +1), so many quick taps don't build a long queue.
+    var waitingDeltaJobs = {};
+
     function requestDelta(variantId, delta, max) {
+      var waiting = waitingDeltaJobs[variantId];
+      if (waiting) {
+        waiting.delta += delta;
+        return waiting.job;
+      }
+
+      var entry = { delta: delta, job: null };
+      waitingDeltaJobs[variantId] = entry;
       queuedCartJobs += 1;
 
       var job = cartQueue.then(function () {
+        delete waitingDeltaJobs[variantId];
+        var totalDelta = entry.delta;
         cartWritesInFlight += 1;
 
         return readCart().then(function (cart) {
           var item = findCartItem(cart, variantId);
           var current = item ? number(item.quantity, 0) : 0;
-          var target = Math.max(0, Math.min(max, current + delta));
+          var target = Math.max(0, Math.min(max, current + totalDelta));
 
           if (target === current) return { cart: cart, quantity: current };
 
@@ -1995,6 +2009,7 @@
         });
       });
 
+      entry.job = job;
       cartQueue = job.catch(function () {}).then(function () {
         queuedCartJobs -= 1;
       });
