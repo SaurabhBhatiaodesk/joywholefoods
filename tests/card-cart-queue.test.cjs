@@ -12,6 +12,7 @@ test('rapid changes across cards serialize writes and retain the last requested 
   let server = { items: [], item_count: 0 };
   let inFlight = 0;
   let maxInFlight = 0;
+  let responseDelay = 15;
   const requests = [];
   const snapshot = () => JSON.parse(JSON.stringify(server));
   const controls = [1, 2, 3].map(id => ({ id, displayed: 0, state: {
@@ -32,7 +33,7 @@ test('rapid changes across cards serialize writes and retain the last requested 
       requests.push({ url, body });
       maxInFlight = Math.max(maxInFlight, ++inFlight);
       // Hold the first response while the customer changes several quantities.
-      await new Promise(resolve => setTimeout(resolve, 15));
+      await new Promise(resolve => setTimeout(resolve, responseDelay));
       let response;
       if (url.endsWith('/add.js')) {
         const line = body.items[0];
@@ -71,4 +72,27 @@ test('rapid changes across cards serialize writes and retain the last requested 
   assert.equal(server.item_count, 7);
   assert.equal(requests.filter(request => request.url.endsWith('/add.js')).length, 3);
   assert.equal(context.queuedCartJobs, 0);
+
+  // Match the reported pattern: four distinct adds 150 ms apart, five rounds.
+  // The fake Shopify response takes 200 ms, so successive clicks overlap it.
+  responseDelay = 200;
+  for (let round = 0; round < 5; round++) {
+    const batch = Array.from({ length: 4 }, (_, index) => ({
+      id: 100 + round * 4 + index, displayed: 0,
+      state: { desired: 0, confirmed: 0, pending: false, running: false, timer: null, version: 0 }
+    }));
+    for (const control of batch) {
+      context.queue(control, 1);
+      await new Promise(resolve => setTimeout(resolve, 150));
+    }
+    for (let attempt = 0; attempt < 100 && batch.some(control => control.state.pending || control.state.running); attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    for (const control of batch) {
+      assert.equal(server.items.find(item => item.variant_id === control.id)?.quantity, 1);
+      assert.equal(control.state.confirmed, 1);
+    }
+  }
+  assert.equal(server.items.filter(item => item.variant_id >= 100).length, 20);
+  assert.equal(maxInFlight, 1);
 });

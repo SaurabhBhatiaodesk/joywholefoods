@@ -204,3 +204,59 @@ for (const file of ['main-collection-product-grid-filter', 'main-collection-prod
     assert.doesNotThrow(() => sync({ root: { querySelector: () => ({}) } }));
   });
 }
+
+test('grid mutations ignore label text, icons and widget updates', () => {
+  const context = { CONTROL_SELECTOR: 'control' };
+  vm.createContext(context);
+  vm.runInContext(productionFunction('containsNewQuantityCards'), context);
+  const label = { nodeType: 1, matches: () => false, querySelector: () => null };
+  const text = { nodeType: 3 };
+  assert.equal(context.containsNewQuantityCards([{ addedNodes: [label, text] }]), false);
+});
+
+test('grid mutations initialize newly inserted cards and entire replaced grids', () => {
+  const context = { CONTROL_SELECTOR: 'control' };
+  vm.createContext(context);
+  vm.runInContext(productionFunction('containsNewQuantityCards'), context);
+  const card = { nodeType: 1, matches: () => true, querySelector: () => null };
+  const grid = { nodeType: 1, matches: () => false, querySelector: () => card };
+  assert.equal(context.containsNewQuantityCards([{ addedNodes: [card] }]), true);
+  assert.equal(context.containsNewQuantityCards([{ addedNodes: [grid] }]), true);
+});
+
+test('idle render mutations cause zero cart reads in the production observer', () => {
+  let callback;
+  let reads = 0;
+  const grid = {};
+  const context = {
+    CONTROL_SELECTOR: 'control', gridObserver: null,
+    document: { getElementById: () => grid },
+    window: { MutationObserver: true, clearTimeout() {}, setTimeout: fn => fn() },
+    MutationObserver: class { constructor(fn) { callback = fn; } observe() {} },
+    fetchCart: () => { reads++; return Promise.resolve({ items: [] }); },
+    syncAllControls() {}, console
+  };
+  vm.createContext(context);
+  const start = source.indexOf("    var grid = document.getElementById('ProductGridContainer');", source.indexOf('function containsNewQuantityCards'));
+  const end = source.indexOf('\n  })();', start);
+  vm.runInContext(productionFunction('containsNewQuantityCards') + source.slice(start, end), context);
+  for (let n = 0; n < 100; n++) callback([{ addedNodes: [{ nodeType: 1, matches: () => false, querySelector: () => null }] }]);
+  assert.equal(reads, 0);
+});
+
+test('weight placeholder tap explains the requirement without making a cart write', () => {
+  let focused = false;
+  let writes = 0;
+  const button = { dataset: { requiresWeight: 'true' }, textContent: '', closest: () => ({ dataset: { available: 'true' } }) };
+  const context = {
+    event: { target: { closest: () => button }, preventDefault() {}, stopPropagation() {}, stopImmediatePropagation() {} },
+    getCard: () => ({ querySelector: () => ({ focus() { focused = true; } }) }),
+    queue: () => { writes++; }
+  };
+  vm.createContext(context);
+  vm.runInContext(productionFunction('handleAddClick'), context);
+  context.handleAddClick(context.event);
+  assert.equal(button.textContent, 'Choose a weight');
+  assert.equal(focused, true);
+  assert.equal(writes, 0);
+});

@@ -3393,3 +3393,15 @@ span.jdgm-prev-badge__text {
 a.jdgm-write-rev-link {
     font-family: 'DM Sans';
 }
+.card-wrapper-os .custom-add-to-cart-btn-os[data-requires-weight="true"] {
+  opacity: 0.55;
+  cursor: pointer;
+}
+.joy-card-quantity-help {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.3;
+}

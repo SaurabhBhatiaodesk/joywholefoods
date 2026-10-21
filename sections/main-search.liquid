@@ -1546,6 +1546,8 @@
 
       addToCartButton.textContent = variant.available ? addLabel : notifyLabel;
       addToCartButton.classList.toggle('is-notify', !variant.available);
+      delete addToCartButton.dataset.requiresWeight;
+      addToCartButton.removeAttribute('aria-disabled');
       addToCartButton.disabled = false;
     }
 
@@ -1593,7 +1595,10 @@
     }
 
     if (addToCartButton) {
-      addToCartButton.disabled = true;
+      addToCartButton.disabled = false;
+      addToCartButton.dataset.requiresWeight = 'true';
+      addToCartButton.setAttribute('aria-disabled', 'true');
+      addToCartButton.textContent = 'Choose a weight';
     }
 
     submitButtons.forEach(function (button) {

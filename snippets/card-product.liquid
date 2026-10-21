@@ -962,6 +962,7 @@
                             {% render 'icon-plus' %}
                           </button>
                         </div>
+                        <small class="joy-card-quantity-help">Use + to add more</small>
                       </div>
 
                       <div class="restocking-soon-product-os">
@@ -1575,9 +1576,6 @@
         plus.classList.toggle('disabled', plus.disabled);
       }
 
-      // These text updates are our own; don't let the grid observer treat them as new
-      // cards and re-read the cart (that caused a /cart.js request loop several times a second).
-      if (gridObserver) gridObserver.takeRecords();
     }
 
     function setControlVisibility(control, quantity) {
@@ -1958,6 +1956,16 @@
       if (!button) return;
 
       var addWrapper = button.closest('.custom-addToCart-os');
+      if (button.dataset.requiresWeight === 'true') {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        var weightCard = getCard(button);
+        var weightSelect = weightCard && weightCard.querySelector('[data-joy-card-product-variant-picker] select');
+        button.textContent = 'Choose a weight';
+        if (weightSelect) weightSelect.focus();
+        return;
+      }
       if (!addWrapper || addWrapper.dataset.available !== 'true') return;
 
       var card = button.closest('.card-wrapper-os') || button.closest('.grid__item');
@@ -2079,14 +2087,27 @@
       initialize();
     }
 
+    function containsNewQuantityCards(mutations) {
+      return mutations.some(function (mutation) {
+        return Array.from(mutation.addedNodes).some(function (node) {
+          return node.nodeType === 1 && (node.matches(CONTROL_SELECTOR) || node.querySelector(CONTROL_SELECTOR));
+        });
+      });
+    }
+
     var grid = document.getElementById('ProductGridContainer');
     if (grid && window.MutationObserver) {
       var observerTimer = null;
-      gridObserver = new MutationObserver(function () {
+      gridObserver = new MutationObserver(function (mutations) {
+        // Only newly inserted cards need initialization. Label, icon and widget
+        // changes must never start another cart read (including our own render).
+        if (!containsNewQuantityCards(mutations)) return;
         window.clearTimeout(observerTimer);
         observerTimer = window.setTimeout(function () {
-          fetchCart(true).then(function (cart) {
+          fetchCart(false).then(function (cart) {
             syncAllControls(cart, false);
+          }).catch(function (error) {
+            console.warn('Unable to initialize new collection cards:', error);
           });
         }, 60);
       });

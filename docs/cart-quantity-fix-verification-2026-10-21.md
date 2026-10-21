@@ -81,3 +81,41 @@ enabled in the draft settings; it was not disabled or changed in this work.
   error), plus customer attempt dates/times for targeted recordings.
 - Current Joy/Bird app diagnostics and affected historical order/session evidence.
 - Deploy and verify the full reviewed change set before claiming a live fix.
+
+## Follow-up to the supplied live-theme reproduction report
+
+The user supplied a 20-add live-theme test with five lost adds and an idle
+MutationObserver loop. Those figures are user-supplied evidence, not measurements
+from this agent's browser session.
+
+The local observer now filters mutation records for newly inserted quantity
+controls or containers containing those controls. It does not react to labels,
+icons or arbitrary widget changes. New-card initialization uses cached cart state
+instead of forcing another cart request. This removes the broad observer read
+path rather than relying on clearing its own mutation records.
+
+Weight selection now exposes a visually muted, focusable “Choose a weight”
+button with aria-disabled=true until a weight is selected. Tapping it focuses the
+weight selector and makes no cart write. Selecting a weight clears that state.
+A visible “Use + to add more” hint explains the quantity stepper.
+
+31 local tests pass. The production queue was additionally exercised with four
+distinct adds 150 ms apart for five rounds against a simulated server taking
+200 ms per write: 20/20 persisted with maximum concurrent writes=1. This is not
+the requested live Shopify or real-phone 20-add acceptance test. Another test
+passes 100 idle label mutations to the actual observer callback: zero reads.
+
+Simple Bundles removal, Recharge active-subscription confirmation, third-party
+CommSlayer polling verification, and the final real-phone/network acceptance test
+remain separate outstanding checks. These integrations have not been removed.
+
+Deployment attempt for this follow-up: Shopify's Themes library and the draft
+code editor repeatedly remained at approximately 95% loading with an empty
+embedded frame, including after reload. Therefore the follow-up observer and
+weight-button changes are local/Git changes, not deployed draft changes. No
+live 20-add result or whole-page idle network measurement is claimed.
+
+The installed-apps list was inspected across all three pages. Simple Bundles
+and CommSlayer are installed; Recharge was not listed. That does not verify
+whether externally billed Recharge subscriptions remain, so its leftover theme
+SDK has not been removed on this evidence alone.
