@@ -178,7 +178,7 @@ test('uncertain network response never repeats a possibly accepted add', async (
   const h = writeHarness();
   await assert.rejects(h.context.runQuantityRequest(1, 2), /Request failed/);
   assert.equal(h.writes, 1);
-  assert.equal(h.reads, 0);
+  assert.equal(h.reads, 1);
   assert.equal(h.context.cartWritesInFlight, 0);
 });
 
@@ -192,7 +192,7 @@ test('removed saved-cart line key is refreshed before one retry', async () => {
   const h = writeHarness({ status: 400, existing: true });
   const result = await h.context.runQuantityRequest(1, 2);
   assert.equal(h.writes, 2);
-  assert.equal(h.reads, 1);
+  assert.equal(h.reads, 2);
   assert.equal(result.items[0].key, 'new');
 });
 

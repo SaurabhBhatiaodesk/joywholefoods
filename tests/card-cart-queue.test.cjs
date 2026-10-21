@@ -8,6 +8,60 @@ function fn(name) {
   return source.slice(start, source.indexOf('\n    }', start) + 6);
 }
 
+test('an old weight response cannot overwrite a completed new weight update', async () => {
+  const pending = new Map();
+  const control = { id: 1, displayed: 0, state: { confirmed: 0, desired: 0, pending: false, version: 0 } };
+  const context = {
+    getState: c => c.state, getCurrentVariantId: c => c.id, getMax: () => Infinity,
+    number: (v, fallback) => Number.isFinite(Number(v)) ? Number(v) : fallback,
+    render: (c, qty) => { c.displayed = qty; }, setControlVisibility() {},
+    requestDelta: id => new Promise(resolve => pending.set(id, resolve))
+  };
+  vm.createContext(context);
+  vm.runInContext(fn('queueDelta'), context);
+  context.queueDelta(control, 1);
+  // Mirror the selection-change handler while the old request remains pending.
+  control.id = 2;
+  control.state.pending = false;
+  control.state.desired = 0;
+  control.state.confirmed = 0;
+  context.queueDelta(control, 1);
+  pending.get(2)({ quantity: 1 });
+  await new Promise(resolve => setImmediate(resolve));
+  pending.get(1)({ quantity: 5 });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(control.displayed, 1);
+  assert.equal(control.state.confirmed, 1);
+  assert.equal(control.state.pending, false);
+  assert.equal(control.state.deltaJobs, 0);
+});
+
+test('failed delta job is reported to the cart navigation guard', async () => {
+  const context = {
+    waitingDeltaJobs: {}, cartQueue: Promise.resolve(), queuedCartJobs: 0,
+    cartWritesInFlight: 0, cartChangeCount: 0, cartWriteFailed: false,
+    readCart: async () => { throw new Error('offline'); }
+  };
+  vm.createContext(context);
+  vm.runInContext(fn('requestDelta'), context);
+  await assert.rejects(context.requestDelta(1, 1, Infinity), /offline/);
+  await context.cartQueue;
+  assert.equal(context.cartWriteFailed, true);
+  assert.equal(context.cartWritesInFlight, 0);
+  assert.equal(context.queuedCartJobs, 0);
+});
+
+test('weight picker without a selection never silently targets the default variant', () => {
+  const context = {
+    getAddWrapper: () => ({ dataset: { variantId: '1' } }),
+    number: (value, fallback) => Number(value) || fallback
+  };
+  vm.createContext(context);
+  vm.runInContext(fn('getCurrentVariantId'), context);
+  const control = { closest: () => ({ querySelector: () => ({ value: '' }) }) };
+  assert.equal(context.getCurrentVariantId(control), 0);
+});
+
 test('rapid changes across cards serialize writes and retain the last requested quantities', async () => {
   let server = { items: [], item_count: 0 };
   let inFlight = 0;
@@ -55,7 +109,9 @@ test('rapid changes across cards serialize writes and retain the last requested 
   };
   vm.createContext(context);
   vm.runInContext(['findCartItem', 'mergeAddedLines', 'postJson', 'writeQuantity',
-    'runQuantityRequest', 'requestQuantity', 'flush', 'queue'].map(fn).join('\n'), context);
+    'requestDelta', 'queueDelta'].map(fn).join('\n') + '\nvar waitingDeltaJobs = {};', context);
+  context.queue = (control, quantity) => context.queueDelta(control,
+    quantity - (control.state.pending ? control.state.desired : control.state.confirmed));
   context.queue(controls[0], 1);
   await new Promise(resolve => setTimeout(resolve, 3));
   context.queue(controls[0], 2);

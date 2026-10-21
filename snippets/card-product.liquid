@@ -1978,6 +1978,7 @@
 
       var entry = { delta: delta, job: null };
       waitingDeltaJobs[variantId] = entry;
+      if (queuedCartJobs === 0) cartWriteFailed = false;
       queuedCartJobs += 1;
 
       var job = cartQueue.then(function () {
@@ -2009,19 +2010,17 @@
         }).then(function (result) {
           cartWritesInFlight -= 1;
           cartChangeCount += 1;
-          lastCartWriteAt = Date.now();
           setLatestCart(result.cart, true);
           return result;
         }, function (error) {
           cartWritesInFlight -= 1;
           cartChangeCount += 1;
-          lastCartWriteAt = Date.now();
           throw error;
         });
       });
 
       entry.job = job;
-      cartQueue = job.catch(function () {}).then(function () {
+      cartQueue = job.catch(function () { cartWriteFailed = true; }).then(function () {
         queuedCartJobs -= 1;
       });
 
@@ -2040,15 +2039,22 @@
       var shown = Math.max(0, Math.min(max, base + delta));
 
       state.desired = shown;
+      state.variantId = variantId;
       state.pending = true;
       state.version += 1;
+      if (state.deltaVariantId !== variantId) {
+        state.deltaVariantId = variantId;
+        state.deltaJobs = 0;
+      }
       state.deltaJobs = (state.deltaJobs || 0) + 1;
 
       render(control, shown);
       setControlVisibility(control, shown);
 
       function finish(quantity) {
+        if (state.deltaVariantId !== variantId) return;
         state.deltaJobs -= 1;
+        if (getCurrentVariantId(control) !== variantId) return;
         if (state.deltaJobs > 0) return;
 
         state.confirmed = quantity;
