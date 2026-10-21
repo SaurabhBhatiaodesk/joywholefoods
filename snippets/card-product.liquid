@@ -1439,6 +1439,11 @@
     // Bumped every time an add/change request finishes. A /cart.js read that started
     // before a change finished may return the old cart, so it must not overwrite it.
     var cartChangeCount = 0;
+    // Cart writes from all cards run one at a time. Shopify can lose an update when two
+    // cart/add or cart/change requests overlap (one overwrites the other's quantity).
+    var cartQueue = Promise.resolve();
+    var cartWritesInFlight = 0;
+    var gridObserver = null;
 
     function number(value, fallback) {
       var parsed = Number(value);
@@ -1565,6 +1570,10 @@
         plus.disabled = Number.isFinite(max) && safeQuantity >= max;
         plus.classList.toggle('disabled', plus.disabled);
       }
+
+      // These text updates are our own; don't let the grid observer treat them as new
+      // cards and re-read the cart (that caused a /cart.js request loop several times a second).
+      if (gridObserver) gridObserver.takeRecords();
     }
 
     function setControlVisibility(control, quantity) {
@@ -1642,9 +1651,9 @@
           return response.json();
         })
         .then(function (cart) {
-          // An add/change finished while this read was in flight: this copy can be
-          // older than latestCart, so keep the newer cart instead (slow mobile networks).
-          if (changeCountAtStart !== cartChangeCount && latestCart) return latestCart;
+          // An add/change was running or finished while this read was in flight: this copy
+          // can be older than latestCart, so keep the newer cart instead (slow mobile networks).
+          if ((changeCountAtStart !== cartChangeCount || cartWritesInFlight > 0) && latestCart) return latestCart;
           return setLatestCart(cart, false);
         })
         .finally(function () {
@@ -1692,10 +1701,26 @@
     }
 
     function requestQuantity(variantId, quantity) {
-      /* Read a fresh cart before every change. The cached cart can be stale (another
-         card, Bird or Joy Subscriptions may have changed the cart or its line keys),
-         and a stale copy made adds/changes go to the wrong line or get lost. */
-      return fetchCart(true).then(function (cart) {
+      var job = cartQueue.then(function () {
+        return runQuantityRequest(variantId, quantity);
+      });
+      cartQueue = job.catch(function () {});
+      return job;
+    }
+
+    function runQuantityRequest(variantId, quantity) {
+      cartWritesInFlight += 1;
+
+      /* Read a fresh cart before every change (inside the queue, so it already includes
+         the previous card's change). The cached cart can be stale, and a stale copy
+         made adds/changes go to the wrong line or get lost. */
+      return fetch('/cart.js', {
+        method: 'GET',
+        headers: { Accept: 'application/json' }
+      }).then(function (response) {
+        if (!response.ok) throw new Error('Unable to read cart');
+        return response.json();
+      }).then(function (cart) {
         var item = findCartItem(cart, variantId);
 
         if (item) {
@@ -1746,9 +1771,11 @@
 
         return response.json();
       }).then(function (cart) {
+        cartWritesInFlight -= 1;
         cartChangeCount += 1;
-        return cart;
+        return setLatestCart(cart, false);
       }, function (error) {
+        cartWritesInFlight -= 1;
         cartChangeCount += 1;
         throw error;
       });
@@ -1959,7 +1986,7 @@
     var grid = document.getElementById('ProductGridContainer');
     if (grid && window.MutationObserver) {
       var observerTimer = null;
-      new MutationObserver(function () {
+      gridObserver = new MutationObserver(function () {
         window.clearTimeout(observerTimer);
         observerTimer = window.setTimeout(function () {
           fetchCart(true).then(function (cart) {
