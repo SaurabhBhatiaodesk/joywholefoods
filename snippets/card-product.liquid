@@ -132,6 +132,10 @@
     opacity: 0.45;
   }
 
+  #product-grid .card-wrapper-os [data-joy-card-quantity-label] {
+    cursor: pointer;
+  }
+
   #product-grid .card-wrapper-os .joy-card-quantity-value-os {
     display: flex;
     align-items: center;
@@ -1469,6 +1473,13 @@
     }
 
     function getCurrentVariantId(control) {
+      /* Products with a weight picker: until a weight is chosen there is no current
+         variant. Falling back to the default variant made +/- change a different weight
+         line than the one in the cart (looked like a lost click after a page reload). */
+      var item = control.closest('li');
+      var picker = item ? item.querySelector('[data-joy-card-product-variant-picker] select') : null;
+      if (picker && !picker.value) return 0;
+
       var addWrapper = getAddWrapper(control);
       var variantId = addWrapper && addWrapper.dataset.variantId
         ? addWrapper.dataset.variantId
@@ -2060,6 +2071,21 @@
       });
     }
 
+    // Tapping the middle "Added: N items" adds one more, like the + button.
+    function handleLabelClick(event) {
+      var label = event.target.closest(LABEL_SELECTOR);
+      if (!label) return;
+
+      var control = label.closest(CONTROL_SELECTOR);
+      if (!control) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      queueDelta(control, getStep(control, getCurrentVariantId(control)));
+    }
+
     function handleAddClick(event) {
       var button = event.target.closest('.custom-add-to-cart-btn-os');
       if (!button) return;
@@ -2149,6 +2175,7 @@
 
     document.addEventListener('click', handleAddClick, true);
     document.addEventListener('click', handleQuantityClick, true);
+    document.addEventListener('click', handleLabelClick, true);
     document.addEventListener('change', handleVariantChange, true);
 
     /* External snapshots have no reliable request timestamp. Treat them as a signal
