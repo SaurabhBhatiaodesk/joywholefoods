@@ -1749,7 +1749,7 @@
     };
 
     const syncCardFromCart = function (card) {
-      if (!card) return;
+      if (!card || card.root.querySelector('[data-joy-card-quantity-control]')) return;
 
       const variantId = getVariantId(card);
       const item = cartCache.get(variantId);

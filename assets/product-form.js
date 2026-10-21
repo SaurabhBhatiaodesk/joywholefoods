@@ -214,7 +214,7 @@ if (!customElements.get('product-form')) {
           .then((response) => {
             
             /* custom upsell page */
-            if(window.routes.upsellPage && response.url.includes('selling_plan='))
+            if(!response.status && window.routes.upsellPage && typeof response.url === 'string' && response.url.includes('selling_plan='))
             { 
               if(window.location.pathname != window.routes.upsellPage)
               window.location = window.routes.upsellPage;  
@@ -226,6 +226,7 @@ if (!customElements.get('product-form')) {
  
             
             if (response.status) {
+              this.error = true;
               publish(PUB_SUB_EVENTS.cartError, {
                 source: 'product-form',
                 productVariantId: formData.get('id'),
@@ -272,6 +273,9 @@ if (!customElements.get('product-form')) {
           })
           .catch((e) => {
             console.error(e);
+            this.error = true;
+            this.handleErrorMessage('Unable to confirm your cart update. Please check your cart before trying again.');
+            if (this.submitButton) this.submitButton.removeAttribute('aria-disabled');
           })
           .finally(() => {  
             if (this.submitButton) this.submitButton.classList.remove('loading');
@@ -289,7 +293,7 @@ if (!customElements.get('product-form')) {
 
             /* custom fix to show added to cart for subscription items */
               var itemSelector = $(this).attr('data-notification');
-               if(itemSelector)
+               if(!this.error && itemSelector)
                {
                  var notificationArea = $('.custom-notification-wrapper[notification-id="'+itemSelector+'"]');
                  if(notificationArea)notificationArea.addClass('active');

@@ -1736,6 +1736,8 @@
       if (!/^(https?:\/\/[^/]+)?\/(cart|checkout)(\/|\?|#|$)/.test(href)) return;
 
       event.preventDefault();
+      event.stopImmediatePropagation();
+      event.stopPropagation();
 
       var waited = 0;
       var idleChecks = 0;
@@ -1832,7 +1834,9 @@
 
       return start.then(function (cart) {
         return writeQuantity(cart, variantId, quantity).catch(function (error) {
-          if (!latestCart || (error.status && error.status >= 500)) throw error;
+          // A network failure can happen after Shopify accepted the add. Repeating
+          // that add would duplicate it; only retry a rejected, stale line key.
+          if (!findCartItem(cart, variantId) || (error.status !== 400 && error.status !== 404)) throw error;
           return readCart().then(function (freshCart) {
             return writeQuantity(freshCart, variantId, quantity);
           });
@@ -2009,14 +2013,19 @@
 
       window.setTimeout(function () {
         fetchCart(true).then(function (cart) {
-          syncControlFromCart(control, cart, true);
+          syncControlFromCart(control, cart, false);
+        }).catch(function (error) {
+          console.warn('Unable to refresh selected variant:', error);
         });
       }, 0);
     }
 
     function initialize() {
       fetchCart(true).then(function (cart) {
-        syncAllControls(cart, true);
+        // Customers can click before this initial read finishes on a slow network.
+        syncAllControls(cart, false);
+      }).catch(function (error) {
+        console.warn('Unable to initialize collection cart:', error);
       });
     }
 
