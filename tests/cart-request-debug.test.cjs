@@ -2,7 +2,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const fs = require('node:fs');
-const code = fs.readFileSync('snippets/cart-request-debug.liquid', 'utf8').replace(/<\/?script>/g, '');
+const code = fs.readFileSync('snippets/cart-request-debug.liquid', 'utf8')
+  .replace(/<\/?script>/g, '').replace('{{ shop.permanent_domain | json }}', '"example.myshopify.com"');
 function setup(search) {
   const logs = [];
   const calls = [];
@@ -45,4 +46,14 @@ test('diagnostics preserve requests and responses without recording bodies or to
   assert.equal(xhr.sendArgs[0], 'private-customer-note');
   assert.equal(c.logs.length, 4);
   assert.doesNotMatch(JSON.stringify(c.logs), /private-token|private-customer-note/);
+});
+
+test('Storefront diagnostics record operation names without GraphQL variables', async () => {
+  const c = setup('?joy_cart_debug=1');
+  const body = JSON.stringify({ query: 'mutation Save($id: ID!) { cartLinesUpdate(cartId: $id) { cart { id } } }',
+    variables: { id: 'private-cart-token' } });
+  await c.context.window.fetch('https://example.myshopify.com/api/2026-04/graphql.json', { method: 'POST', body });
+  assert.equal(c.logs.length, 2);
+  assert.match(JSON.stringify(c.logs), /cartLinesUpdate/);
+  assert.doesNotMatch(JSON.stringify(c.logs), /private-cart-token/);
 });
