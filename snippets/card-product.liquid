@@ -1714,7 +1714,7 @@
     }
 
     /* If the customer heads to the cart/checkout while card changes are still queued,
-       wait for them to reach Shopify first (max 8s) so nothing is left behind. */
+       wait for them to reach Shopify first (max 15s) so nothing is left behind. */
     document.addEventListener('click', function (event) {
       var link = event.target.closest('a[href]');
       if (!link || queuedCartJobs === 0) return;
@@ -1728,7 +1728,7 @@
       var idleChecks = 0;
       (function waitForQueue() {
         idleChecks = queuedCartJobs === 0 ? idleChecks + 1 : 0;
-        if (idleChecks >= 2 || waited >= 8000) {
+        if (idleChecks >= 2 || waited >= 15000) {
           window.location.href = link.href;
           return;
         }
