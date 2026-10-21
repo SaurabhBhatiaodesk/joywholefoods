@@ -152,9 +152,9 @@
           "type": "postcode",
           "name": "Local - Wed or Fri",
           "settings": {
-            "postcodes": "4063,4064,4065,4053,4013,4014,4030,4031,4032,4034,4010,4011,4012,4051,4035,4037",
+            "postcodes": "4063,4064,4065,4067,4053,4013,4014,4030,4031,4032,4034,4010,4011,4012,4051,4035,4037",
             "locationName": "Yes we deliver to your area!",
-            "postcodeText": "<p>Your delivery days are:<strong> Wednesday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery days are:<strong> Wednesday or Friday</strong></p><p>Order deadlines:&nbsp;</p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_DjiJjV": {
@@ -501,22 +501,6 @@
         "button_text_color": "#ffffff"
       }
     },
-    "map_section_ywtC7V": {
-      "type": "map-section",
-      "custom_css": [
-        "@media (max-width: 767px) {h2 {font-size: 32px; } .about {padding-top: 20px !important; padding-bottom: 20px !important; }}"
-      ],
-      "name": "Pickup location",
-      "settings": {
-        "bg_color": "#fffaf5",
-        "heading": "Our pick up points",
-        "paragraph": "<p>Enter your suburb below to see if we have a pick-up point near you.</p><p>Please note the time frame provided is an estimate of when our driver will arrive at the pick-up location each week. We will send a confirmation text message with a more specific time two days prior to your collection date.</p>",
-        "subheading": "Remember we also offer home delivery right across Brisbane, Sunshine Coast, Gold Coast, Gympie, Toowoomba and Northern NSW.",
-        "paragraph2": "<p><em>Please try to collect from our pick-up points within 5 hours to ensure your box isn't sitting out too long. It is your responsibility to remember to collect your order.</em></p>",
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
     "table_columns_rYNJF3": {
       "type": "table_columns",
       "blocks": {
@@ -766,7 +750,6 @@
     "cart_missed_cutoff_w7JTcN",
     "cart_minimum_orders_UEJb9f",
     "cart_prefer_day_qahr4D",
-    "map_section_ywtC7V",
     "table_columns_rYNJF3"
   ]
 }
