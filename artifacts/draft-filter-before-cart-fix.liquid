@@ -1,0 +1,2543 @@
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.image_shape == 'blob' %}
+  {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+{%- unless section.settings.quick_add == 'none' -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
+
+{%- if section.settings.quick_add == 'standard' -%}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if section.settings.quick_add == 'bulk' -%}
+  <script src="{{ 'quick-add-bulk.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- liquid
+  assign show_collection_tabs = false
+
+  if section.settings.enable_collection_tabs
+    if section.settings.show_shop_all_tab or section.blocks.size > 0
+      assign show_collection_tabs = true
+    endif
+  endif
+-%}
+
+{%- style -%}
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  {% if collection.handle == 'organic-spray-free-farm-fresh-fruit-and-veg-box-delivery-brisbane-gold-coast' %}
+    #shopify-section-{{ section.id }} #product-grid .card-wrapper-os .swap-product-btn-os {
+      background-color: #086c3f;
+      color: #ffffff;
+      --color-button: 8, 108, 63;
+      --color-button-text: 255, 255, 255;
+    }
+  {% endif %}
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .cstm_{{ template }},
+  .cstm_{{ template }} * {
+    box-sizing: border-box;
+  }
+
+  .cstm_{{ template }} {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  .cstm_{{ template }} .facets-wrapper,
+  .cstm_{{ template }} .product-grid-container,
+  .cstm_{{ template }} #ProductGridContainer,
+  .cstm_{{ template }} .collection,
+  .cstm_{{ template }} #product-grid {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .cstm_{{ template }} .facets-vertical {
+    width: 100% !important;
+    overflow-x: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cstm_{{ template }} .facets-vertical > .facets-wrapper {
+      flex: 0 0 auto;
+      min-width: 0 !important;
+    }
+
+    .cstm_{{ template }} .facets-vertical > .product-grid-container {
+      flex: 1 1 0% !important;
+      width: 0 !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow-x: hidden;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .cstm_{{ template }} .facets-vertical,
+    .cstm_{{ template }} .facets-vertical > .product-grid-container,
+    .cstm_{{ template }} .product-grid-container,
+    .cstm_{{ template }} #ProductGridContainer {
+      display: block;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .joy-collection-tabs-wrapper {
+    position: relative;
+    display: block;
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 0 34px !important;
+    padding: 0 44px 18px;
+    border-bottom: 1px solid #e5eadc;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    contain: inline-size;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .joy-collection-tabs-scroll {
+    display: flex;
+    align-items: center;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 12px;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    padding: 4px 0;
+    box-sizing: border-box !important;
+  }
+
+  .joy-collection-tabs-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .joy-collection-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    text-decoration: none;
+    white-space: nowrap;
+    border-radius: 999px;
+    padding: 11px 20px;
+    background: #eef3e5;
+    color: #5d7434;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    transition: all 0.25s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .joy-collection-tab svg {
+    width: 22px;
+    height: 22px;
+    color: currentColor;
+    flex: 0 0 auto;
+  }
+
+  .joy-collection-tab img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    border-radius: 50%;
+    display: block;
+    flex: 0 0 auto;
+  }
+
+  .joy-collection-tab span {
+    color: inherit;
+  }
+
+  .joy-collection-tab.active,
+  .joy-collection-tab:hover {
+    background: #789536;
+    color: #ffffff;
+  }
+
+  .joy-collection-tab.active img,
+  .joy-collection-tab:hover img {
+    filter: brightness(0) invert(1);
+  }
+
+  .joy-tabs-arrow {
+    position: absolute;
+    top: 4px;
+    z-index: 2;
+    width: 34px;
+    height: 42px;
+    border: 0;
+    border-radius: 999px;
+    background: #eef3e5;
+    color: #5d7434;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .25s ease;
+  }
+
+  .joy-tabs-arrow:hover {
+    background: #789536;
+    color: #ffffff;
+  }
+
+  .joy-tabs-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .joy-tabs-arrow.prev {
+    left: 0;
+  }
+
+  .joy-tabs-arrow.next {
+    right: 0;
+  }
+
+  .joy-card-variant-box {
+    margin-top: 0;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 147px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .joy-product-card {
+    height: 100%;
+    border: 1px solid #9abf3f;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .joy-product-image-link {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: #f4f4f4;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .joy-product-image-link::before {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }
+
+  .joy-product-image-link img,
+  .joy-product-image-placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .joy-product-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f2f3ed;
+    color: #5d7434;
+    font-size: 13px;
+    text-align: center;
+    padding: 18px;
+  }
+
+  .joy-product-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 1;
+    border-radius: 6px;
+    background: #087840;
+    color: #ffffff;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .joy-product-quick-view {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #789536;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+  }
+
+  .joy-product-quick-view svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .joy-product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 20px 20px;
+    justify-content: space-between;
+  }
+
+  .joy-product-vendor {
+    margin: 0 0 8px;
+    color: #555555;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .joy-product-title {
+    margin: 0 0 16px;
+    color: #005c25;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .joy-product-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .joy-product-title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .joy-card-price-range {
+    color: #111111;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .joy-variant-form {
+    display: grid;
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .joy-variant-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+
+  .joy-variant-label {
+    color: #00733f;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .joy-variant-select-wrap {
+    position: relative;
+  }
+
+  .joy-variant-select:focus-visible {
+    border: 1px solid #b8d8ca !important;
+  }
+
+  .joy-variant-select {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 42px 0 18px;
+    border: 1px solid #b8d8ca;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #00735a;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .joy-variant-select-wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid #00735a;
+    border-bottom: 2px solid #00735a;
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .joy-add-to-cart {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-radius: 6px;
+    background: #087840;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    transition: background .2s ease, opacity .2s ease;
+  }
+
+  .joy-add-to-cart:hover {
+    background: #006b37;
+  }
+
+  .joy-add-to-cart:disabled {
+    cursor: not-allowed;
+    opacity: .55;
+  }
+
+  .joy-variant-message {
+    min-height: 16px;
+    color: #087840;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .joy-variant-message.is-error {
+    color: #b3261e;
+  }
+
+  .joy-card-product-variant-picker {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 12px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .joy-card-product-variant-picker__label {
+    color: #00733f;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .joy-card-product-variant-picker__select-wrap {
+    position: relative;
+  }
+
+  .joy-card-product-variant-picker__select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 42px 0 16px;
+    border: 1px solid #b8d8ca;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #00735a;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .joy-card-product-variant-picker__select-wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid #00735a;
+    border-bottom: 2px solid #00735a;
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .cstm_{{ template }} #product-grid .card-wrapper-os .collection-product__inventory-os {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 7px;
+    width: auto;
+    margin: 0 0 10px;
+    color: #111111;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .cstm_{{ template }} #product-grid .card-wrapper-os .collection-product__inventory-os span {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+
+  #product-grid .card-wrapper-os .custom-addToCart-os,
+  #product-grid .card-wrapper-os .quantity-selector-and-buyNow-wrapper-os,
+  #product-grid .card-wrapper-os .restocking-soon-product-os,
+  #product-grid .card-wrapper-os .view-product-os {
+    display: none;
+  }
+
+  #product-grid .card-wrapper-os .custom-addToCart-os.active,
+  #product-grid .card-wrapper-os .quantity-selector-and-buyNow-wrapper-os.active,
+  #product-grid .card-wrapper-os .restocking-soon-product-os.active,
+  #product-grid .card-wrapper-os .view-product-os.active {
+    display: block;
+  }
+
+  #product-grid .card-wrapper-os .custom-add-to-cart-btn-os.is-notify,
+  #product-grid .card-wrapper-os .custom-add-to-cart-btn-os[data-notify-label] {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-radius: 6px;
+    background: #087840;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight:400;
+    line-height: 1;
+    transition: background .2s ease, opacity .2s ease;
+  }
+
+  #product-grid .card-wrapper-os .custom-add-to-cart-btn-os.is-notify:hover,
+  #product-grid .card-wrapper-os .custom-add-to-cart-btn-os[data-notify-label]:hover {
+    background: #006b37;
+  }
+
+  /* Sold-out collection button: display the existing PDP notification popup only. */
+  .joy-pdp-notify-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .joy-pdp-notify-overlay[hidden] {
+    display: none !important;
+  }
+
+  .joy-pdp-notify-overlay__frame {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .joy-pdp-notify-overlay.is-ready .joy-pdp-notify-overlay__frame {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .joy-pdp-notify-overlay__loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 17px 22px;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #087840;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .joy-pdp-notify-overlay.is-ready .joy-pdp-notify-overlay__loading {
+    display: none;
+  }
+
+  .joy-pdp-notify-overlay__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 3;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #087840;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 29px;
+    font-weight: 400;
+    line-height: 42px;
+    text-align: center;
+  }
+
+  body.joy-pdp-notify-overlay-open {
+    overflow: hidden !important;
+  }
+
+  @media screen and (max-width: 749px) {
+    .joy-pdp-notify-overlay__close {
+      top: 10px;
+      right: 10px;
+      width: 38px;
+      height: 38px;
+      font-size: 26px;
+      line-height: 38px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .joy-collection-tabs-wrapper {
+      margin: 0 0 24px;
+      padding: 0 38px 14px;
+    }
+
+    .joy-collection-tab {
+      padding: 10px 15px;
+      font-size: 13px;
+      gap: 8px;
+    }
+
+    .joy-collection-tab img,
+    .joy-collection-tab svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .joy-tabs-arrow {
+      width: 30px;
+      height: 38px;
+    }
+
+    .joy-variant-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .joy-variant-select {
+      min-height: 44px;
+    }
+
+    .joy-product-info {
+      padding: 14px 14px 16px;
+    }
+
+    .joy-card-price-range {
+      margin-bottom: 24px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="cstm_{{ template }} section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
+  {%- paginate collection.products by section.settings.products_per_page -%}
+
+    {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
+      <facet-filters-form class="facets facets-vertical-sort page-width small-hide">
+        <form class="facets-vertical-form" id="FacetSortForm">
+          <div class="facet-filters sorting caption">
+            <div class="facet-filters__field">
+              <h2 class="facet-filters__label caption-large text-body">
+                <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
+              </h2>
+              <div class="select">
+                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                <select
+                  name="sort_by"
+                  class="facet-filters__sort select__select caption-large"
+                  id="SortBy"
+                  aria-describedby="a11y-refresh-page-message"
+                >
+                  {%- for option in collection.sort_options -%}
+                    <option
+                      value="{{ option.value | escape }}"
+                      {% if option.value == sort_by %}
+                        selected="selected"
+                      {% endif %}
+                    >
+                      {{ option.name | escape }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+                <span class="svg-wrapper">
+                  {{- 'icon-caret.svg' | inline_asset_content -}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-count-vertical light" role="status">
+            <h2 class="product-count__text text-body">
+              <span id="ProductCountDesktop">
+                {%- if collection.results_count -%}
+                  {{
+                    'templates.search.results_with_count'
+                    | t: terms: collection.terms, count: collection.results_count
+                  }}
+                {%- elsif collection.products_count == collection.all_products_count -%}
+                  {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+                {%- else -%}
+                  {{
+                    'products.facets.product_count'
+                    | t: product_count: collection.products_count, count: collection.all_products_count
+                  }}
+                {%- endif -%}
+              </span>
+            </h2>
+            {%- render 'loading-spinner' -%}
+          </div>
+        </form>
+      </facet-filters-form>
+    {%- endif -%}
+
+    <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
+      {{ 'component-facets.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+
+      {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+        <aside
+          aria-labelledby="verticalTitle"
+          class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
+          id="main-collection-filters"
+          data-id="{{ section.id }}"
+        >
+          <div id="cloud_search_filters_sidebar"></div>
+        </aside>
+      {%- endif -%}
+
+      <div
+        class="product-grid-container ee{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+        id="ProductGridContainer"
+        {% if settings.animations_reveal_on_scroll %}
+          data-cascade
+        {% endif %}
+      >
+        {%- if collection.products.size == 0 -%}
+          <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+            <div class="loading-overlay gradient"></div>
+            <div class="title-wrapper center">
+              <h2 class="title title--primary">
+                {{ 'sections.collection_template.empty' | t -}}
+                <br>
+                {{
+                  'sections.collection_template.use_fewer_filters_html'
+                  | t: link: collection.url, class: 'underlined-link link'
+                }}
+              </h2>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}">
+            <div class="loading-overlay gradient"></div>
+
+            {%- if show_collection_tabs -%}
+              <div class="joy-collection-tabs-wrapper" data-joy-tabs-wrapper>
+                <button class="joy-tabs-arrow prev" type="button" aria-label="Previous collections" data-joy-tabs-prev>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+
+                <div class="joy-collection-tabs-scroll" data-joy-tabs-scroll>
+                  {%- if section.settings.show_shop_all_tab -%}
+                    {%- assign shop_all_collection = section.settings.shop_all_collection -%}
+                    <a
+                      href="{% if shop_all_collection != blank %}{{ shop_all_collection.url }}{% else %}{{ routes.collections_url }}/all{% endif %}"
+                      class="joy-collection-tab {% if shop_all_collection != blank and shop_all_collection.handle == collection.handle %}active{% elsif shop_all_collection == blank and collection.handle == 'all' %}active{% endif %}"
+                    >
+                      {%- if section.settings.shop_all_icon != blank -%}
+                        <img
+                          src="{{ section.settings.shop_all_icon | image_url: width: 80 }}"
+                          alt="{{ section.settings.shop_all_label | escape }}"
+                          width="22"
+                          height="22"
+                          loading="lazy"
+                        >
+                      {%- else -%}
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                      {%- endif -%}
+
+                      <span>
+                        {%- if section.settings.shop_all_label != blank -%}
+                          {{ section.settings.shop_all_label }}
+                        {%- else -%}
+                          Shop All
+                        {%- endif -%}
+                      </span>
+                    </a>
+                  {%- endif -%}
+
+                  {%- for block in section.blocks -%}
+                    {%- assign tab_collection = block.settings.tab_collection -%}
+
+                    {%- if tab_collection != blank -%}
+                      <a
+                        href="{{ tab_collection.url }}"
+                        class="joy-collection-tab {% if tab_collection.handle == collection.handle %}active{% endif %}"
+                        {{ block.shopify_attributes }}
+                      >
+                        {%- if block.settings.tab_icon != blank -%}
+                          <img
+                            src="{{ block.settings.tab_icon | image_url: width: 80 }}"
+                            alt="{{ tab_collection.title | escape }}"
+                            width="22"
+                            height="22"
+                            loading="lazy"
+                          >
+                        {%- elsif tab_collection.image -%}
+                          <img
+                            src="{{ tab_collection.image | image_url: width: 80 }}"
+                            alt="{{ tab_collection.title | escape }}"
+                            width="22"
+                            height="22"
+                            loading="lazy"
+                          >
+                        {%- elsif tab_collection.products.first.featured_image -%}
+                          <img
+                            src="{{ tab_collection.products.first.featured_image | image_url: width: 80 }}"
+                            alt="{{ tab_collection.title | escape }}"
+                            width="22"
+                            height="22"
+                            loading="lazy"
+                          >
+                        {%- else -%}
+                          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M4 8.5L12 4L20 8.5L12 13L4 8.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                            <path d="M4 8.5V15.5L12 20L20 15.5V8.5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                            <path d="M12 13V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                          </svg>
+                        {%- endif -%}
+
+                        <span>
+                          {%- if block.settings.tab_label != blank -%}
+                            {{ block.settings.tab_label }}
+                          {%- else -%}
+                            {{ tab_collection.title }}
+                          {%- endif -%}
+                        </span>
+                      </a>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+
+                <button class="joy-tabs-arrow next" type="button" aria-label="Next collections" data-joy-tabs-next>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            {%- endif -%}
+
+            <div id="cloud_search_filters_root"></div>
+
+            <ul
+              id="product-grid"
+              data-id="{{ section.id }}"
+              class="
+                grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
+                grid--{{ section.settings.columns_desktop }}-col-desktop
+                {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %}
+              "
+            >
+              {% assign skip_card_product_styles = false %}
+
+              {%- for product in collection.products -%}
+                  {%- if product.metafields.custom.hide_from_listings.value == true -%}{%- continue -%}{%- endif -%}
+                {% assign lazy_load = false %}
+
+                {%- if forloop.index > 2 -%}
+                  {%- assign lazy_load = true -%}
+                {%- endif -%}
+
+                <li
+                  class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                  {% if settings.animations_reveal_on_scroll %}
+                    data-cascade
+                    style="--animation-order: {{ forloop.index }};"
+                  {% endif %}
+                >
+                  {% render 'card-product',
+                    card_product: product,
+                    media_aspect_ratio: section.settings.image_ratio,
+                    image_shape: section.settings.image_shape,
+                    show_secondary_image: section.settings.show_secondary_image,
+                    show_vendor: section.settings.show_vendor,
+                    show_rating: section.settings.show_rating,
+                    lazy_load: lazy_load,
+                    skip_styles: skip_card_product_styles,
+                    quick_add: section.settings.quick_add,
+                    section_id: section.id
+                  %}
+
+                  <script type="application/json" data-joy-card-variant-data>
+                    {
+                      "productId": {{ product.id | json }},
+                      "productUrl": {{ product.url | json }},
+                      "optionName": {{ product.options_with_values.first.name | default: 'Variant' | json }},
+                      "fromPrice": {{ product.price_min | money | json }},
+                      "selectedVariantId": {{ product.selected_or_first_available_variant.id | json }},
+                      "variants": [
+                        {%- for variant in product.variants -%}
+                          {
+                            "id": {{ variant.id | json }},
+                            "title": {{ variant.title | json }},
+                            "price": {{ variant.price | money | json }},
+                            "compareAtPrice": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
+                            "available": {{ variant.available | json }},
+                            "inventoryQuantity": {% if variant.inventory_quantity < 0 %}1000000{% else %}{{ variant.inventory_quantity | json }}{% endif %},
+                            "cartQuantity": {{ cart | item_count_for_variant: variant.id | json }},
+                            "min": {{ variant.quantity_rule.min | json }},
+                            "max": {% if variant.quantity_rule.max != null %}{{ variant.quantity_rule.max | json }}{% else %}null{% endif %},
+                            "step": {{ variant.quantity_rule.increment | json }}
+                          }{% unless forloop.last %},{% endunless %}
+                        {%- endfor -%}
+                      ]
+                    }
+                  </script>
+                </li>
+
+                {%- assign skip_card_product_styles = true -%}
+              {%- endfor -%}
+            </ul>
+
+            {%- if paginate.pages > 1 -%}
+              {% render 'pagination', paginate: paginate, anchor: '' %}
+            {%- endif -%}
+
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endpaginate -%}
+
+  {% if section.settings.image_shape == 'arch' %}
+    {{ 'mask-arch.svg' | inline_asset_content }}
+  {%- endif -%}
+</div>
+
+{% render 'swap_popup' %}
+
+<script>
+(function () {
+  function initializeTabs(root) {
+    const scope = root || document;
+
+    scope.querySelectorAll('[data-joy-tabs-wrapper]').forEach(function (wrapper) {
+      if (wrapper.dataset.joyTabsInitialized === 'true') return;
+
+      wrapper.dataset.joyTabsInitialized = 'true';
+
+      const scrollBox = wrapper.querySelector('[data-joy-tabs-scroll]');
+      const prevBtn = wrapper.querySelector('[data-joy-tabs-prev]');
+      const nextBtn = wrapper.querySelector('[data-joy-tabs-next]');
+
+      if (!scrollBox || !prevBtn || !nextBtn) return;
+
+      const getScrollAmount = function () {
+        return Math.max(220, Math.floor(scrollBox.clientWidth * 0.65));
+      };
+
+      prevBtn.addEventListener('click', function () {
+        scrollBox.scrollBy({
+          left: -getScrollAmount(),
+          behavior: 'smooth'
+        });
+      });
+
+      nextBtn.addEventListener('click', function () {
+        scrollBox.scrollBy({
+          left: getScrollAmount(),
+          behavior: 'smooth'
+        });
+      });
+    });
+  }
+
+  function updateCartCountBubble(itemCount) {
+    const cartIcon = document.getElementById('cart-icon-bubble');
+    const count = Number(itemCount) || 0;
+
+    if (!cartIcon) return;
+
+    let bubble = cartIcon.querySelector('.cart-count-bubble');
+
+    if (count <= 0) {
+      if (bubble) bubble.remove();
+      return;
+    }
+
+    if (!bubble) {
+      bubble = document.createElement('div');
+      bubble.className = 'cart-count-bubble';
+      cartIcon.appendChild(bubble);
+    }
+
+    bubble.textContent = '';
+
+    const visibleCount = document.createElement('span');
+    visibleCount.setAttribute('aria-hidden', 'true');
+
+    const hiddenCount = document.createElement('span');
+    hiddenCount.className = 'visually-hidden';
+
+    visibleCount.textContent = count < 100 ? count : '';
+    hiddenCount.textContent = count + ' item' + (count === 1 ? '' : 's');
+
+    bubble.appendChild(visibleCount);
+    bubble.appendChild(hiddenCount);
+  }
+
+  function refreshCartUi() {
+    return fetch('/cart.js', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+      .then(function (response) {
+        if (!response.ok) return null;
+        return response.json();
+      })
+      .then(function (cart) {
+        if (!cart) return;
+
+        updateCartCountBubble(cart.item_count);
+
+        document.dispatchEvent(new CustomEvent('cart:refresh', {
+          detail: { cart: cart }
+        }));
+
+        document.dispatchEvent(new CustomEvent('cart:updated', {
+          detail: { cart: cart }
+        }));
+
+        document.dispatchEvent(new CustomEvent('joy:cart-added', {
+          detail: { cart: cart }
+        }));
+
+        return cart;
+      });
+  }
+
+  function closeJoyPdpNotifyOverlay() {
+    const overlay = document.querySelector('[data-joy-pdp-notify-overlay]');
+
+    if (overlay) {
+      overlay.remove();
+    }
+
+    document.body.classList.remove('joy-pdp-notify-overlay-open');
+  }
+
+  function isElementVisible(element, frameWindow) {
+    if (!element || !frameWindow) return false;
+
+    const style = frameWindow.getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+
+    return (
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      Number(style.opacity || 1) !== 0 &&
+      rect.width > 0 &&
+      rect.height > 0
+    );
+  }
+
+  function findPopupRoot(frameDocument, frameWindow) {
+    if (!frameDocument || !frameWindow) return null;
+
+    const directThemePopup =
+      frameDocument.querySelector('modal-dialog[open]') ||
+      frameDocument.querySelector('.product-popup-modal[open]') ||
+      frameDocument.querySelector('[role="dialog"][open]');
+
+    if (directThemePopup && isElementVisible(directThemePopup, frameWindow)) {
+      return directThemePopup;
+    }
+
+    const emailInput = Array.from(
+      frameDocument.querySelectorAll('input[type="email"], input[name*="email" i]')
+    ).find(function (input) {
+      return isElementVisible(input, frameWindow);
+    });
+
+    const dialogCandidates = Array.from(
+      frameDocument.querySelectorAll(
+        '[role="dialog"], .klaviyo-form, .needsclick, [data-testid*="modal" i]'
+      )
+    ).filter(function (element) {
+      return isElementVisible(element, frameWindow);
+    });
+
+    let sourceElement = null;
+
+    if (emailInput) {
+      sourceElement =
+        emailInput.closest('[role="dialog"]') ||
+        emailInput.closest('.klaviyo-form') ||
+        emailInput.closest('.needsclick') ||
+        emailInput;
+    } else if (dialogCandidates.length) {
+      sourceElement = dialogCandidates[0];
+    }
+
+    if (!sourceElement) return null;
+
+    let current = sourceElement;
+    let bestRoot = sourceElement;
+
+    while (current && current !== frameDocument.body) {
+      const style = frameWindow.getComputedStyle(current);
+      const rect = current.getBoundingClientRect();
+      const coversViewport =
+        rect.width >= frameWindow.innerWidth * 0.75 &&
+        rect.height >= frameWindow.innerHeight * 0.75;
+
+      if (style.position === 'fixed' && coversViewport) {
+        bestRoot = current;
+      }
+
+      current = current.parentElement;
+    }
+
+    return bestRoot;
+  }
+
+  function clickExistingPdpNotifyButton(frameDocument, frameWindow) {
+    if (!frameDocument || !frameWindow) return false;
+
+    const exactButton =
+      frameDocument.querySelector('.direct-add-to-cart-btn.joy-pdp-notify-state') ||
+      frameDocument.querySelector('.klaviyo-bis-trigger');
+
+    if (exactButton && isElementVisible(exactButton, frameWindow)) {
+      exactButton.click();
+      return true;
+    }
+
+    const notifyButton = Array.from(
+      frameDocument.querySelectorAll('button, a')
+    ).find(function (element) {
+      if (!isElementVisible(element, frameWindow)) return false;
+
+      const text = (element.textContent || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+
+      return text === 'notify me' || text === 'get notified';
+    });
+
+    if (notifyButton) {
+      notifyButton.click();
+      return true;
+    }
+
+    return false;
+  }
+
+  function isolatePopupInsideFrame(frameDocument, frameWindow, popupRoot) {
+    if (!frameDocument || !frameWindow || !popupRoot) return false;
+
+    const styleId = 'JoyEmbeddedNotifyPopupStyle';
+
+    if (!frameDocument.getElementById(styleId)) {
+      const style = frameDocument.createElement('style');
+      style.id = styleId;
+      style.textContent = [
+        'html, body {',
+        '  width: 100% !important;',
+        '  height: 100% !important;',
+        '  min-height: 100% !important;',
+        '  margin: 0 !important;',
+        '  padding: 0 !important;',
+        '  overflow: hidden !important;',
+        '  background: transparent !important;',
+        '}',
+        'body > *:not(.joy-embedded-notify-popup-root) {',
+        '  display: none !important;',
+        '}',
+        '.joy-embedded-notify-popup-root {',
+        '  display: block !important;',
+        '  visibility: visible !important;',
+        '  opacity: 1 !important;',
+        '  z-index: 2147483647 !important;',
+        '}'
+      ].join('\\n');
+
+      frameDocument.head.appendChild(style);
+    }
+
+    if (popupRoot.parentElement !== frameDocument.body) {
+      frameDocument.body.appendChild(popupRoot);
+    }
+
+    popupRoot.classList.add('joy-embedded-notify-popup-root');
+
+    return true;
+  }
+
+  function openJoyPdpNotifyOverlay(productUrl, variantId) {
+    if (!productUrl || !variantId) return;
+
+    closeJoyPdpNotifyOverlay();
+
+    const separator = productUrl.indexOf('?') === -1 ? '?' : '&';
+    const notifyUrl =
+      productUrl +
+      separator +
+      'variant=' +
+      encodeURIComponent(variantId) +
+      '&notify=true&joy_notify_embed=1';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'joy-pdp-notify-overlay';
+    overlay.setAttribute('data-joy-pdp-notify-overlay', '');
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute(
+      'aria-label',
+      'Get notified when this product is back in stock'
+    );
+
+    const loading = document.createElement('p');
+    loading.className = 'joy-pdp-notify-overlay__loading';
+    loading.textContent = 'Loading notification form...';
+
+    const frame = document.createElement('iframe');
+    frame.className = 'joy-pdp-notify-overlay__frame';
+    frame.src = notifyUrl;
+    frame.title = 'Back in stock notification form';
+    frame.setAttribute(
+      'sandbox',
+      'allow-same-origin allow-scripts allow-forms allow-popups'
+    );
+
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'joy-pdp-notify-overlay__close';
+    closeButton.setAttribute('aria-label', 'Close notification form');
+    closeButton.innerHTML = '&times;';
+
+    closeButton.addEventListener('click', closeJoyPdpNotifyOverlay);
+
+    frame.addEventListener('load', function () {
+      let attempts = 0;
+      let popupRoot = null;
+      let notifyClickAttempted = false;
+      const maximumAttempts = 80;
+
+      const watcher = window.setInterval(function () {
+        attempts += 1;
+
+        if (!document.body.contains(overlay)) {
+          window.clearInterval(watcher);
+          return;
+        }
+
+        try {
+          const frameWindow = frame.contentWindow;
+          const frameDocument = frame.contentDocument ||
+            (frameWindow ? frameWindow.document : null);
+
+          if (!frameWindow || !frameDocument || !frameDocument.body) {
+            return;
+          }
+
+          popupRoot = findPopupRoot(frameDocument, frameWindow);
+
+          if (!popupRoot && !notifyClickAttempted && attempts >= 4) {
+            notifyClickAttempted = clickExistingPdpNotifyButton(
+              frameDocument,
+              frameWindow
+            );
+          }
+
+          if (popupRoot) {
+            isolatePopupInsideFrame(
+              frameDocument,
+              frameWindow,
+              popupRoot
+            );
+
+            overlay.classList.add('is-ready');
+            window.clearInterval(watcher);
+
+            const closeWatcher = window.setInterval(function () {
+              if (!document.body.contains(overlay)) {
+                window.clearInterval(closeWatcher);
+                return;
+              }
+
+              try {
+                const stillVisible =
+                  popupRoot.isConnected &&
+                  isElementVisible(popupRoot, frameWindow);
+
+                if (!stillVisible) {
+                  window.clearInterval(closeWatcher);
+                  closeJoyPdpNotifyOverlay();
+                }
+              } catch (error) {
+                window.clearInterval(closeWatcher);
+              }
+            }, 300);
+
+            return;
+          }
+
+          if (attempts >= maximumAttempts) {
+            window.clearInterval(watcher);
+            loading.textContent =
+              'Notification form could not be loaded. Please try again.';
+          }
+        } catch (error) {
+          window.clearInterval(watcher);
+          loading.textContent =
+            'Notification form could not be loaded. Please try again.';
+        }
+      }, 250);
+    });
+
+    overlay.appendChild(loading);
+    overlay.appendChild(frame);
+    overlay.appendChild(closeButton);
+
+    document.body.appendChild(overlay);
+    document.body.classList.add('joy-pdp-notify-overlay-open');
+
+    closeButton.focus();
+  }
+
+  window.openJoyPdpNotifyOverlay = openJoyPdpNotifyOverlay;
+
+  function initializeVariantForm(form) {
+    if (!form || form.dataset.joyVariantInitialized === 'true') return;
+
+    form.dataset.joyVariantInitialized = 'true';
+
+    const select = form.querySelector('[data-joy-variant-select]');
+    const variantInput = form.querySelector('[data-joy-variant-id]');
+    const addButton = form.querySelector('[data-joy-add-button]');
+    const message = form.querySelector('[data-joy-variant-message]');
+    const card = form.closest('[data-joy-card-product]');
+    const priceEl = card ? card.querySelector('[data-joy-price]') : null;
+    const addLabel = addButton ? (addButton.dataset.addLabel || 'Add to cart') : 'Add to cart';
+    const notifyLabel = addButton ? (addButton.dataset.notifyLabel || 'Get notified') : 'Get notified';
+    const defaultAvailable = form.dataset.defaultAvailable === 'true';
+
+    function setMessage(text, isError) {
+      if (!message) return;
+
+      message.textContent = text || '';
+      message.classList.toggle('is-error', Boolean(isError));
+    }
+
+    function updateStateFromOption() {
+      const option = select ? select.options[select.selectedIndex] : null;
+      const hasSelectedVariant = !select || Boolean(option && option.value);
+      const isAvailable = select
+        ? Boolean(hasSelectedVariant && option && option.dataset.available === 'true')
+        : defaultAvailable;
+
+      if (variantInput && select) {
+        variantInput.value = hasSelectedVariant && option ? option.value : '';
+      }
+
+      if (priceEl) {
+        if (hasSelectedVariant && option && option.dataset.price) {
+          priceEl.textContent = option.dataset.price;
+        } else {
+          priceEl.textContent =
+            (priceEl.dataset.pricePrefix || '') +
+            (priceEl.dataset.defaultPrice || '');
+        }
+      }
+
+      if (addButton) {
+        addButton.disabled = false;
+        addButton.textContent = hasSelectedVariant && !isAvailable ? notifyLabel : addLabel;
+        addButton.classList.toggle('is-notify', Boolean(hasSelectedVariant && !isAvailable));
+      }
+
+      setMessage('');
+
+      return {
+        option: option,
+        hasSelectedVariant: Boolean(hasSelectedVariant),
+        isAvailable: Boolean(isAvailable)
+      };
+    }
+
+    if (select) {
+      Array.from(select.options).forEach(function (option) {
+        if (option.value !== '') option.disabled = false;
+      });
+
+      select.addEventListener('change', updateStateFromOption);
+    }
+
+    updateStateFromOption();
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      if (!variantInput || !addButton) return;
+
+      const currentState = updateStateFromOption();
+      const option = currentState.option;
+
+      if (!currentState.hasSelectedVariant) {
+        const label = select && select.previousElementSibling
+          ? select.previousElementSibling.textContent.trim().toLowerCase()
+          : 'variant';
+
+        setMessage('Please select ' + label + '.', true);
+
+        if (select) select.focus();
+        return;
+      }
+
+      if (!currentState.isAvailable) {
+        const productUrl =
+          form.dataset.productUrl ||
+          (option ? option.dataset.variantUrl : '') ||
+          '';
+
+        openJoyPdpNotifyOverlay(
+          productUrl,
+          variantInput.value
+        );
+
+        return;
+      }
+
+      const originalText = addButton.textContent;
+      const formData = new FormData(form);
+
+      addButton.disabled = true;
+      addButton.textContent = 'Adding...';
+      setMessage('');
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json'
+        },
+        body: formData
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            return response.json().then(function (error) {
+              throw error;
+            });
+          }
+
+          return response.json();
+        })
+        .then(function () {
+          addButton.textContent = 'Added';
+          setMessage('Added to cart');
+
+          return refreshCartUi();
+        })
+        .then(function () {
+          window.setTimeout(function () {
+            updateStateFromOption();
+            setMessage('');
+          }, 1800);
+        })
+        .catch(function (error) {
+          const errorMessage = error && error.description
+            ? error.description
+            : 'Could not add this item. Please try again.';
+
+          addButton.textContent = originalText;
+          addButton.disabled = false;
+          setMessage(errorMessage, true);
+        });
+    });
+  }
+
+  function initializeVariantForms(root) {
+    const scope = root || document;
+
+    scope.querySelectorAll('[data-joy-variant-form]').forEach(function (form) {
+      initializeVariantForm(form);
+    });
+  }
+
+  function formatVariantOptionText(variant) {
+    if (!variant) return '';
+
+    return variant.title + (variant.available ? '' : ' (Sold Out)');
+  }
+
+  function findCardPriceElement(card) {
+    if (!card) return null;
+
+    return (
+      card.querySelector('.price__regular .price-item--regular') ||
+      card.querySelector('.price .price-item--regular') ||
+      card.querySelector('.price__sale .price-item--sale') ||
+      card.querySelector('.price-item')
+    );
+  }
+
+  function updateCardPriceDisplay(card, variant) {
+    if (!card || !variant) return;
+
+    const priceWrapper = card.querySelector('.price');
+    const regularPrice = card.querySelector('.price__regular .price-item--regular');
+    const salePrice = card.querySelector('.price__sale .price-item--sale');
+    const compareAtPrice = card.querySelector('.price__sale .price-item--regular');
+    const fallbackPrice = findCardPriceElement(card);
+    const hasCompareAtPrice = Boolean(variant.compareAtPrice);
+
+    if (priceWrapper) {
+      priceWrapper.classList.toggle('price--on-sale', hasCompareAtPrice);
+    }
+
+    if (hasCompareAtPrice) {
+      if (salePrice) {
+        salePrice.textContent = variant.price;
+      } else if (fallbackPrice) {
+        fallbackPrice.textContent = variant.price;
+      }
+
+      if (compareAtPrice) {
+        compareAtPrice.textContent = variant.compareAtPrice;
+      }
+    } else {
+      if (regularPrice) {
+        regularPrice.textContent = variant.price;
+      } else if (salePrice) {
+        salePrice.textContent = variant.price;
+      } else if (fallbackPrice) {
+        fallbackPrice.textContent = variant.price;
+      }
+
+      if (compareAtPrice) {
+        compareAtPrice.textContent = '';
+      }
+    }
+  }
+
+  function updateCardVariantState(listItem, data, variant, options) {
+    if (!listItem || !data || !variant) return;
+
+    const settings = options || {};
+    const card = listItem.querySelector('.card-wrapper-os') || listItem;
+    const priceElement = findCardPriceElement(card);
+    const hiddenVariantInput = card.querySelector('input[name="id"], .product-variant-id');
+    const addToCartWrapper = card.querySelector('.custom-addToCart-os');
+    const addToCartButton = card.querySelector('.custom-add-to-cart-btn-os');
+    const submitButtons = card.querySelectorAll('button[name="add"]');
+    const quantityInput = card.querySelector('.quantity__input');
+
+    if (priceElement && !settings.keepFromPrice) {
+      updateCardPriceDisplay(card, variant);
+    }
+
+    if (hiddenVariantInput) {
+      hiddenVariantInput.value = variant.id;
+      hiddenVariantInput.removeAttribute('disabled');
+    }
+
+    if (addToCartWrapper) {
+      addToCartWrapper.dataset.variantId = variant.id;
+      addToCartWrapper.dataset.available = String(Boolean(variant.available));
+
+      if (data.productUrl) {
+        addToCartWrapper.dataset.productUrl = data.productUrl;
+      }
+    }
+
+    if (addToCartButton) {
+      const addLabel = addToCartButton.dataset.addLabel || 'Add to cart';
+      const notifyLabel = addToCartButton.dataset.notifyLabel || 'Get notified';
+
+      addToCartButton.textContent = variant.available ? addLabel : notifyLabel;
+      addToCartButton.classList.toggle('is-notify', !variant.available);
+      addToCartButton.disabled = false;
+    }
+
+    if (quantityInput) {
+      const min = variant.min || 1;
+      const step = variant.step || 1;
+
+      quantityInput.dataset.totalQuantity = String(variant.inventoryQuantity || 1000000);
+      quantityInput.dataset.cartQuantity = String(variant.cartQuantity || 0);
+      quantityInput.dataset.min = String(min);
+      quantityInput.min = String(min);
+      quantityInput.step = String(step);
+      quantityInput.value = String(min);
+
+      if (variant.max) {
+        quantityInput.dataset.max = String(variant.max);
+        quantityInput.max = String(variant.max);
+      } else {
+        quantityInput.removeAttribute('data-max');
+        quantityInput.removeAttribute('max');
+      }
+
+      const quantityValue = card.querySelector('.custom-quantity-value-os span');
+
+      if (quantityValue) {
+        quantityValue.textContent = String(min);
+      }
+    }
+
+    submitButtons.forEach(function (button) {
+      button.disabled = !variant.available;
+    });
+  }
+
+  function requireCardVariantSelection(listItem) {
+    if (!listItem) return;
+
+    const card = listItem.querySelector('.card-wrapper-os') || listItem;
+    const hiddenVariantInput = card.querySelector('input[name="id"], .product-variant-id');
+    const addToCartButton = card.querySelector('.custom-add-to-cart-btn-os');
+    const submitButtons = card.querySelectorAll('button[name="add"]');
+
+    if (hiddenVariantInput) {
+      hiddenVariantInput.setAttribute('disabled', 'disabled');
+    }
+
+    if (addToCartButton) {
+      addToCartButton.disabled = true;
+    }
+
+    submitButtons.forEach(function (button) {
+      button.disabled = true;
+    });
+  }
+
+  function initializeEnhancedCustomAddToCartHandler() {
+    const selector = {
+      wrapper: '.custom-addToCart-os[data-variant-id]',
+      button: '.custom-add-to-cart-btn-os',
+      quantityWrap: '.quantity-selector-and-buyNow-wrapper-os',
+      quantityInput: '.quantity__input',
+      quantityPlus: '.quantity__button[name="plus"]',
+      quantityMinus: '.quantity__button[name="minus"]',
+      quantityText: '.custom-quantity-value-os',
+      restock: '.restocking-soon-product-os',
+      view: '.view-product-os'
+    };
+
+    const activate = function (element) {
+      if (!element) return;
+      element.classList.add('active');
+      element.setAttribute('aria-hidden', 'false');
+    };
+
+    const deactivate = function (element) {
+      if (!element) return;
+      element.classList.remove('active');
+      element.setAttribute('aria-hidden', 'true');
+    };
+
+    let cartCache = new Map();
+    let quantityDebounce = null;
+
+    const findCard = function (element) {
+      const wrapper = element ? element.closest(selector.wrapper) : null;
+      const quantityWrap = element ? element.closest(selector.quantityWrap) : null;
+      const root = element ? element.closest('.qty-atc-container') || element.closest('.card-wrapper-os') : null;
+      const addWrapper = wrapper || (root ? root.querySelector(selector.wrapper) : null);
+
+      if (!root || !addWrapper) return null;
+
+      const quantityElement = root.querySelector(selector.quantityWrap);
+      const input = quantityElement ? quantityElement.querySelector(selector.quantityInput) : null;
+
+      return {
+        root: root,
+        wrapper: addWrapper,
+        button: addWrapper.querySelector(selector.button),
+        quantityWrap: quantityElement,
+        quantityInput: input,
+        quantityPlus: quantityElement ? quantityElement.querySelector(selector.quantityPlus) : null,
+        quantityMinus: quantityElement ? quantityElement.querySelector(selector.quantityMinus) : null,
+        quantityText: quantityElement ? quantityElement.querySelector(selector.quantityText) : null,
+        restock: root.querySelector(selector.restock),
+        view: root.querySelector(selector.view)
+      };
+    };
+
+    const getVariantId = function (card) {
+      if (!card || !card.root) return 0;
+
+      const selectedPicker = card.root.querySelector('[data-joy-card-product-variant-picker] select');
+
+      if (selectedPicker && selectedPicker.value) {
+        return Number(selectedPicker.value);
+      }
+
+      const hiddenInput = card.root.querySelector('input[name="id"], .product-variant-id');
+
+      if (hiddenInput && hiddenInput.value && !hiddenInput.disabled) {
+        return Number(hiddenInput.value);
+      }
+
+      return Number(card.wrapper ? card.wrapper.dataset.variantId : 0);
+    };
+
+    const isAvailable = function (card) {
+      return Boolean(card && card.wrapper && card.wrapper.dataset.available === 'true');
+    };
+
+    const updateQuantityLabel = function (card, value) {
+      if (!card || !card.quantityText) return;
+
+      const count = Number(value || 0);
+      card.quantityText.innerHTML = 'Added: <span>' + count + '</span> ' + (count === 1 ? 'item' : 'items');
+    };
+
+    const refreshQuantityButtons = function (card) {
+      if (!card || !card.quantityInput) return;
+
+      const input = card.quantityInput;
+      const value = Number(input.value || 0);
+      const min = Number(input.getAttribute('min') || input.dataset.min || 0);
+      const maxAttr = input.getAttribute('max');
+      const hasMax = maxAttr !== null && maxAttr !== '';
+      const max = hasMax ? Number(maxAttr) : Infinity;
+
+      updateQuantityLabel(card, value);
+
+      if (card.quantityMinus) {
+        const disableMinus = value <= 0;
+        card.quantityMinus.disabled = disableMinus;
+        card.quantityMinus.classList.toggle('disabled', disableMinus);
+      }
+
+      if (card.quantityPlus) {
+        const disablePlus = hasMax && Number.isFinite(max) && value >= max;
+        card.quantityPlus.disabled = disablePlus;
+        card.quantityPlus.classList.toggle('disabled', disablePlus);
+      }
+    };
+
+    const setQuantityBusy = function (card, busy) {
+      if (!card) return;
+
+      card.root.dataset.joyQtyBusy = busy ? 'true' : 'false';
+
+      if (card.quantityInput) {
+        card.quantityInput.setAttribute('aria-busy', busy ? 'true' : 'false');
+      }
+
+      refreshQuantityButtons(card);
+    };
+
+    const applyCartState = function (cart) {
+      cartCache = new Map((cart.items || []).map(function (item) {
+        return [Number(item.variant_id), {
+          key: item.key,
+          quantity: Number(item.quantity)
+        }];
+      }));
+
+      updateCartCountBubble(cart.item_count);
+
+      document.dispatchEvent(new CustomEvent('cart:refresh', {
+        detail: { cart: cart }
+      }));
+
+      return cart;
+    };
+
+    const fetchCart = function () {
+      return fetch('/cart.js', {
+        headers: { Accept: 'application/json' }
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error('Failed to fetch cart');
+          return response.json();
+        })
+        .then(applyCartState);
+    };
+
+    const syncCardFromCart = function (card) {
+      if (!card) return;
+
+      const variantId = getVariantId(card);
+      const item = cartCache.get(variantId);
+
+      if (!isAvailable(card)) {
+        const hasVariantPicker = Boolean(
+          card.root.querySelector('[data-joy-card-product-variant-picker]')
+        );
+
+        deactivate(card.view);
+        deactivate(card.quantityWrap);
+
+        if (hasVariantPicker) {
+          // Weight/variant product: use the main button as Get Notified
+          // for the specifically selected sold-out variant.
+          deactivate(card.restock);
+          activate(card.wrapper);
+
+          if (card.button) {
+            const notifyLabel = card.button.dataset.notifyLabel || 'Get notified';
+
+            card.button.textContent = notifyLabel;
+            card.button.classList.add('is-notify');
+            card.button.disabled = false;
+          }
+        } else {
+          // Normal sold-out product / Meal Kit: retain the theme's existing
+          // restocking/Get Notified element.
+          deactivate(card.wrapper);
+          activate(card.restock);
+        }
+
+        return;
+      }
+
+      deactivate(card.view);
+      deactivate(card.restock);
+
+      if (item && item.quantity > 0) {
+        activate(card.quantityWrap);
+        deactivate(card.wrapper);
+
+        if (card.quantityInput) {
+          card.quantityInput.value = String(item.quantity);
+          card.quantityInput.dataset.cartQuantity = String(item.quantity);
+          card.quantityInput.dataset.productMin = card.quantityInput.dataset.productMin || card.quantityInput.dataset.min || card.quantityInput.getAttribute('min') || '1';
+          card.quantityInput.dataset.min = '0';
+          card.quantityInput.setAttribute('min', '0');
+        }
+
+        refreshQuantityButtons(card);
+      } else {
+        if (card.quantityInput && card.quantityInput.dataset.productMin) {
+          card.quantityInput.dataset.min = card.quantityInput.dataset.productMin;
+          card.quantityInput.setAttribute('min', card.quantityInput.dataset.productMin);
+        }
+
+        activate(card.wrapper);
+        deactivate(card.quantityWrap);
+      }
+    };
+
+    const syncAllCardsFromCart = function () {
+      return fetchCart()
+        .then(function () {
+          document.querySelectorAll(selector.wrapper).forEach(function (wrapper) {
+            syncCardFromCart(findCard(wrapper));
+          });
+        })
+        .catch(function () {
+          document.querySelectorAll(selector.wrapper).forEach(function (wrapper) {
+            const card = findCard(wrapper);
+
+            if (card && isAvailable(card)) {
+              activate(card.wrapper);
+              deactivate(card.quantityWrap);
+              deactivate(card.view);
+              deactivate(card.restock);
+            }
+          });
+        });
+    };
+
+    const addToCart = function (variantId, quantity) {
+      return fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          items: [{
+            id: Number(variantId),
+            quantity: Number(quantity || 1)
+          }]
+        })
+      }).then(function (response) {
+        if (!response.ok) {
+          return response.text().then(function (errorText) {
+            throw new Error(errorText || 'Add to cart failed');
+          });
+        }
+
+        return fetchCart();
+      });
+    };
+
+    const changeCartLine = function (item, quantity) {
+      return fetch('/cart/change.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          id: item.key,
+          quantity: Number(quantity)
+        })
+      }).then(function (response) {
+        if (!response.ok) {
+          return response.text().then(function (errorText) {
+            throw new Error(errorText || 'Cart change failed');
+          });
+        }
+
+        return response.json().then(applyCartState);
+      });
+    };
+
+    const setCartQuantity = function (variantId, quantity) {
+      const numericVariantId = Number(variantId);
+      const item = cartCache.get(numericVariantId);
+
+      if (item) return changeCartLine(item, quantity);
+
+      return fetchCart().then(function () {
+        const latestItem = cartCache.get(numericVariantId);
+
+        if (latestItem) return changeCartLine(latestItem, quantity);
+
+        return addToCart(numericVariantId, quantity);
+      });
+    };
+
+    if (document.documentElement.dataset.joyEnhancedCustomAtc !== 'true') {
+      document.documentElement.dataset.joyEnhancedCustomAtc = 'true';
+
+      document.addEventListener('click', function (event) {
+        const button = event.target.closest(selector.button);
+
+        if (!button) return;
+
+        const card = findCard(button);
+        const variantId = getVariantId(card);
+
+        if (!card || !variantId) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        if (!isAvailable(card)) {
+          const productUrl = card.wrapper.dataset.productUrl || '';
+
+          openJoyPdpNotifyOverlay(productUrl, variantId);
+          return;
+        }
+
+        if (button.dataset.joyAdding === 'true') return;
+
+        const originalText = button.textContent;
+        button.dataset.joyAdding = 'true';
+        button.disabled = true;
+        button.textContent = 'Adding...';
+
+        addToCart(variantId, 1)
+          .then(function () {
+            button.textContent = 'Added';
+            syncCardFromCart(findCard(button));
+          })
+          .catch(function () {
+            button.textContent = 'Try again';
+          })
+          .finally(function () {
+            window.setTimeout(function () {
+              button.textContent = originalText || 'Add to cart';
+              button.disabled = false;
+              button.dataset.joyAdding = 'false';
+            }, 800);
+          });
+      }, true);
+
+      const commitQuantity = function (card, desiredQuantity) {
+        const variantId = getVariantId(card);
+
+        if (!card || !variantId || Number.isNaN(desiredQuantity)) return;
+        if (card.root.dataset.joyQtyBusy === 'true') return;
+
+        setQuantityBusy(card, true);
+        window.clearTimeout(quantityDebounce);
+
+        quantityDebounce = window.setTimeout(function () {
+          setCartQuantity(variantId, desiredQuantity)
+            .then(function () {
+              syncCardFromCart(findCard(card.root));
+            })
+            .catch(function () {
+              syncAllCardsFromCart();
+            })
+            .finally(function () {
+              setQuantityBusy(findCard(card.root), false);
+            });
+        }, 0);
+      };
+
+      document.addEventListener('click', function (event) {
+        const button = event.target.closest(selector.quantityPlus + ', ' + selector.quantityMinus);
+
+        if (!button || !button.closest(selector.quantityWrap)) return;
+
+        const card = findCard(button);
+
+        if (!card || !card.quantityInput) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+
+        if (card.root.dataset.joyQtyBusy === 'true') return;
+
+        const input = card.quantityInput;
+        const currentQuantity = Number(input.value || 0);
+        const step = Number(input.getAttribute('step') || 1) || 1;
+        const maxAttr = input.getAttribute('max');
+        const hasMax = maxAttr !== null && maxAttr !== '';
+        const max = hasMax ? Number(maxAttr) : Infinity;
+        const direction = button.matches(selector.quantityPlus) ? 1 : -1;
+        const desiredQuantity = Math.max(0, Math.min(max, currentQuantity + (direction * step)));
+
+        input.value = String(desiredQuantity);
+        input.dataset.joyIgnoreChangeUntil = String(Date.now() + 800);
+        updateQuantityLabel(card, desiredQuantity);
+        refreshQuantityButtons(card);
+        commitQuantity(card, desiredQuantity);
+      }, true);
+
+      document.addEventListener('change', function (event) {
+        const input = event.target;
+
+        if (!(input instanceof HTMLInputElement) || !input.matches(selector.quantityInput)) return;
+        if (!input.closest(selector.quantityWrap)) return;
+        if (Number(input.dataset.joyIgnoreChangeUntil || 0) > Date.now()) return;
+
+        const card = findCard(input);
+        const maxAttr = input.getAttribute('max');
+        const hasMax = maxAttr !== null && maxAttr !== '';
+        const max = hasMax ? Number(maxAttr) : Infinity;
+        const desiredQuantity = Math.max(0, Math.min(max, Number(input.value || 0)));
+
+        input.value = String(desiredQuantity);
+        updateQuantityLabel(card, desiredQuantity);
+        refreshQuantityButtons(card);
+        commitQuantity(card, desiredQuantity);
+      }, true);
+
+      document.addEventListener('change', function (event) {
+        if (!event.target.closest('[data-joy-card-product-variant-picker]')) return;
+
+        window.requestAnimationFrame(function () {
+          syncAllCardsFromCart();
+        });
+      }, true);
+    }
+
+    syncAllCardsFromCart();
+  }
+
+  function initializeCardProductVariantEnhancers(root) {
+    const scope = root || document;
+
+    scope.querySelectorAll('[data-joy-card-variant-data]').forEach(function (script) {
+      const listItem = script.closest('li');
+
+      if (!listItem || listItem.dataset.joyCardVariantEnhancer === 'true') return;
+
+      let data = null;
+
+      try {
+        data = JSON.parse(script.textContent || '{}');
+      } catch (error) {
+        return;
+      }
+
+      if (!data || !Array.isArray(data.variants) || data.variants.length < 1) return;
+
+      // Always sync the card from Shopify's actual variant availability.
+      // This covers single/default-variant Meal Kits as well as products
+      // that have a weight/variant selector.
+      if (data.variants.length === 1) {
+        listItem.dataset.joyCardVariantEnhancer = 'true';
+        updateCardVariantState(listItem, data, data.variants[0]);
+        return;
+      }
+
+      const card = listItem.querySelector('.card-wrapper-os') || listItem;
+      const priceElement = findCardPriceElement(card);
+      const insertionTarget =
+        card.querySelector('.quick-add.no-js-hidden') ||
+        card.querySelector('.qty-atc-container') ||
+        card.querySelector('.card-information') ||
+        card;
+
+      if (!priceElement || !insertionTarget) return;
+
+      listItem.dataset.joyCardVariantEnhancer = 'true';
+      priceElement.textContent = 'From ' + data.fromPrice;
+
+      const priceWrapper = card.querySelector('.price');
+      const compareAtPrice = card.querySelector('.price__sale .price-item--regular');
+
+      if (priceWrapper) {
+        priceWrapper.classList.remove('price--on-sale');
+      }
+
+      if (compareAtPrice) {
+        compareAtPrice.textContent = '';
+      }
+
+      const picker = document.createElement('div');
+      picker.className = 'joy-card-product-variant-picker';
+      picker.setAttribute('data-joy-card-product-variant-picker', '');
+
+      const label = document.createElement('label');
+      label.className = 'joy-card-product-variant-picker__label';
+      label.setAttribute('for', 'JoyCardVariant-' + data.productId);
+      label.textContent = data.optionName || 'Variant';
+
+      const selectWrap = document.createElement('div');
+      selectWrap.className = 'joy-card-product-variant-picker__select-wrap';
+
+      const select = document.createElement('select');
+      select.id = 'JoyCardVariant-' + data.productId;
+      select.className = 'joy-card-product-variant-picker__select';
+
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select ' + String(data.optionName || 'variant').toLowerCase();
+      placeholder.selected = true;
+      placeholder.disabled = true;
+      select.appendChild(placeholder);
+
+      data.variants.forEach(function (variant) {
+        const option = document.createElement('option');
+        option.value = variant.id;
+        option.textContent = formatVariantOptionText(variant);
+
+        select.appendChild(option);
+      });
+
+      select.addEventListener('change', function () {
+        const selected = data.variants.find(function (variant) {
+          return String(variant.id) === String(select.value);
+        });
+
+        updateCardVariantState(listItem, data, selected);
+      });
+
+      selectWrap.appendChild(select);
+      picker.appendChild(label);
+      picker.appendChild(selectWrap);
+
+      if (insertionTarget.classList && insertionTarget.classList.contains('quick-add')) {
+        const inventoryMessage = insertionTarget.querySelector('.collection-product__inventory-os');
+
+        if (inventoryMessage && inventoryMessage.nextSibling) {
+          insertionTarget.insertBefore(picker, inventoryMessage.nextSibling);
+        } else if (inventoryMessage) {
+          insertionTarget.appendChild(picker);
+        } else {
+          insertionTarget.insertBefore(picker, insertionTarget.firstChild);
+        }
+      } else if (insertionTarget.classList && insertionTarget.classList.contains('qty-atc-container')) {
+        insertionTarget.insertBefore(picker, insertionTarget.firstChild);
+      } else {
+        insertionTarget.appendChild(picker);
+      }
+
+      requireCardVariantSelection(listItem);
+    });
+  }
+
+  function initializeCollection() {
+    initializeTabs(document);
+    initializeVariantForms(document);
+    initializeCardProductVariantEnhancers(document);
+    initializeEnhancedCustomAddToCartHandler();
+
+    const productGrid = document.getElementById('ProductGridContainer');
+
+    if (!productGrid || productGrid.dataset.joyObserverInitialized === 'true') return;
+
+    productGrid.dataset.joyObserverInitialized = 'true';
+
+    const observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(function (node) {
+          if (!(node instanceof Element)) return;
+
+          initializeTabs(node);
+          initializeVariantForms(node);
+          initializeCardProductVariantEnhancers(node);
+          initializeEnhancedCustomAddToCartHandler();
+        });
+      });
+    });
+
+    observer.observe(productGrid, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (
+      event.key === 'Escape' &&
+      document.querySelector('[data-joy-pdp-notify-overlay]')
+    ) {
+      closeJoyPdpNotifyOverlay();
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCollection);
+  } else {
+    initializeCollection();
+  }
+
+  document.addEventListener('shopify:section:load', initializeCollection);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-product-grid.name",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection tabs"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_collection_tabs",
+      "default": true,
+      "label": "Enable collection tabs"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shop_all_tab",
+      "default": true,
+      "label": "Show Shop All tab"
+    },
+    {
+      "type": "collection",
+      "id": "shop_all_collection",
+      "label": "Shop All collection",
+      "info": "Optional. Select a collection to use instead of Shopify's /collections/all page."
+    },
+    {
+      "type": "text",
+      "id": "shop_all_label",
+      "default": "Shop All",
+      "label": "Shop All label"
+    },
+    {
+      "type": "image_picker",
+      "id": "shop_all_icon",
+      "label": "Shop All custom icon"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 36,
+      "step": 4,
+      "default": 16,
+      "label": "t:sections.main-collection-product-grid.settings.products_per_page.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.main-collection-product-grid.settings.columns_desktop.label"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "default": "2",
+      "label": "t:sections.main-collection-product-grid.settings.columns_mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__2.label"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection-product-grid.settings.header__3.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.all.image_shape.options__1.label"
+        },
+        {
+          "value": "arch",
+          "label": "t:sections.all.image_shape.options__2.label"
+        },
+        {
+          "value": "blob",
+          "label": "t:sections.all.image_shape.options__3.label"
+        },
+        {
+          "value": "chevronleft",
+          "label": "t:sections.all.image_shape.options__4.label"
+        },
+        {
+          "value": "chevronright",
+          "label": "t:sections.all.image_shape.options__5.label"
+        },
+        {
+          "value": "diamond",
+          "label": "t:sections.all.image_shape.options__6.label"
+        },
+        {
+          "value": "parallelogram",
+          "label": "t:sections.all.image_shape.options__7.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.all.image_shape.options__8.label"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.main-collection-product-grid.settings.image_shape.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_rating.label",
+      "info": "t:sections.main-collection-product-grid.settings.show_rating.info"
+    },
+    {
+      "type": "select",
+      "id": "quick_add",
+      "default": "none",
+      "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
+        },
+        {
+          "value": "standard",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
+        },
+        {
+          "value": "bulk",
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection-product-grid.settings.header__1.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_filtering.label",
+      "info": "t:sections.main-collection-product-grid.settings.enable_filtering.info"
+    },
+    {
+      "type": "select",
+      "id": "filter_type",
+      "options": [
+        {
+          "value": "horizontal",
+          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__1.label"
+        },
+        {
+          "value": "vertical",
+          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__2.label"
+        },
+        {
+          "value": "drawer",
+          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__3.label"
+        }
+      ],
+      "default": "horizontal",
+      "label": "t:sections.main-collection-product-grid.settings.filter_type.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_tab",
+      "name": "Collection tab",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "tab_collection",
+          "label": "Select collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "tab_icon",
+          "label": "Custom icon"
+        },
+        {
+          "type": "text",
+          "id": "tab_label",
+          "label": "Custom label",
+          "info": "Leave blank to use collection title."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

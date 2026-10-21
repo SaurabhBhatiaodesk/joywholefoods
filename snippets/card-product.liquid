@@ -962,6 +962,7 @@
                             {% render 'icon-plus' %}
                           </button>
                         </div>
+                        <small class="joy-card-quantity-help">Use + to add more</small>
                       </div>
 
                       <div class="restocking-soon-product-os">
@@ -1443,7 +1444,10 @@
     // cart/add or cart/change requests overlap (one overwrites the other's quantity).
     var cartQueue = Promise.resolve();
     var cartWritesInFlight = 0;
-    var lastCartWriteAt = 0;
+    var cartWriteFailed = false;
+    var externalRefreshTimer = null;
+    var externalRefreshRunning = false;
+    var externalRefreshRequested = false;
     var gridObserver = null;
 
     function number(value, fallback) {
@@ -1572,9 +1576,6 @@
         plus.classList.toggle('disabled', plus.disabled);
       }
 
-      // These text updates are our own; don't let the grid observer treat them as new
-      // cards and re-read the cart (that caused a /cart.js request loop several times a second).
-      if (gridObserver) gridObserver.takeRecords();
     }
 
     function setControlVisibility(control, quantity) {
@@ -1703,34 +1704,53 @@
 
     var queuedCartJobs = 0;
 
+    function hasPendingCardChanges() {
+      if (queuedCartJobs > 0 || cartWritesInFlight > 0) return true;
+      return Array.from(document.querySelectorAll(CONTROL_SELECTOR)).some(function (control) {
+        var state = states.get(control);
+        return state && (state.pending || state.running);
+      });
+    }
+
     function requestQuantity(variantId, quantity) {
+      if (queuedCartJobs === 0) cartWriteFailed = false;
       queuedCartJobs += 1;
       var job = cartQueue.then(function () {
         return runQuantityRequest(variantId, quantity);
       });
-      cartQueue = job.catch(function () {}).then(function () {
+      cartQueue = job.catch(function () { cartWriteFailed = true; }).then(function () {
         queuedCartJobs -= 1;
       });
       return job;
     }
 
     /* If the customer heads to the cart/checkout while card changes are still queued,
-       wait for them to reach Shopify first (max 15s) so nothing is left behind. */
+       wait for them to reach Shopify first. A timeout must never discard queued writes. */
     document.addEventListener('click', function (event) {
       var link = event.target.closest('a[href]');
-      if (!link || queuedCartJobs === 0) return;
+      if (!link || !hasPendingCardChanges()) return;
 
       var href = link.getAttribute('href') || '';
       if (!/^(https?:\/\/[^/]+)?\/(cart|checkout)(\/|\?|#|$)/.test(href)) return;
 
       event.preventDefault();
+      event.stopImmediatePropagation();
+      event.stopPropagation();
 
       var waited = 0;
       var idleChecks = 0;
       (function waitForQueue() {
-        idleChecks = queuedCartJobs === 0 ? idleChecks + 1 : 0;
-        if (idleChecks >= 2 || waited >= 15000) {
+        idleChecks = !hasPendingCardChanges() ? idleChecks + 1 : 0;
+        if (idleChecks >= 2) {
+          if (cartWriteFailed) {
+            window.alert('Some cart changes could not be saved. Please review your quantities and try again.');
+            return;
+          }
           window.location.href = link.href;
+          return;
+        }
+        if (waited >= 15000) {
+          window.alert('Your cart is still saving. Please wait, then select Cart or Checkout again.');
           return;
         }
         waited += 250;
@@ -1812,7 +1832,9 @@
 
       return start.then(function (cart) {
         return writeQuantity(cart, variantId, quantity).catch(function (error) {
-          if (!latestCart || (error.status && error.status >= 500)) throw error;
+          // A network failure can happen after Shopify accepted the add. Repeating
+          // that add would duplicate it; only retry a rejected, stale line key.
+          if (!findCartItem(cart, variantId) || (error.status !== 400 && error.status !== 404)) throw error;
           return readCart().then(function (freshCart) {
             return writeQuantity(freshCart, variantId, quantity);
           });
@@ -1820,12 +1842,10 @@
       }).then(function (cart) {
         cartWritesInFlight -= 1;
         cartChangeCount += 1;
-        lastCartWriteAt = Date.now();
         return setLatestCart(cart, false);
       }, function (error) {
         cartWritesInFlight -= 1;
         cartChangeCount += 1;
-        lastCartWriteAt = Date.now();
         throw error;
       });
     }
@@ -1936,6 +1956,16 @@
       if (!button) return;
 
       var addWrapper = button.closest('.custom-addToCart-os');
+      if (button.dataset.requiresWeight === 'true') {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        var weightCard = getCard(button);
+        var weightSelect = weightCard && weightCard.querySelector('[data-joy-card-product-variant-picker] select');
+        button.textContent = 'Choose a weight';
+        if (weightSelect) weightSelect.focus();
+        return;
+      }
       if (!addWrapper || addWrapper.dataset.available !== 'true') return;
 
       var card = button.closest('.card-wrapper-os') || button.closest('.grid__item');
@@ -1991,14 +2021,19 @@
 
       window.setTimeout(function () {
         fetchCart(true).then(function (cart) {
-          syncControlFromCart(control, cart, true);
+          syncControlFromCart(control, cart, false);
+        }).catch(function (error) {
+          console.warn('Unable to refresh selected variant:', error);
         });
       }, 0);
     }
 
     function initialize() {
       fetchCart(true).then(function (cart) {
-        syncAllControls(cart, true);
+        // Customers can click before this initial read finishes on a slow network.
+        syncAllControls(cart, false);
+      }).catch(function (error) {
+        console.warn('Unable to initialize collection cart:', error);
       });
     }
 
@@ -2006,13 +2041,30 @@
     document.addEventListener('click', handleQuantityClick, true);
     document.addEventListener('change', handleVariantChange, true);
 
-    /* Carts sent by other scripts (e.g. the collection section's own cart read) can be
-       older than our last write if their request started first. Ignore them while our
-       writes are queued and shortly after, so they can't undo a card change. */
-    function acceptExternalCart(cart) {
-      if (queuedCartJobs > 0 || cartWritesInFlight > 0 || Date.now() - lastCartWriteAt < 4000) return;
-      setLatestCart(cart, false);
-      syncAllControls(cart, false);
+    /* External snapshots have no reliable request timestamp. Treat them as a signal
+       to read Shopify after our queue settles, never as authoritative cart contents. */
+    function acceptExternalCart() {
+      externalRefreshRequested = true;
+      if (externalRefreshTimer !== null || externalRefreshRunning) return;
+      externalRefreshTimer = window.setTimeout(refreshExternalCart, 80);
+    }
+
+    function refreshExternalCart() {
+      externalRefreshTimer = null;
+      if (queuedCartJobs > 0 || cartWritesInFlight > 0) {
+        externalRefreshTimer = window.setTimeout(refreshExternalCart, 250);
+        return;
+      }
+      externalRefreshRequested = false;
+      externalRefreshRunning = true;
+      fetchCart(true).then(function (cart) {
+        syncAllControls(cart, false);
+      }).catch(function (error) {
+        console.warn('Unable to refresh collection cart:', error);
+      }).finally(function () {
+        externalRefreshRunning = false;
+        if (externalRefreshRequested) acceptExternalCart();
+      });
     }
 
     document.addEventListener('cart:updated', function (event) {
@@ -2035,14 +2087,27 @@
       initialize();
     }
 
+    function containsNewQuantityCards(mutations) {
+      return mutations.some(function (mutation) {
+        return Array.from(mutation.addedNodes).some(function (node) {
+          return node.nodeType === 1 && (node.matches(CONTROL_SELECTOR) || node.querySelector(CONTROL_SELECTOR));
+        });
+      });
+    }
+
     var grid = document.getElementById('ProductGridContainer');
     if (grid && window.MutationObserver) {
       var observerTimer = null;
-      gridObserver = new MutationObserver(function () {
+      gridObserver = new MutationObserver(function (mutations) {
+        // Only newly inserted cards need initialization. Label, icon and widget
+        // changes must never start another cart read (including our own render).
+        if (!containsNewQuantityCards(mutations)) return;
         window.clearTimeout(observerTimer);
         observerTimer = window.setTimeout(function () {
-          fetchCart(true).then(function (cart) {
+          fetchCart(false).then(function (cart) {
             syncAllControls(cart, false);
+          }).catch(function (error) {
+            console.warn('Unable to initialize new collection cards:', error);
           });
         }, 60);
       });
