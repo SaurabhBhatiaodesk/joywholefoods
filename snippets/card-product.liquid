@@ -1772,6 +1772,7 @@
     function readCart() {
       return fetch('/cart.js', {
         method: 'GET',
+        cache: 'no-store',
         headers: { Accept: 'application/json' }
       }).then(function (response) {
         if (!response.ok) throw new Error('Unable to read cart');
@@ -1992,6 +1993,18 @@
           var target = Math.max(0, Math.min(max, current + totalDelta));
 
           if (target === current) return { cart: cart, quantity: current };
+
+          // Positive clicks are increments, never an absolute quantity derived
+          // from a GET snapshot. A stale read must not turn two +1 taps into 1.
+          if (totalDelta > 0) {
+            return postJson('/cart/add.js', {
+              items: [{ id: variantId, quantity: target - current }]
+            }).then(function (added) {
+              var newCart = mergeAddedLines(cart, added);
+              var line = findCartItem(newCart, variantId);
+              return { cart: newCart, quantity: line ? number(line.quantity, 0) : 0 };
+            });
+          }
 
           if (item) {
             return postJson('/cart/change.js', { id: item.key, quantity: target }).then(function (newCart) {

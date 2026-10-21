@@ -126,7 +126,8 @@ test('rapid changes across cards serialize writes and retain the last requested 
   assert.deepEqual(controls.map(control => control.state.confirmed), [2, 3, 2]);
   assert.deepEqual(controls.map(control => control.displayed), [2, 3, 2]);
   assert.equal(server.item_count, 7);
-  assert.equal(requests.filter(request => request.url.endsWith('/add.js')).length, 3);
+  assert.ok(requests.every(request => request.url.endsWith('/add.js')),
+    'Positive deltas must use incremental adds, including existing lines');
   assert.equal(context.queuedCartJobs, 0);
 
   // Match the reported pattern: four distinct adds 150 ms apart, five rounds.
@@ -151,4 +152,28 @@ test('rapid changes across cards serialize writes and retain the last requested 
   }
   assert.equal(server.items.filter(item => item.variant_id >= 100).length, 20);
   assert.equal(maxInFlight, 1);
+});
+
+test('stale cart GETs cannot overwrite repeated increments on an existing line', async () => {
+  let quantity = 1;
+  const staleCart = () => ({ items: [{ key: 'line-1', variant_id: 1, quantity: 1 }], item_count: 1 });
+  const context = {
+    waitingDeltaJobs: {}, cartQueue: Promise.resolve(), queuedCartJobs: 0,
+    cartWritesInFlight: 0, cartChangeCount: 0, cartWriteFailed: false,
+    number: (v, fallback) => Number.isFinite(Number(v)) ? Number(v) : fallback,
+    readCart: async () => staleCart(), setLatestCart() {},
+    postJson: async (url, body) => {
+      assert.equal(url, '/cart/add.js', 'Never replace quantity using a stale GET');
+      quantity += body.items[0].quantity;
+      return { items: [{ key: 'line-1', variant_id: 1, quantity }] };
+    }
+  };
+  vm.createContext(context);
+  vm.runInContext(['findCartItem', 'mergeAddedLines', 'requestDelta'].map(fn).join('\n'), context);
+  for (let i = 0; i < 4; i++) {
+    const result = await context.requestDelta(1, 1, Infinity);
+    await context.cartQueue;
+    assert.equal(result.quantity, i + 2);
+  }
+  assert.equal(quantity, 5);
 });
