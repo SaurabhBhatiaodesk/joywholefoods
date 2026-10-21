@@ -110,7 +110,7 @@ test('rapid changes across cards serialize writes and retain the last requested 
     }
   };
   vm.createContext(context);
-  vm.runInContext(['findCartItem', 'mergeAddedLines', 'postJson', 'writeQuantity',
+  vm.runInContext(['findCartItem', 'getCartQuantity', 'decreaseCartQuantity', 'mergeAddedLines', 'postJson', 'writeQuantity',
     'requestDelta', 'queueDelta'].map(fn).join('\n') + '\nvar waitingDeltaJobs = {};', context);
   context.queue = (control, quantity) => context.queueDelta(control,
     quantity - (control.state.pending ? control.state.desired : control.state.confirmed));
@@ -173,11 +173,40 @@ test('stale cart GETs cannot overwrite repeated increments on an existing line',
     }
   };
   vm.createContext(context);
-  vm.runInContext(['findCartItem', 'mergeAddedLines', 'requestDelta'].map(fn).join('\n'), context);
+  vm.runInContext(['findCartItem', 'getCartQuantity', 'mergeAddedLines', 'requestDelta'].map(fn).join('\n'), context);
   for (let i = 0; i < 4; i++) {
     const result = await context.requestDelta(1, 1, Infinity);
     await context.cartQueue;
     assert.equal(result.quantity, i + 2);
   }
   assert.equal(quantity, 5);
+});
+
+test('app-split lines are counted together, preserve properties on add, and decrease across lines', async () => {
+  let cart = { items: [
+    { key: 'a', variant_id: 1, quantity: 1, properties: { _bird: 'delivery' } },
+    { key: 'b', variant_id: 1, quantity: 4, properties: {} }
+  ] };
+  const context = {
+    waitingDeltaJobs: {}, cartQueue: Promise.resolve(), queuedCartJobs: 0,
+    cartWritesInFlight: 0, cartChangeCount: 0, cartWriteFailed: false, latestCart: cart,
+    number: (v, fallback) => Number.isFinite(Number(v)) ? Number(v) : fallback,
+    readCart: async () => cart, setLatestCart(c) { cart = c; context.latestCart = c; },
+    postJson: async (url, body) => {
+      if (url === '/cart/add.js') {
+        assert.equal(body.items[0].properties._bird, 'delivery');
+        return { items: [{ ...cart.items[0], quantity: cart.items[0].quantity + body.items[0].quantity }] };
+      }
+      cart = { items: cart.items.map(item => item.key === body.id ? { ...item, quantity: body.quantity } : item).filter(item => item.quantity) };
+      return cart;
+    }
+  };
+  vm.createContext(context);
+  vm.runInContext(['findCartItem', 'getCartQuantity', 'decreaseCartQuantity', 'mergeAddedLines', 'requestDelta'].map(fn).join('\n'), context);
+  assert.equal(context.getCartQuantity(cart, 1), 5);
+  assert.equal((await context.requestDelta(1, 1, Infinity)).quantity, 6);
+  await context.cartQueue;
+  assert.equal((await context.requestDelta(1, -3, Infinity)).quantity, 3);
+  await context.cartQueue;
+  assert.equal(context.getCartQuantity(cart, 1), 3);
 });
