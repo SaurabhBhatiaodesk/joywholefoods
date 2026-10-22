@@ -28,7 +28,7 @@
           "settings": {
             "postcodes": "4510",
             "locationName": "Yes we deliver to your area",
-            "postcodeText": "<p>Your delivery day is:<strong> Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$100</strong></p><p>Home delivery fee: <strong>$12.50 </strong></p><p><em>Note: some suburbs will be delivered by refrigerated courier, others will be delivered by our own delivery team.</em></p>"
+            "postcodeText": "<p>Your delivery day is:<strong> Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$100</strong></p><p>Home delivery fee: <strong>$12.50 + temporary fuel levy</strong> ($2 for our own delivery vans, $4 for refrigerated courier)</p><p><em>Note: some suburbs will be delivered by refrigerated courier, others will be delivered by our own delivery team.</em></p>"
           }
         },
         "postcode_XzLbPY": {
@@ -37,7 +37,7 @@
           "settings": {
             "postcodes": "4000,4001,4002,4003,4004,4005,4006,4007,4008,4009",
             "locationName": "Yes we deliver to your area! You're on Zone 1",
-            "postcodeText": "<p>Your delivery day is: <strong>Wednesday</strong></p><p>Order deadline: <strong>10am Monday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Wednesday</strong></p><p>Order deadline: <strong>10am Monday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_kgDLbX": {
@@ -46,7 +46,7 @@
           "settings": {
             "postcodes": "4066,4069,4072,4070",
             "locationName": "Yes we deliver to your area! You're on Zone 2",
-            "postcodeText": "<p>Your delivery day is: <strong>Wednesday</strong></p><p>Order deadline: <strong>10am Monday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Wednesday</strong></p><p>Order deadline: <strong>10am Monday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_FXUpHB": {
@@ -55,7 +55,7 @@
           "settings": {
             "postcodes": "4212,4216,4214,4215,4217,4218",
             "locationName": "Yes we deliver to your area! You're on Zone 3",
-            "postcodeText": "<p>Your delivery day is: <strong>Wednesday</strong></p><p>Order deadline: <strong>10am Monday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Wednesday</strong></p><p>Order deadline: <strong>10am Monday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_Y4VxjN": {
@@ -64,7 +64,7 @@
           "settings": {
             "postcodes": "4210,4211,4213,4220,4226,4227,4223,4224,4228,4221,4219,4230",
             "locationName": "Yes we deliver to your area! You're on Zone 3 (Southern GC)",
-            "postcodeText": "<p>Your delivery day is:<strong> Wednesday</strong></p><p>Order deadline: <strong>10am Monday</strong></p><p>Minimum order value: <strong>$100</strong></p><p>Home delivery fee: <strong>$12.50 </strong></p><p><em>Delivery not available to Springbrook, Natural Bridge, Binna Burra</em></p>"
+            "postcodeText": "<p>Your delivery day is:<strong> Wednesday</strong></p><p>Order deadline: <strong>10am Monday</strong></p><p>Minimum order value: <strong>$100</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy</strong></p><p><em>Delivery not available to Springbrook, Natural Bridge, Binna Burra</em></p>"
           }
         },
         "postcode_6qXy4W": {
@@ -73,7 +73,7 @@
           "settings": {
             "postcodes": "4101,4102,4103,4104,4105,4120,4151,4169",
             "locationName": "Yes we deliver to your area! You're on Zone 4",
-            "postcodeText": "<p>Your delivery day is: <strong>Thursday</strong></p><p>Order deadline: <strong>10am Tuesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Thursday</strong></p><p>Order deadline: <strong>10am Tuesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_Mi33Hb": {
@@ -82,7 +82,7 @@
           "settings": {
             "postcodes": "4124,4300,4301,4303,4304,4305,4306,4077,4078,4110",
             "locationName": "Yes we deliver to your area! You're on Zone 5",
-            "postcodeText": "<p>Your delivery day is: <strong>Thursday</strong></p><p>Order deadline: <strong>10am Tuesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Thursday</strong></p><p>Order deadline: <strong>10am Tuesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_F63wdP": {
@@ -91,7 +91,7 @@
           "settings": {
             "postcodes": "4114,4115,4116,4117,4118,4119,4125,4132,4133,4128,4129,4130,4131,4205,4207,4208,4209",
             "locationName": "Yes we deliver to your area! You're on Zone 6",
-            "postcodeText": "<p>Your delivery day is: <strong>Thursday</strong></p><p>Order deadline: <strong>10am Tuesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Thursday</strong></p><p>Order deadline: <strong>10am Tuesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_QH9hBD": {
@@ -100,7 +100,7 @@
           "settings": {
             "postcodes": "4017,4018,4019,4020,4021,4022,4036,4503,4504,4505,4506,4508,4509",
             "locationName": "Yes we deliver to your area! You're on Zone 8",
-            "postcodeText": "<p>Your delivery day is: <strong>Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_UVmzLk": {
@@ -109,7 +109,7 @@
           "settings": {
             "postcodes": "4500,4501,4502",
             "locationName": "Yes we deliver to your area! You're on Zone 9",
-            "postcodeText": "<p>Your delivery day is: <strong>Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_MCqBaN": {
@@ -118,7 +118,7 @@
           "settings": {
             "postcodes": "4109,4111,4112,4113,4154,4155,4156,4157,4158,4159,4160,4161,4163,4164,4165,4174,4178,4179",
             "locationName": "Yes we deliver to your area! You're on Zone 10",
-            "postcodeText": "<p>Your delivery day is: <strong>Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_hdhCXf": {
@@ -127,7 +127,7 @@
           "settings": {
             "postcodes": "4123",
             "locationName": "Yes we deliver to your area! You're on Zone 11",
-            "postcodeText": "<p>Your delivery day is: <strong>Saturday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><strong>Want to save on delivery fees? Choose to collect your order from our ROCHEDALE SOUTH PICK UP POINT. Available every Saturday.</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Saturday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><strong>Want to save on delivery fees? Choose to collect your order from our ROCHEDALE SOUTH PICK UP POINT. Available every Saturday.</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_GLYLDc": {
@@ -136,7 +136,7 @@
           "settings": {
             "postcodes": "4059,4060,4055,4054,4061,4075,4076,4068,4073,4074",
             "locationName": "Yes we deliver to your area",
-            "postcodeText": "<p>Your delivery days are:<strong> Wednesday or Saturday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Wednesday for Saturday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery days are:<strong> Wednesday or Saturday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Wednesday for Saturday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_baC9BU": {
@@ -145,7 +145,7 @@
           "settings": {
             "postcodes": "4127,4170,4171,4172,4173,4121,4152,4153,4122",
             "locationName": "Yes we deliver to your area!",
-            "postcodeText": "<p>Your delivery days are:<strong> Thursday or Saturday</strong></p><p>Order deadlines: </p><p><strong>10am Tuesday for Thursday delivery</strong></p><p><strong>10am Wednesday for Saturday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery days are:<strong> Thursday or Saturday</strong></p><p>Order deadlines: </p><p><strong>10am Tuesday for Thursday delivery</strong></p><p><strong>10am Wednesday for Saturday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_BMEmqR": {
@@ -154,7 +154,7 @@
           "settings": {
             "postcodes": "4063,4064,4065,4067,4053,4013,4014,4030,4031,4032,4034,4010,4011,4012,4051,4035,4037",
             "locationName": "Yes we deliver to your area!",
-            "postcodeText": "<p>Your delivery days are:<strong> Wednesday or Friday</strong></p><p>Order deadlines:&nbsp;</p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery days are:<strong> Wednesday or Friday</strong></p><p>Order deadlines:&nbsp;</p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_DjiJjV": {
@@ -163,7 +163,7 @@
           "settings": {
             "postcodes": "4106,4107,4108,4111",
             "locationName": "Yes we deliver to your area!",
-            "postcodeText": "<p>Your delivery days are: <strong>Thursday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Tuesday for Thursday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery days are: <strong>Thursday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Tuesday for Thursday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_GkLeiE": {
@@ -172,7 +172,7 @@
           "settings": {
             "postcodes": "4520",
             "locationName": "Yes we deliver to your area",
-            "postcodeText": "<p>Your delivery days are: </p><p><strong>Yugar, Cedar Creek, Closeburn, Mount Samson, Samsonvale, Kobble Creek, Armstrong Creek - FRIDAY</strong></p><p><strong>Wights Mountain, Camp Mountain, Highvale, Samford - SATURDAY</strong></p><p><em>Delivery not available to Mt Nebo or Mt Glorious (we recommend collecting from our pick up point at Samford)</em></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 or free for orders over $200</strong></p><p><strong>Want to save on home delivery fees? Pick up from our SAMFORD PICK UP POINT on Saturday mornings.</strong></p><p><strong>We also have others nearby at EATONS HILL and DAYBORO (both available on Fridays).</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
+            "postcodeText": "<p>Your delivery days are: </p><p><strong>Yugar, Cedar Creek, Closeburn, Mount Samson, Samsonvale, Kobble Creek, Armstrong Creek - FRIDAY</strong></p><p><strong>Wights Mountain, Camp Mountain, Highvale, Samford - SATURDAY</strong></p><p><em>Delivery not available to Mt Nebo or Mt Glorious (we recommend collecting from our pick up point at Samford)</em></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$50</strong></p><p>Home delivery fee: <strong>$12.50 + $2 temporary fuel levy, or free for orders over $200</strong> (the $2 fuel levy still applies to free delivery)</p><p><strong>Want to save on home delivery fees? Pick up from our SAMFORD PICK UP POINT on Saturday mornings.</strong></p><p><strong>We also have others nearby at EATONS HILL and DAYBORO (both available on Fridays).</strong></p><p><em>Prefer a different day? Be sure to tell us as we are regularly making changes to improve our schedule.</em></p>"
           }
         },
         "postcode_EpTVCh": {
@@ -181,7 +181,7 @@
           "settings": {
             "postcodes": "4521",
             "locationName": "Yes we deliver to your area",
-            "postcodeText": "<p>Your delivery day is:<strong> Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$100</strong></p><p>Home delivery fee: <strong>$12.50 </strong></p><p><strong>We also have a pick up point at DAYBORO if you'd like to save on home delivery fees. The minimum order value for pick up is just $50. Available every Friday.</strong></p><p><em>Note: some suburbs will be delivered by refrigerated courier, others will be delivered by our own delivery team.</em><br/><br/></p>"
+            "postcodeText": "<p>Your delivery day is:<strong> Friday</strong></p><p>Order deadline: <strong>10am Wednesday</strong></p><p>Minimum order value: <strong>$100</strong></p><p>Home delivery fee: <strong>$12.50 + temporary fuel levy</strong> ($2 for our own delivery vans, $4 for refrigerated courier)</p><p><strong>We also have a pick up point at DAYBORO if you'd like to save on home delivery fees. The minimum order value for pick up is just $50. Available every Friday.</strong></p><p><em>Note: some suburbs will be delivered by refrigerated courier, others will be delivered by our own delivery team.</em><br/><br/></p>"
           }
         },
         "postcode_jFLb7e": {
@@ -190,7 +190,7 @@
           "settings": {
             "postcodes": "4346,4307,4311,4340,2485,2486,2487,4512,4514,4561,4562,4563,4565,4566,4567,4568,4573,4564,4552,4225,4516,4517,4518,4519,4550,4551,4553,4554,4555,4556,4557,4558,4559,4560,4575,4507,4511",
             "locationName": "Yes we deliver to your area via refrigerated courier",
-            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 is currently in place in addition to the delivery fee listed below.</em></p><p>Your delivery days are: <strong>Wednesday, Thursday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Tuesday for Thursday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50</strong></p>"
+            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 applies to every order, in addition to the delivery fee listed below.</em></p><p>Your delivery days are: <strong>Wednesday, Thursday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Tuesday for Thursday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50 + $4 temporary fuel levy</strong></p>"
           }
         },
         "postcode_EdWfcx": {
@@ -199,7 +199,7 @@
           "settings": {
             "postcodes": "2477,2478,2479,2480,2481,2482,2483,2489",
             "locationName": "Yes we deliver to your area via refrigerated courier",
-            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 is currently in place in addition to the delivery fee listed below.</em></p><p>Your delivery days are: <strong>Wednesday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50</strong></p>"
+            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 applies to every order, in addition to the delivery fee listed below.</em></p><p>Your delivery days are: <strong>Wednesday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50 + $4 temporary fuel levy</strong></p>"
           }
         },
         "postcode_KqmyDc": {
@@ -208,7 +208,7 @@
           "settings": {
             "postcodes": "4341,4342,4343,4344,4345,4347,4350,4352,4353,4354,4355,4358,4363,4400,4401,4422,4865",
             "locationName": "Yes we deliver to your area via refrigerated courier",
-            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 is currently in place in addition to the delivery fee listed below.</em></p><p>Your delivery days are: <strong>Thursday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Tuesday for Thursday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50</strong></p>"
+            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 applies to every order, in addition to the delivery fee listed below.</em></p><p>Your delivery days are: <strong>Thursday or Friday</strong></p><p>Order deadlines: </p><p><strong>10am Tuesday for Thursday delivery</strong></p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50 + $4 temporary fuel levy</strong></p>"
           }
         },
         "postcode_PjmJtx": {
@@ -217,7 +217,7 @@
           "settings": {
             "postcodes": "4373,4380,4387,4287,4309,4310",
             "locationName": "Yes we deliver to your area via refrigerated courier",
-            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 is currently in place in addition to the delivery fee listed below.</em></p><p>Your delivery day is: <strong>Wednesday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50</strong></p>"
+            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 applies to every order, in addition to the delivery fee listed below.</em></p><p>Your delivery day is: <strong>Wednesday</strong></p><p>Order deadlines: </p><p><strong>10am Monday for Wednesday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50 + $4 temporary fuel levy</strong></p>"
           }
         },
         "postcode_LU78XC": {
@@ -226,7 +226,7 @@
           "settings": {
             "postcodes": "4275,4285,4280,4356,4272,4271,4270,4313,4515,4614,4615",
             "locationName": "Yes we deliver to your area via refrigerated courier",
-            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 is currently in place in addition to the delivery fee listed below.</em></p><p>Your delivery day is: <strong>Thursday</strong></p><p>Order deadlines: </p><p><strong>10am Tuesday for Thursday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50</strong></p>"
+            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 applies to every order, in addition to the delivery fee listed below.</em></p><p>Your delivery day is: <strong>Thursday</strong></p><p>Order deadlines: </p><p><strong>10am Tuesday for Thursday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50 + $4 temporary fuel levy</strong></p>"
           }
         },
         "postcode_WWjhc6": {
@@ -235,7 +235,7 @@
           "settings": {
             "postcodes": "4570,4361,4362,4370,4371,4372",
             "locationName": "Yes we deliver to your area via refrigerated courier",
-            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 is currently in place in addition to the delivery fee listed below.</em></p><p>Your delivery day is: <strong>Friday</strong></p><p>Order deadlines: </p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50</strong></p>"
+            "postcodeText": "<p><em><strong>Please note</strong></em><em>: a small temporary fuel levy of $4 applies to every order, in addition to the delivery fee listed below.</em></p><p>Your delivery day is: <strong>Friday</strong></p><p>Order deadlines: </p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$150</strong></p><p>Home delivery fee: <strong>$12.50 + $4 temporary fuel levy</strong></p>"
           }
         },
         "postcode_P7yThQ": {
@@ -244,7 +244,7 @@
           "settings": {
             "postcodes": "4521",
             "locationName": "Yes we deliver to your area via refrigerated courier or our own local delivery vans",
-            "postcodeText": "<p>Your delivery day is: <strong>Friday</strong></p><p>Order deadlines: </p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$100</strong></p><p>Home delivery fee: <strong>$12.50</strong></p><p><strong>4521 is a huge postcode! We use a refrigerated courier to reach some areas, others we do ourselves.</strong></p>"
+            "postcodeText": "<p>Your delivery day is: <strong>Friday</strong></p><p>Order deadlines: </p><p><strong>10am Wednesday for Friday delivery</strong></p><p>Minimum order value: <strong>$100</strong></p><p>Home delivery fee: <strong>$12.50 + temporary fuel levy</strong> ($2 for our own delivery vans, $4 for refrigerated courier)</p><p><strong>4521 is a huge postcode! We use a refrigerated courier to reach some areas, others we do ourselves.</strong></p>"
           }
         }
       },
@@ -440,7 +440,7 @@
           "settings": {
             "icon": "fuel",
             "heading": "Our temporary fuel levy",
-            "text": "The levy helps cover the current cost of diesel. It's temporary, and we hope to remove it as diesel prices come back down.",
+            "text": "A temporary fuel levy of $2 (local delivery) or $4 (refrigerated courier) is added to every order, including orders with free delivery over $200. The levy helps cover the current cost of diesel. It's temporary, and we hope to remove it as diesel prices come back down.",
             "background_color": "#faf3e6",
             "icon_color": "#086c3f",
             "heading_color": "#086c3f"
