@@ -2004,6 +2004,18 @@
        anything that went missing (once per change). */
     var confirmedByVariant = {};
     var healTimer = null;
+    var lastAppCartActivity = 0;
+
+    // Apps (Bird) keep writing the cart via the Storefront API for a few seconds after an
+    // add. Heal only once they have been quiet for 2s, otherwise their late write can
+    // drop the line again right after we add it back.
+    try {
+      new PerformanceObserver(function (list) {
+        list.getEntries().forEach(function (entry) {
+          if (/\/api\/[^/]+\/graphql\.json/.test(entry.name)) lastAppCartActivity = Date.now();
+        });
+      }).observe({ type: 'resource', buffered: false });
+    } catch (error) {}
 
     var healingVariants = {};
 
@@ -2012,20 +2024,27 @@
       // keeps removing the line); only a customer's own change re-arms it.
       var fromHeal = Boolean(healingVariants[variantId]);
       delete healingVariants[variantId];
-      confirmedByVariant[variantId] = { quantity: quantity, max: max, at: Date.now(), healed: fromHeal };
-      if (!fromHeal) scheduleHeal(3000);
+      var previous = confirmedByVariant[variantId];
+      var attempts = fromHeal && previous ? previous.attempts : 0;
+      confirmedByVariant[variantId] = { quantity: quantity, max: max, at: Date.now(), attempts: attempts };
+      scheduleHeal(3000);
     }
 
+    var healWaitingSince = 0;
+
     function scheduleHeal(delay) {
+      if (!healWaitingSince) healWaitingSince = Date.now();
       window.clearTimeout(healTimer);
       healTimer = window.setTimeout(healCart, delay);
     }
 
     function healCart() {
-      if (queuedCartJobs > 0 || cartWritesInFlight > 0) {
-        scheduleHeal(1500);
+      var appBusy = Date.now() - lastAppCartActivity < 2000 && Date.now() - healWaitingSince < 15000;
+      if (queuedCartJobs > 0 || cartWritesInFlight > 0 || appBusy) {
+        scheduleHeal(1000);
         return;
       }
+      healWaitingSince = 0;
 
       readCart().then(function (cart) {
         var now = Date.now();
@@ -2034,11 +2053,11 @@
         Object.keys(confirmedByVariant).forEach(function (key) {
           var entry = confirmedByVariant[key];
           if (now - entry.at > 60000) { delete confirmedByVariant[key]; return; }
-          if (entry.healed || waitingDeltaJobs[key]) return;
+          if (entry.attempts >= 2 || waitingDeltaJobs[key]) return;
 
           var actual = getCartQuantity(cart, Number(key));
           if (actual < entry.quantity) {
-            entry.healed = true;
+            entry.attempts += 1;
             repairs.push({ variantId: Number(key), missing: entry.quantity - actual, max: entry.max });
           }
         });
