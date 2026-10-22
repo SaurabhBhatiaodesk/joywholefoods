@@ -1997,6 +1997,69 @@
        returned line quantity; decreases read the cart before changing its line. */
     // Clicks on the same product that are still waiting in the queue are merged into one
     // job (e.g. +1 +1 -1 becomes +1), so many quick taps don't build a long queue.
+    /* Self-heal: some apps (Bird's Storefront API cartLinesUpdate) write a cart snapshot
+       they read before our cart/add.js finished, which silently drops our line even
+       though add.js returned 200. A few seconds after the last card change, when the
+       apps have finished, compare the cart with what the cards confirmed and add back
+       anything that went missing (once per change). */
+    var confirmedByVariant = {};
+    var healTimer = null;
+
+    var healingVariants = {};
+
+    function rememberConfirmed(variantId, quantity, max) {
+      // A repair's own result must not arm another repair (no add-back loop if an app
+      // keeps removing the line); only a customer's own change re-arms it.
+      var fromHeal = Boolean(healingVariants[variantId]);
+      delete healingVariants[variantId];
+      confirmedByVariant[variantId] = { quantity: quantity, max: max, at: Date.now(), healed: fromHeal };
+      if (!fromHeal) scheduleHeal(3000);
+    }
+
+    function scheduleHeal(delay) {
+      window.clearTimeout(healTimer);
+      healTimer = window.setTimeout(healCart, delay);
+    }
+
+    function healCart() {
+      if (queuedCartJobs > 0 || cartWritesInFlight > 0) {
+        scheduleHeal(1500);
+        return;
+      }
+
+      readCart().then(function (cart) {
+        var now = Date.now();
+        var repairs = [];
+
+        Object.keys(confirmedByVariant).forEach(function (key) {
+          var entry = confirmedByVariant[key];
+          if (now - entry.at > 60000) { delete confirmedByVariant[key]; return; }
+          if (entry.healed || waitingDeltaJobs[key]) return;
+
+          var actual = getCartQuantity(cart, Number(key));
+          if (actual < entry.quantity) {
+            entry.healed = true;
+            repairs.push({ variantId: Number(key), missing: entry.quantity - actual, max: entry.max });
+          }
+        });
+
+        if (!repairs.length) {
+          setLatestCart(cart, false);
+          return;
+        }
+
+        repairs.forEach(function (repair) {
+          traceCart('heal', repair);
+          healingVariants[repair.variantId] = true;
+          requestDelta(repair.variantId, repair.missing, repair.max).then(function (result) {
+            document.querySelectorAll(CONTROL_SELECTOR).forEach(function (control) {
+              if (getCurrentVariantId(control) === repair.variantId) syncControlFromCart(control, result.cart, true);
+            });
+          }).catch(function () {});
+        });
+      }).catch(function () {});
+    }
+
     var waitingDeltaJobs = {};
 
     function requestDelta(variantId, delta, max) {
@@ -2062,6 +2125,7 @@
           cartWritesInFlight -= 1;
           cartChangeCount += 1;
           setLatestCart(result.cart, true);
+          rememberConfirmed(variantId, result.quantity, max);
           return result;
         }, function (error) {
           cartWritesInFlight -= 1;
