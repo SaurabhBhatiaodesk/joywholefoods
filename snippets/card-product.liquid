@@ -2016,6 +2016,16 @@
         var totalDelta = entry.delta;
         cartWritesInFlight += 1;
 
+        /* cart/add.js only returns the added line. When the existing line carries app
+           properties (e.g. Bird's _BirdChimeSlotId) the add lands on a separate line that
+           is merged later, so the response said 1 while the cart held 5 and the card
+           reverted to 1. Read the real cart and show its total for this variant. */
+        function confirmFromFreshCart() {
+          return readCart().then(function (freshCart) {
+            return { cart: freshCart, quantity: getCartQuantity(freshCart, variantId) };
+          });
+        }
+
         var baseline = totalDelta > 0 && latestCart
           ? Promise.resolve(latestCart)
           : readCart();
@@ -2036,11 +2046,7 @@
             }
             return postJson('/cart/add.js', {
               items: [addedItem]
-            }).then(function (added) {
-              var newCart = mergeAddedLines(cart, added);
-              var line = findCartItem(newCart, variantId);
-              return { cart: newCart, quantity: getCartQuantity(newCart, variantId) };
-            });
+            }).then(confirmFromFreshCart);
           }
 
           if (item) {
@@ -2051,10 +2057,7 @@
 
           return postJson('/cart/add.js', {
             items: [{ id: variantId, quantity: target }]
-          }).then(function (added) {
-            var newCart = mergeAddedLines(cart, added);
-            return { cart: newCart, quantity: getCartQuantity(newCart, variantId) };
-          });
+          }).then(confirmFromFreshCart);
         }).then(function (result) {
           cartWritesInFlight -= 1;
           cartChangeCount += 1;
