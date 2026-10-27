@@ -6,7 +6,7 @@ const source = fs.readFileSync('assets/cart.js', 'utf8');
 const method = source.slice(source.indexOf('  updateQuantity(line,'), source.indexOf('\n  updateLiveRegions('))
   .replace('  updateQuantity(', 'function updateQuantity(');
 
-async function run(items, first = { errors: 'no valid id or line parameter' }, originalProperties = { 'Swap Item': 'No onion' }) {
+async function run(items, first = { errors: 'no valid id or line parameter' }, originalProperties = { 'Swap Item': 'No onion' }, plan = '0') {
   const writes = []; let reads = 0;
   const context = {
     fetch: async (url, options) => {
@@ -21,7 +21,7 @@ async function run(items, first = { errors: 'no valid id or line parameter' }, o
   vm.runInNewContext(method, context);
   const cart = { quantityWrites: new Set(), quantityWriteFailed: false,
     enableLoading() {}, disableLoading() {}, getSectionsToRender: () => [], updateLiveRegions() {}, querySelectorAll: () => [] };
-  await context.updateQuantity.call(cart, '1', '2', 'updates[]', '123', '123:old', JSON.stringify(originalProperties));
+  await context.updateQuantity.call(cart, '1', '2', 'updates[]', '123', '123:old', JSON.stringify(originalProperties), plan);
   return { writes, reads, cart };
 }
 
@@ -56,4 +56,26 @@ test('Liquid pair-array properties match Ajax object properties after a key chan
   const result = await run([{ variant_id: 123, key: '123:new', properties: { 'Swap Item': 'No onion', _BirdChimeSlotId: 'new' } }],
     undefined, [['Swap Item', 'No onion'], ['_BirdChimeSlotId', 'old']]);
   assert.equal(result.writes.length, 2); assert.equal(result.writes[1].id, '123:new');
+});
+
+test('a vanished subscription line never retries against a one-time line', async () => {
+  const result = await run([{ variant_id: 123, key: '123:one-time', properties: { 'Swap Item': 'No onion' } }], undefined, undefined, '101');
+  assert.equal(result.writes.length, 1); assert.equal(result.cart.quantityWriteFailed, true);
+});
+
+test('recovery selects the original selling plan among otherwise identical lines', async () => {
+  const result = await run([
+    { variant_id: 123, key: '123:one-time', properties: { 'Swap Item': 'No onion' } },
+    { variant_id: 123, key: '123:other-plan', properties: { 'Swap Item': 'No onion' }, selling_plan_allocation: { selling_plan: { id: 202 } } },
+    { variant_id: 123, key: '123:original-plan', properties: { 'Swap Item': 'No onion' }, selling_plan_allocation: { selling_plan: { id: 101 } } }
+  ], undefined, undefined, '101');
+  assert.equal(result.writes.length, 2); assert.equal(result.writes[1].id, '123:original-plan');
+});
+
+test('one-time recovery cannot target a subscription and missing plan identity fails closed', async () => {
+  const items = [{ variant_id: 123, key: '123:subscription', properties: { 'Swap Item': 'No onion' }, selling_plan_allocation: { selling_plan: { id: 101 } } }];
+  for (const plan of ['0', null, '']) {
+    const result = await run(items, undefined, undefined, plan);
+    assert.equal(result.writes.length, 1); assert.equal(result.cart.quantityWriteFailed, true);
+  }
 });

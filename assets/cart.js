@@ -67,7 +67,8 @@ class CartItems extends HTMLElement {
       document.activeElement && document.activeElement.getAttribute('name'),
       event.target.dataset.quantityVariantId,
       event.target.dataset.cartLineKey,
-      event.target.dataset.cartLineProperties
+      event.target.dataset.cartLineProperties,
+      event.target.dataset.cartSellingPlanId
     );
   }
 
@@ -145,7 +146,7 @@ class CartItems extends HTMLElement {
     ];
   }
 
-  updateQuantity(line, quantity, name, variantId, lineKey, lineProperties) {
+  updateQuantity(line, quantity, name, variantId, lineKey, lineProperties, sellingPlanId) {
     if (this.quantityWrites.size === 0) this.quantityWriteFailed = false;
     this.enableLoading(line);
 
@@ -168,6 +169,11 @@ class CartItems extends HTMLElement {
         const rejected = JSON.parse(state);
         if (!key || !/no valid id or line parameter/i.test(String(rejected.errors || rejected.description || rejected.message || ''))) return state;
 
+        const originalPlan = sellingPlanId != null ? String(sellingPlanId)
+          : currentInput && currentInput.dataset.cartSellingPlanId;
+        // Unknown is not the same as one-time (explicitly rendered as "0").
+        if (originalPlan == null || originalPlan === '') throw new Error('Cart purchase option changed. Please refresh your cart.');
+
         // Bird adds delivery properties and changes line keys after HTML renders.
         // Retry only an explicitly rejected change, never an uncertain add/network failure.
         const response = await fetch('/cart.js', { headers: { Accept: 'application/json' }, cache: 'no-store' });
@@ -180,7 +186,8 @@ class CartItems extends HTMLElement {
           .sort(([a], [b]) => a.localeCompare(b)));
         const expectedVariant = String(variantId || key.split(':')[0]);
         const candidates = (cart.items || []).filter((item) =>
-          String(item.variant_id || item.id) === expectedVariant && signature(item.properties) === signature(properties));
+          String(item.variant_id || item.id) === expectedVariant && signature(item.properties) === signature(properties)
+          && String(item.selling_plan_allocation && item.selling_plan_allocation.selling_plan.id || 0) === originalPlan);
         if (candidates.length !== 1) throw new Error('Cart contents changed. Please refresh your cart before editing this item.');
         return sendChange({ ...request, id: candidates[0].key });
       })
@@ -512,9 +519,10 @@ class CartItems extends HTMLElement {
     document.body.dataset.swapCheckoutBound = 'true';
 
     let submitResetTimer = null;
+    let checkoutSubmitting = false;
     const resetCheckoutSubmitting = () => {
       clearTimeout(submitResetTimer);
-      this.checkoutSubmitting = false;
+      checkoutSubmitting = false;
     };
 
     // Coming back from checkout with the Back button can restore this page from the
@@ -531,16 +539,31 @@ class CartItems extends HTMLElement {
 
       if (!checkoutTrigger) return;
 
+      // Drawer section updates replace their custom element. Resolve connected
+      // controllers now instead of keeping the first element in this closure.
+      const controllers = Array.from(document.querySelectorAll('cart-items, cart-drawer-items'))
+        .filter((controller) => controller.isConnected && typeof controller.cleanupSwapPropertiesBeforeCheckout === 'function');
+      const controller = checkoutTrigger.closest('cart-items, cart-drawer-items')
+        || controllers.find((element) => element.tagName === 'CART-ITEMS') || controllers[0];
+      if (!controller || !controllers.includes(controller)) return;
+
       event.preventDefault();
       event.stopPropagation();
 
       // Ignore repeated taps while checkout is already being prepared / submitted.
-      if (this.checkoutSubmitting) return;
-      this.checkoutSubmitting = true;
+      if (checkoutSubmitting) return;
+      checkoutSubmitting = true;
 
       // Safety net: if the submit is blocked for any reason and the page doesn't navigate,
       // let the customer try again instead of leaving the button dead.
-      const cleaned = await this.cleanupSwapPropertiesBeforeCheckout();
+      let cleaned = false;
+      try {
+        // A page cart and drawer can coexist; both may have unsent edits.
+        await Promise.all(controllers.map((element) => element.flushQuantityChanges()));
+        cleaned = await controller.cleanupSwapPropertiesBeforeCheckout();
+      } catch (error) {
+        console.error('Failed to prepare current cart for checkout:', error);
+      }
 
       if (!cleaned) {
         resetCheckoutSubmitting();
