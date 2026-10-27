@@ -10,12 +10,14 @@ function harness() {
   const timers = [];
   const alerts = [];
   const painted = [];
+  const status = { style: {}, setAttribute() {}, remove() {} };
   let reads = 0;
   const context = {
     queuedCartJobs: 0, cartWritesInFlight: 0, cartWriteFailed: false,
     pendingControl: false,
     externalRefreshTimer: null, externalRefreshRunning: false, externalRefreshRequested: false,
     console: { warn() {} },
+    document: { getElementById: () => status, createElement: () => status, body: { appendChild() {} } },
     fetchCart: async () => { reads++; return { item_count: 3 }; },
     syncAllControls: cart => painted.push(cart.item_count),
     window: {
@@ -79,9 +81,14 @@ test('navigation never abandons writes that take longer than 15 seconds', async 
   const h = harness();
   h.context.queuedCartJobs = 1;
   h.clickCart();
-  while (h.timerCount) await h.tick();
+  for (let i = 0; i < 120; i++) await h.tick();
   assert.equal(h.context.window.location.href, '');
-  assert.equal(h.alerts.length, 1);
+  assert.equal(h.alerts.length, 0);
+  assert.equal(h.timerCount, 1);
+  assert.match(h.context.document.getElementById().textContent, /Saving your cart/);
+  h.context.queuedCartJobs = 0;
+  while (h.timerCount) await h.tick();
+  assert.equal(h.context.window.location.href, 'https://test.invalid/cart');
 });
 
 test('navigation proceeds once queued writes have settled successfully', async () => {
