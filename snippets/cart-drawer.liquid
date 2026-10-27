@@ -379,6 +379,7 @@
                                     id="Drawer-quantity-{{ item.index | plus: 1 }}"
                                     data-index="{{ item.index | plus: 1 }}"
                                     data-cart-line-key="{{ item.key | escape }}"
+                                    data-cart-line-properties="{{ item.properties | json | escape }}"
                                   >
                                   <button class="quantity__button no-js-hidden" name="plus" type="button">
                                     <span class="visually-hidden">
