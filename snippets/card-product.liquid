@@ -1746,6 +1746,14 @@
       });
     }
 
+    // Reload/close/back can abandon jobs which have not reached fetch yet.
+    // The browser owns this warning; it cannot save a queue after a forced exit.
+    window.addEventListener('beforeunload', function (event) {
+      if (!hasPendingCardChanges()) return;
+      event.preventDefault();
+      event.returnValue = '';
+    });
+
     function requestQuantity(variantId, quantity) {
       if (queuedCartJobs === 0) cartWriteFailed = false;
       queuedCartJobs += 1;

@@ -18,11 +18,24 @@ class CartItems extends HTMLElement {
     this.lineItemStatusElement =
       document.getElementById('shopping-cart-line-item-status') || document.getElementById('CartDrawer-LineItemStatus');
 
-    const debouncedOnChange = debounce((event) => {
-      this.onChange(event);
-    }, ON_CHANGE_DEBOUNCE_TIMER);
-
-    this.addEventListener('change', debouncedOnChange.bind(this));
+    this.quantityChanges = new Map();
+    this.quantityWrites = new Set();
+    this.quantityWriteFailed = false;
+    this.addEventListener('change', (event) => {
+      const input = event.target;
+      if (!input.dataset.index || input.name !== 'updates[]') return;
+      const index = input.dataset.index;
+      const previous = this.quantityChanges.get(index);
+      if (previous) clearTimeout(previous.timer);
+      // Capture values before a different line's section response replaces this input.
+      const change = { target: { dataset: { ...input.dataset }, value: input.value } };
+      const pending = { run: () => {
+        this.quantityChanges.delete(index);
+        return this.onChange(change);
+      } };
+      pending.timer = setTimeout(pending.run, ON_CHANGE_DEBOUNCE_TIMER);
+      this.quantityChanges.set(index, pending);
+    });
     this.swapNoteSyncTimer = null;
     this.swapSyncInProgress = false;
     this.checkoutCleanupInProgress = false;
@@ -48,12 +61,22 @@ class CartItems extends HTMLElement {
   }
 
   onChange(event) {
-    this.updateQuantity(
+    return this.updateQuantity(
       event.target.dataset.index,
       event.target.value,
-      document.activeElement.getAttribute('name'),
-      event.target.dataset.quantityVariantId
+      document.activeElement && document.activeElement.getAttribute('name'),
+      event.target.dataset.quantityVariantId,
+      event.target.dataset.cartLineKey
     );
+  }
+
+  async flushQuantityChanges() {
+    for (const pending of [...this.quantityChanges.values()]) {
+      clearTimeout(pending.timer);
+      pending.run();
+    }
+    while (this.quantityWrites.size) await Promise.all([...this.quantityWrites]);
+    if (this.quantityWriteFailed) throw new Error('A cart quantity could not be saved');
   }
 
   onCartUpdate() {
@@ -121,17 +144,21 @@ class CartItems extends HTMLElement {
     ];
   }
 
-  updateQuantity(line, quantity, name, variantId) {
+  updateQuantity(line, quantity, name, variantId, lineKey) {
+    if (this.quantityWrites.size === 0) this.quantityWriteFailed = false;
     this.enableLoading(line);
 
+    const currentInput = document.getElementById(`Quantity-${line}`) || document.getElementById(`Drawer-quantity-${line}`);
+    const key = lineKey || (currentInput && currentInput.dataset.cartLineKey);
+
     const body = JSON.stringify({
-      line,
+      ...(key ? { id: key } : { line }),
       quantity,
       sections: this.getSectionsToRender().map((section) => section.section),
       sections_url: window.location.pathname,
     });
 
-    fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body } })
+    const write = fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body } })
       .then((response) => response.text())
       .then((state) => {
         const parsedState = JSON.parse(state);
@@ -140,7 +167,8 @@ class CartItems extends HTMLElement {
         const items = document.querySelectorAll('.cart-item');
 
         if (parsedState.errors) {
-          quantityElement.value = quantityElement.getAttribute('value');
+          this.quantityWriteFailed = true;
+          if (quantityElement) quantityElement.value = quantityElement.getAttribute('value');
           this.updateLiveRegions(line, parsedState.errors);
           return;
         }
@@ -164,7 +192,7 @@ class CartItems extends HTMLElement {
         const updatedValue = parsedState.items[line - 1] ? parsedState.items[line - 1].quantity : undefined;
         let message = '';
 
-        if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {
+        if (quantityElement && items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {
           if (typeof updatedValue === 'undefined') {
             message = window.cartStrings.error;
           } else {
@@ -191,13 +219,17 @@ class CartItems extends HTMLElement {
         this.triggerSwapNoteSync();
       })
       .catch(() => {
+        this.quantityWriteFailed = true;
         this.querySelectorAll('.loading-overlay').forEach((overlay) => overlay.classList.add('hidden'));
         const errors = document.getElementById('cart-errors') || document.getElementById('CartDrawer-CartErrors');
-        errors.textContent = window.cartStrings.error;
+        if (errors) errors.textContent = window.cartStrings.error;
       })
       .finally(() => {
         this.disableLoading(line);
+        this.quantityWrites.delete(write);
       });
+    this.quantityWrites.add(write);
+    return write;
   }
 
   updateLiveRegions(line, message) {
@@ -322,7 +354,8 @@ class CartItems extends HTMLElement {
         }
       });
 
-      const existingNote = (cart.note || '').trim();
+      const noteInput = document.getElementById('Cart-note') || document.getElementById('CartDrawer-Note');
+      const existingNote = (noteInput ? noteInput.value : cart.note || '').trim();
 
       const preservedLines = existingNote
         ? existingNote
@@ -352,13 +385,24 @@ class CartItems extends HTMLElement {
   }
 
   async cleanupSwapPropertiesBeforeCheckout() {
-    if (this.checkoutCleanupInProgress) return true;
+    if (this.checkoutCleanupPromise) return this.checkoutCleanupPromise;
+    this.checkoutCleanupPromise = this.performCheckoutCleanup();
+    try {
+      return await this.checkoutCleanupPromise;
+    } finally {
+      this.checkoutCleanupPromise = null;
+    }
+  }
+
+  async performCheckoutCleanup() {
     this.checkoutCleanupInProgress = true;
 
     try {
+      await this.flushQuantityChanges();
       const response = await fetch('/cart.js', {
         headers: { Accept: 'application/json' },
       });
+      if (!response.ok) throw new Error('Unable to read cart before checkout');
       const cart = await response.json();
 
       const swapLines = [];
@@ -375,9 +419,14 @@ class CartItems extends HTMLElement {
           swapLines.push(`Swap Item: ${String(swapValue).trim()}`);
         }
 
-        if (publicSwap || privateSwap) {
+        if (privateSwap) {
           const updatedProperties = { ...item.properties };
           delete updatedProperties['_Swap Item'];
+
+          // Shopify rejects replacing existing properties with an empty object.
+          // Keep a sole private swap property; it remains on the order and its
+          // readable value is also copied to the order note below.
+          if (Object.keys(updatedProperties).length === 0) return;
 
           updatePromises.push(
             fetch(`${routes.cart_change_url}.js`, {
@@ -388,9 +437,11 @@ class CartItems extends HTMLElement {
               },
               body: JSON.stringify({
                 id: item.key,
-                quantity: item.quantity,
                 properties: updatedProperties,
               }),
+            }).then((result) => {
+              if (!result.ok) throw new Error('Unable to save box swaps');
+              return result;
             })
           );
         }
@@ -400,7 +451,8 @@ class CartItems extends HTMLElement {
         await Promise.all(updatePromises);
       }
 
-      const existingNote = (cart.note || '').trim();
+      const noteInput = document.getElementById('Cart-note') || document.getElementById('CartDrawer-Note');
+      const existingNote = (noteInput ? noteInput.value : cart.note || '').trim();
 
       const preservedLines = existingNote
         ? existingNote
@@ -412,7 +464,7 @@ class CartItems extends HTMLElement {
       const finalLines = [...preservedLines, ...swapLines];
       const finalNote = finalLines.join('\n').trim();
 
-      await fetch(`${routes.cart_update_url}.js`, {
+      const noteResponse = await fetch(`${routes.cart_update_url}.js`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -420,6 +472,7 @@ class CartItems extends HTMLElement {
         },
         body: JSON.stringify({ note: finalNote }),
       });
+      if (!noteResponse.ok) throw new Error('Unable to save cart instructions');
 
       return true;
     } catch (error) {
@@ -463,15 +516,17 @@ class CartItems extends HTMLElement {
 
       // Safety net: if the submit is blocked for any reason and the page doesn't navigate,
       // let the customer try again instead of leaving the button dead.
-      clearTimeout(submitResetTimer);
-      submitResetTimer = setTimeout(resetCheckoutSubmitting, 5000);
-
       const cleaned = await this.cleanupSwapPropertiesBeforeCheckout();
 
       if (!cleaned) {
         resetCheckoutSubmitting();
+        window.alert('Your cart changes could not be saved. Please check your cart and try again.');
         return;
       }
+
+      // Only release the tap guard after cleanup finishes, never during a slow save.
+      clearTimeout(submitResetTimer);
+      submitResetTimer = setTimeout(resetCheckoutSubmitting, 5000);
 
       const linkedFormId = checkoutTrigger.getAttribute('form');
       const cartForm =
