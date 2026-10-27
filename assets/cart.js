@@ -66,7 +66,8 @@ class CartItems extends HTMLElement {
       event.target.value,
       document.activeElement && document.activeElement.getAttribute('name'),
       event.target.dataset.quantityVariantId,
-      event.target.dataset.cartLineKey
+      event.target.dataset.cartLineKey,
+      event.target.dataset.cartLineProperties
     );
   }
 
@@ -144,22 +145,44 @@ class CartItems extends HTMLElement {
     ];
   }
 
-  updateQuantity(line, quantity, name, variantId, lineKey) {
+  updateQuantity(line, quantity, name, variantId, lineKey, lineProperties) {
     if (this.quantityWrites.size === 0) this.quantityWriteFailed = false;
     this.enableLoading(line);
 
     const currentInput = document.getElementById(`Quantity-${line}`) || document.getElementById(`Drawer-quantity-${line}`);
     const key = lineKey || (currentInput && currentInput.dataset.cartLineKey);
 
-    const body = JSON.stringify({
+    const request = {
       ...(key ? { id: key } : { line }),
       quantity,
       sections: this.getSectionsToRender().map((section) => section.section),
       sections_url: window.location.pathname,
-    });
+    };
 
-    const write = fetch(`${routes.cart_change_url}`, { ...fetchConfig(), ...{ body } })
-      .then((response) => response.text())
+    const sendChange = (payload) => fetch(`${routes.cart_change_url}`, {
+      ...fetchConfig(), body: JSON.stringify(payload),
+    }).then((response) => response.text());
+
+    const write = sendChange(request)
+      .then(async (state) => {
+        const rejected = JSON.parse(state);
+        if (!key || !/no valid id or line parameter/i.test(String(rejected.errors || rejected.description || rejected.message || ''))) return state;
+
+        // Bird adds delivery properties and changes line keys after HTML renders.
+        // Retry only an explicitly rejected change, never an uncertain add/network failure.
+        const response = await fetch('/cart.js', { headers: { Accept: 'application/json' }, cache: 'no-store' });
+        if (!response.ok) throw new Error('Unable to refresh cart line');
+        const cart = await response.json();
+        const properties = JSON.parse(lineProperties || (currentInput && currentInput.dataset.cartLineProperties) || '{}') || {};
+        const signature = (value) => JSON.stringify(Object.keys(value || {})
+          .filter((name) => !/^_?BirdChime/i.test(name))
+          .sort().map((name) => [name, String(value[name])]));
+        const expectedVariant = String(variantId || key.split(':')[0]);
+        const candidates = (cart.items || []).filter((item) =>
+          String(item.variant_id || item.id) === expectedVariant && signature(item.properties) === signature(properties));
+        if (candidates.length !== 1) throw new Error('Cart contents changed. Please refresh your cart before editing this item.');
+        return sendChange({ ...request, id: candidates[0].key });
+      })
       .then((state) => {
         const parsedState = JSON.parse(state);
         const quantityElement =
