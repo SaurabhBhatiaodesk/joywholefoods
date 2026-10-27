@@ -380,6 +380,7 @@
                               data-quantity-variant-id="{{ item.variant.id }}"
                               data-cart-line-key="{{ item.key | escape }}"
                               data-cart-line-properties="{{ item.properties | json | escape }}"
+                              data-cart-selling-plan-id="{{ item.selling_plan_allocation.selling_plan.id | default: 0 }}"
                               type="number"
                               name="updates[]"
                               value="{{ item.quantity }}"
