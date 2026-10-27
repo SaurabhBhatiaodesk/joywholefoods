@@ -75,6 +75,7 @@ test('rapid changes across cards serialize writes and retain the last requested 
   } }));
   const context = {
     traceCart() {},
+    rememberConfirmed() {},
     number: (value, fallback) => Number.isFinite(Number(value)) ? Number(value) : fallback,
     states: new WeakMap(), cartQueue: Promise.resolve(), queuedCartJobs: 0,
     cartWritesInFlight: 0, cartWriteFailed: false, cartChangeCount: 0,
@@ -156,18 +157,25 @@ test('rapid changes across cards serialize writes and retain the last requested 
   assert.equal(maxInFlight, 1);
 });
 
-test('stale cart GETs cannot overwrite repeated increments on an existing line', async () => {
+test('stale baseline cannot overwrite increments and confirmation reads follow writes', async () => {
   let quantity = 1;
+  let lastOperation;
   const staleCart = () => ({ items: [{ key: 'line-1', variant_id: 1, quantity: 1 }], item_count: 1 });
   const context = {
     waitingDeltaJobs: {}, cartQueue: Promise.resolve(), queuedCartJobs: 0,
     cartWritesInFlight: 0, cartChangeCount: 0, cartWriteFailed: false,
     number: (v, fallback) => Number.isFinite(Number(v)) ? Number(v) : fallback,
     latestCart: staleCart(),
-    readCart: async () => { throw new Error('Positive increments must not wait for a cart GET'); },
+    rememberConfirmed() {},
+    readCart: async () => {
+      assert.equal(lastOperation, 'write', 'An increment must be sent before its confirmation read');
+      lastOperation = 'read';
+      return { items: [{ key: 'line-1', variant_id: 1, quantity }], item_count: quantity };
+    },
     setLatestCart() {},
     postJson: async (url, body) => {
       assert.equal(url, '/cart/add.js', 'Never replace quantity using a stale GET');
+      lastOperation = 'write';
       quantity += body.items[0].quantity;
       return { items: [{ key: 'line-1', variant_id: 1, quantity }] };
     }
@@ -188,6 +196,7 @@ test('app-split lines are counted together, preserve properties on add, and decr
     { key: 'b', variant_id: 1, quantity: 4, properties: {} }
   ] };
   const context = {
+    rememberConfirmed() {},
     waitingDeltaJobs: {}, cartQueue: Promise.resolve(), queuedCartJobs: 0,
     cartWritesInFlight: 0, cartChangeCount: 0, cartWriteFailed: false, latestCart: cart,
     number: (v, fallback) => Number.isFinite(Number(v)) ? Number(v) : fallback,
@@ -195,7 +204,8 @@ test('app-split lines are counted together, preserve properties on add, and decr
     postJson: async (url, body) => {
       if (url === '/cart/add.js') {
         assert.equal(body.items[0].properties._bird, 'delivery');
-        return { items: [{ ...cart.items[0], quantity: cart.items[0].quantity + body.items[0].quantity }] };
+        cart = { items: [{ ...cart.items[0], quantity: cart.items[0].quantity + body.items[0].quantity }, ...cart.items.slice(1)] };
+        return { items: [cart.items[0]] };
       }
       cart = { items: cart.items.map(item => item.key === body.id ? { ...item, quantity: body.quantity } : item).filter(item => item.quantity) };
       return cart;

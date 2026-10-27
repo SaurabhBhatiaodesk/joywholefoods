@@ -1,114 +1,116 @@
+{% doc %}
+  Serializes theme and app cart requests, allowing an app's read/write continuation
+  to finish before a waiting theme mutation. Render before app scripts.
+{% enddoc %}
 <script>
   (function () {
     if (window.__joyCartWriteQueue) return;
     window.__joyCartWriteQueue = true;
     var originalFetch = window.fetch;
-    var queue = Promise.resolve();
+    var transportQueue = Promise.resolve();
+    var themeQueue = Promise.resolve();
     var storeDomain = {{ shop.permanent_domain | json }};
-
-    function isCartWrite(input, options) {
-      try {
-        var url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
-        if (url.origin !== location.origin && url.hostname !== storeDomain) return false;
-        var method = String((options && options.method) || input.method || 'GET').toUpperCase();
-        if (method === 'GET' || method === 'HEAD') return false;
-        if (/\/cart\/(?:add|change|update|clear)(?:\.js|\.json)?\/?$/.test(url.pathname)) return true;
-        if (!/\/api\/[^/]+\/graphql\.json$/.test(url.pathname)) return false;
-        var body = options && options.body;
-        var query = typeof body === 'string' ? JSON.parse(body).query : '';
-        return /\bmutation\b/.test(query || '') && /\bcart[A-Z]\w*\s*\(/.test(query || '');
-      } catch (_) { return false; }
-    }
-
-    function isStorefrontRequest(input) {
-      try {
-        var url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
-        return /\/api\/[^/]+\/graphql\.json$/.test(url.pathname);
-      } catch (_) { return false; }
-    }
-
-    function isAjaxCartWrite(input, options) {
-      try {
-        var url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
-        var method = String((options && options.method) || input.method || 'GET').toUpperCase();
-        return method !== 'GET' && method !== 'HEAD' &&
-          /\/cart\/(?:add|change|update|clear)(?:\.js|\.json)?\/?$/.test(url.pathname);
-      } catch (_) { return false; }
-    }
-
-    /* Apps such as Bird read the cart through the Storefront API and then write it back
-       a few milliseconds later (getCart -> cartAttributesUpdate -> cartLinesUpdate). If a
-       theme cart/add.js lands in that gap, the app writes its older copy and the new item
-       disappears. Treat the app's burst of Storefront requests as one transaction: theme
-       cart writes wait until the app has been quiet for 1.5s (max 8s), and a new app
-       burst waits for theme writes already in flight. A running app burst is never
-       paused, so the two can't deadlock. */
+    var themeWritesPending = 0;
     var appInFlight = 0;
     var appQuietAt = 0;
-    var ajaxWritesPending = 0;
     var APP_QUIET_MS = 1500;
-    var MAX_WAIT_MS = 8000;
+
+    function requestKind(input, options) {
+      try {
+        var url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
+        if (url.origin !== location.origin && url.hostname !== storeDomain) return '';
+        var method = String((options && options.method) || input.method || 'GET').toUpperCase();
+        if (method === 'GET' || method === 'HEAD') return '';
+        if (/\/cart\/(?:add|change|update|clear)(?:\.js|\.json)?\/?$/.test(url.pathname)) return 'theme';
+        if (!/\/api\/[^/]+\/graphql\.json$/.test(url.pathname)) return '';
+        var body = options && options.body;
+        var query = typeof body === 'string' ? JSON.parse(body).query : '';
+        if (/\bmutation\b/.test(query || '') && /\bcart[A-Z]\w*\s*\(/.test(query || '')) return 'app-write';
+        if (!/\bmutation\b/.test(query || '') && /\bcart\s*\(/.test(query || '')) return 'app-read';
+      } catch (_) {}
+      return '';
+    }
+
+    function enqueueTransport(run) {
+      var job = transportQueue.then(run);
+      transportQueue = job.then(function () {}, function () {});
+      return job;
+    }
 
     function appBusy() {
       return appInFlight > 0 || Date.now() < appQuietAt;
     }
 
-    function waitFor(isReady) {
-      var started = Date.now();
+    function waitForApp() {
       return new Promise(function (resolve) {
         (function check() {
-          if (isReady() || Date.now() - started >= MAX_WAIT_MS) return resolve();
+          if (!appBusy()) return resolve();
           window.setTimeout(check, 100);
         })();
       });
     }
 
-    function runAppRequest(receiver, args) {
+    function runAppRequest(receiver, args, read) {
+      // Only cart reads start a continuation window. An app write following such a
+      // read extends it, but unrelated GraphQL queries never hold up Add to cart.
+      var continuation = read || appBusy();
       appInFlight += 1;
-      return originalFetch.apply(receiver, args).then(function (response) {
+      function finished() {
         appInFlight -= 1;
-        appQuietAt = Date.now() + APP_QUIET_MS;
+        if (continuation) appQuietAt = Date.now() + APP_QUIET_MS;
+      }
+      return Promise.resolve().then(function () {
+        return originalFetch.apply(receiver, args);
+      }).then(function (response) {
+        // fetch resolves at response headers. On a slow connection the app may
+        // still be downloading its cart, so don't start the grace period yet.
+        // Observe a clone without consuming or replacing the caller's response.
+        if (read && response && typeof response.clone === 'function') {
+          try {
+            var copy = response.clone();
+            if (typeof copy.arrayBuffer === 'function') {
+              Promise.resolve(copy.arrayBuffer()).then(finished, finished);
+              return response;
+            }
+          } catch (_) {}
+        }
+        finished();
         return response;
       }, function (error) {
-        appInFlight -= 1;
-        appQuietAt = Date.now() + APP_QUIET_MS;
+        finished();
         throw error;
       });
     }
 
-    // Install before app scripts so their captured fetch also uses this queue.
-    // Preserve responses and errors; never retry an uncertain cart mutation.
     window.fetch = function (input, options) {
+      var kind = requestKind(input, options);
+      if (!kind) return originalFetch.apply(this, arguments);
       var receiver = this;
       var args = arguments;
 
-      if (isStorefrontRequest(input)) {
-        // Continuing an app burst: go straight through. Starting a new one: let any
-        // theme cart write already sent finish first, so the app reads the new cart.
-        var start = appBusy() || ajaxWritesPending === 0
-          ? Promise.resolve()
-          : waitFor(function () { return ajaxWritesPending === 0 || appBusy(); });
-        var appJob = start.then(function () {
-          if (!isCartWrite(input, options)) return runAppRequest(receiver, args);
-          var queued = queue.then(function () { return runAppRequest(receiver, args); });
-          queue = queued.then(function () {}, function () {});
-          return queued;
+      if (kind === 'theme') {
+        themeWritesPending += 1;
+        // Waiting must stay OUTSIDE the transport queue: an app continuation
+        // needs that transport to finish before this theme request can proceed.
+        var job = themeQueue.then(waitForApp).then(function () {
+          return enqueueTransport(function () { return originalFetch.apply(receiver, args); });
         });
-        return appJob;
+        themeQueue = job.then(function () {}, function () {});
+        job.then(function () { themeWritesPending -= 1; }, function () { themeWritesPending -= 1; });
+        return job;
       }
 
-      if (!isCartWrite(input, options)) return originalFetch.apply(this, arguments);
-
-      var ajax = isAjaxCartWrite(input, options);
-      if (ajax) ajaxWritesPending += 1;
-      var job = queue.then(function () {
-        return ajax ? waitFor(function () { return !appBusy(); }) : null;
-      }).then(function () { return originalFetch.apply(receiver, args); });
-      queue = job.then(function () {}, function () {});
-      if (ajax) {
-        job.then(function () { ajaxWritesPending -= 1; }, function () { ajaxWritesPending -= 1; });
+      if (themeWritesPending > 0 && (kind === 'app-read' || !appBusy())) {
+        // A new read (or a write outside an active read/write burst) waits for
+        // pending theme changes. Background reads cannot extend the old window.
+        return themeQueue.then(function () {
+          return enqueueTransport(function () { return runAppRequest(receiver, args, kind === 'app-read'); });
+        });
       }
-      return job;
+
+      return enqueueTransport(function () {
+        return runAppRequest(receiver, args, kind === 'app-read');
+      });
     };
   })();
 </script>
