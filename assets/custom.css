@@ -2316,7 +2316,7 @@ span.product-tag{
   background-color: transparent !important;
 }
 .cart-drawer__overlay{
-  display: none !important;
+  display: block !important;
 }
 .drawer{
   --color-background: 246, 242, 240;

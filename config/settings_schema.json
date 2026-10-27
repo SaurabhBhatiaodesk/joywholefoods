@@ -37,7 +37,7 @@
           {
             "value": "Holiday Journey",
             "label": "Holiday Journey"
-          },
+          }
         ],
         "default": "DM Sans 9pt"
       },
@@ -57,10 +57,10 @@
           {
             "value": "Holiday Journey",
             "label": "Holiday Journey"
-          },
+          }
         ],
         "default": "DM Sans 9pt"
-      },
+      }
     ]
   },
   {

@@ -442,7 +442,7 @@ cart-note.cart__note.field label {
     if (!boxPreference) return;
 
     let saveTimer = null;
-    let isSaving = false;
+    let preferenceSave = Promise.resolve();
 
     function isBoxValue(value) {
       const v = (value || "").trim();
@@ -462,15 +462,11 @@ cart-note.cart__note.field label {
       return cartNote.value || "";
     }
 
-    async function updateCartPreference() {
-      if (isSaving) return;
-      isSaving = true;
-
+    function updateCartPreference() {
       const selectedPreference = boxPreference.value || "";
       const cleanNote = getCleanNote();
-
-      try {
-        await fetch("/cart/update.js", {
+      const save = preferenceSave.catch(() => {}).then(async function () {
+        const response = await fetch("/cart/update.js", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -483,21 +479,24 @@ cart-note.cart__note.field label {
             }
           })
         });
-      } catch (error) {
+        if (!response.ok) throw new Error("Cart preference update was rejected");
+      });
+
+      preferenceSave = save;
+      return save.catch(function (error) {
         console.error("Cart preference update error:", error);
-      } finally {
-        isSaving = false;
-      }
+        throw error;
+      });
     }
 
     function debounceSavePreference() {
       clearTimeout(saveTimer);
       saveTimer = setTimeout(function () {
-        updateCartPreference();
+        updateCartPreference().catch(function () {});
       }, 400);
     }
 
-    updateCartPreference();
+    updateCartPreference().catch(function () {});
 
     boxPreference.addEventListener("change", function () {
       debounceSavePreference();
@@ -507,12 +506,18 @@ cart-note.cart__note.field label {
       checkoutButton.addEventListener("click", async function (event) {
         event.preventDefault();
 
+        clearTimeout(saveTimer);
         checkoutButton.setAttribute("disabled", "disabled");
         checkoutButton.classList.add("loading");
 
-        await updateCartPreference();
-
-        window.location.href = "/checkout";
+        try {
+          await updateCartPreference();
+          window.location.href = "/checkout";
+        } catch (error) {
+          checkoutButton.removeAttribute("disabled");
+          checkoutButton.classList.remove("loading");
+          window.alert("Your cart preference could not be saved. Please try again.");
+        }
       });
     }
   });
