@@ -378,6 +378,7 @@
                             <input
                               class="quantity__input"
                               data-quantity-variant-id="{{ item.variant.id }}"
+                              data-cart-line-key="{{ item.key | escape }}"
                               type="number"
                               name="updates[]"
                               value="{{ item.quantity }}"

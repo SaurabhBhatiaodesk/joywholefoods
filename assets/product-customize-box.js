@@ -96,6 +96,8 @@ $('form[action="/cart/add"]').submit(function(e){
 
   	e.preventDefault();
     e.stopPropagation();
+    const submittedForm = e.currentTarget;
+    if (submittedForm.dataset.joyBoxSubmitting === 'true') return;
     // cleanCartAttributes();
   
     if(!isMaxSelected()){
@@ -104,14 +106,15 @@ $('form[action="/cart/add"]').submit(function(e){
        return;
     }
   
-    var submitButton = $('form [type="submit"]');
-    var loadingSpinner = $('form .loading-overlay__spinner');
+    submittedForm.dataset.joyBoxSubmitting = 'true';
+    var submitButton = $(submittedForm).find('[type="submit"]');
+    var loadingSpinner = $(submittedForm).find('.loading-overlay__spinner');
     submitButton.attr('aria-disabled', true);
     submitButton.addClass('loading');
     loadingSpinner.removeClass('hidden');
 
   
-    let addToCartForm = document.querySelector('form[action$="/cart/add"]');
+    let addToCartForm = submittedForm;
     let formData = new FormData(addToCartForm);
     
 
@@ -177,19 +180,36 @@ $('form[action="/cart/add"]').submit(function(e){
       body: formData
     })
     .then(response => {
-      return response.json();
+      return response.json().then(data => {
+        if (!response.ok || data.status) {
+          throw new Error(data.description || data.message || 'Unable to add this box. Please try again.');
+        }
+        return data;
+      });
     })
     .then((response) => {
       // console.log(response);
-      submitButton.attr('aria-disabled', false);
-      submitButton.removeClass('loading');
-      loadingSpinner.addClass('hidden');
-      
-      boxCart.renderContents(response);
-      boxCart.classList.remove("is-empty");
+      if (boxCart) {
+        try {
+          boxCart.renderContents(response);
+          boxCart.classList.remove("is-empty");
+        } catch (error) {
+          // The add succeeded. Do not invite a duplicate add if section rendering fails.
+          window.location.assign(window.Shopify.routes.root + 'cart');
+        }
+      } else {
+        window.location.assign(window.Shopify.routes.root + 'cart');
+      }
     })
     .catch((error) => {
       console.error('Error:', error);
+      window.alert(error.message || 'Unable to confirm this add. Please check your cart before trying again.');
+    })
+    .finally(() => {
+      submittedForm.dataset.joyBoxSubmitting = 'false';
+      submitButton.attr('aria-disabled', false);
+      submitButton.removeClass('loading');
+      loadingSpinner.addClass('hidden');
     });
 
 });
