@@ -1779,23 +1779,27 @@
       event.stopImmediatePropagation();
       event.stopPropagation();
 
-      var waited = 0;
+      var status = document.getElementById('joy-cart-save-status');
+      if (!status) {
+        status = document.createElement('p');
+        status.id = 'joy-cart-save-status';
+        status.setAttribute('role', 'status');
+        status.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:10000;background:white;color:#086c43;border:1px solid #086c43;border-radius:6px;padding:12px 18px;max-width:90vw;margin:0;text-align:center;';
+        document.body.appendChild(status);
+      }
+      status.textContent = 'Saving your cart. Please keep this page open…';
       var idleChecks = 0;
       (function waitForQueue() {
         idleChecks = !hasPendingCardChanges() ? idleChecks + 1 : 0;
         if (idleChecks >= 2) {
           if (cartWriteFailed) {
+            status.remove();
             window.alert('Some cart changes could not be saved. Please review your quantities and try again.');
             return;
           }
           window.location.href = link.href;
           return;
         }
-        if (waited >= 15000) {
-          window.alert('Your cart is still saving. Please wait, then select Cart or Checkout again.');
-          return;
-        }
-        waited += 250;
         window.setTimeout(waitForQueue, 250);
       })();
     }, true);
