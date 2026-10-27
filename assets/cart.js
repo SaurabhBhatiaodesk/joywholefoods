@@ -174,9 +174,10 @@ class CartItems extends HTMLElement {
         if (!response.ok) throw new Error('Unable to refresh cart line');
         const cart = await response.json();
         const properties = JSON.parse(lineProperties || (currentInput && currentInput.dataset.cartLineProperties) || '{}') || {};
-        const signature = (value) => JSON.stringify(Object.keys(value || {})
-          .filter((name) => !/^_?BirdChime/i.test(name))
-          .sort().map((name) => [name, String(value[name])]));
+        const signature = (value) => JSON.stringify((Array.isArray(value) ? value : Object.entries(value || {}))
+          .filter(([name]) => !/^_?BirdChime/i.test(name))
+          .map(([name, value]) => [name, String(value)])
+          .sort(([a], [b]) => a.localeCompare(b)));
         const expectedVariant = String(variantId || key.split(':')[0]);
         const candidates = (cart.items || []).filter((item) =>
           String(item.variant_id || item.id) === expectedVariant && signature(item.properties) === signature(properties));
