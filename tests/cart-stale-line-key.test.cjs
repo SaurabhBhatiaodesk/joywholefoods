@@ -6,7 +6,7 @@ const source = fs.readFileSync('assets/cart.js', 'utf8');
 const method = source.slice(source.indexOf('  updateQuantity(line,'), source.indexOf('\n  updateLiveRegions('))
   .replace('  updateQuantity(', 'function updateQuantity(');
 
-async function run(items, first = { errors: 'no valid id or line parameter' }) {
+async function run(items, first = { errors: 'no valid id or line parameter' }, originalProperties = { 'Swap Item': 'No onion' }) {
   const writes = []; let reads = 0;
   const context = {
     fetch: async (url, options) => {
@@ -21,7 +21,7 @@ async function run(items, first = { errors: 'no valid id or line parameter' }) {
   vm.runInNewContext(method, context);
   const cart = { quantityWrites: new Set(), quantityWriteFailed: false,
     enableLoading() {}, disableLoading() {}, getSectionsToRender: () => [], updateLiveRegions() {}, querySelectorAll: () => [] };
-  await context.updateQuantity.call(cart, '1', '2', 'updates[]', '123', '123:old', JSON.stringify({ 'Swap Item': 'No onion' }));
+  await context.updateQuantity.call(cart, '1', '2', 'updates[]', '123', '123:old', JSON.stringify(originalProperties));
   return { writes, reads, cart };
 }
 
@@ -50,4 +50,10 @@ test('stock rejections are not retried as stale keys', async () => {
 test('missing original line is never replaced by a different swap request', async () => {
   const result = await run([{ variant_id: 123, key: '123:other', properties: { 'Swap Item': 'No milk' } }]);
   assert.equal(result.writes.length, 1); assert.equal(result.cart.quantityWriteFailed, true);
+});
+
+test('Liquid pair-array properties match Ajax object properties after a key change', async () => {
+  const result = await run([{ variant_id: 123, key: '123:new', properties: { 'Swap Item': 'No onion', _BirdChimeSlotId: 'new' } }],
+    undefined, [['Swap Item', 'No onion'], ['_BirdChimeSlotId', 'old']]);
+  assert.equal(result.writes.length, 2); assert.equal(result.writes[1].id, '123:new');
 });
