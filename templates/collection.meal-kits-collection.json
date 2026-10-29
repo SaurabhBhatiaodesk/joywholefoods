@@ -20,6 +20,73 @@
     },
     "product-grid": {
       "type": "main-collection-product-grid-filter",
+      "blocks": {
+        "collection_tab_433UaR": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "farm-fresh-organics-spray-free-fruit-and-vegetables-delivered-brisbane-gold-coast",
+            "tab_icon": "shopify://shop_images/Fruit_Veg_cd0e8bc6-fd1b-4cb7-8a4c-e67014808bb3.png",
+            "tab_label": ""
+          }
+        },
+        "collection_tab_P6EMpe": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "local-organic-bakery-bread-delivery",
+            "tab_icon": "shopify://shop_images/Bakery.png",
+            "tab_label": "Bakery"
+          }
+        },
+        "collection_tab_3L9BrE": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "pantry-preservative-free-fresh-made-healthy-natural-ingredients",
+            "tab_icon": "shopify://shop_images/Pantry.png",
+            "tab_label": "Pantry"
+          }
+        },
+        "collection_tab_cxfjDj": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "local-organic-fridge-food-delivery",
+            "tab_icon": "shopify://shop_images/Fridge_Freezer.png",
+            "tab_label": "Fridge & Freezer"
+          }
+        },
+        "collection_tab_eDVbpf": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "local-organic-meat-delivery",
+            "tab_icon": "shopify://shop_images/Butcher.png",
+            "tab_label": "Butcher"
+          }
+        },
+        "collection_tab_HnKqUQ": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "local-organic-drinks-beverages-delivery",
+            "tab_icon": "shopify://shop_images/Beverages.png",
+            "tab_label": "Beverages"
+          }
+        },
+        "collection_tab_dwgRzH": {
+          "type": "collection_tab",
+          "settings": {
+            "tab_collection": "organic-household-personal-care-delivery",
+            "tab_icon": "shopify://shop_images/Household_Personal_Care.png",
+            "tab_label": "Home & Body"
+          }
+        }
+      },
+      "block_order": [
+        "collection_tab_433UaR",
+        "collection_tab_P6EMpe",
+        "collection_tab_3L9BrE",
+        "collection_tab_cxfjDj",
+        "collection_tab_eDVbpf",
+        "collection_tab_HnKqUQ",
+        "collection_tab_dwgRzH"
+      ],
       "custom_css": [
         ".filter-container {max-width: 186px; width: 100%;}"
       ],
