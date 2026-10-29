@@ -1071,6 +1071,7 @@ class VariantSelects extends HTMLElement {
 
   setInputAvailability(listOfOptions, listOfAvailableOptions) {
     listOfOptions.forEach((input) => {
+      if (input.hasAttribute('data-joy-placeholder-option')) return;
       if (listOfAvailableOptions.includes(input.getAttribute('value'))) {
         input.innerText = input.getAttribute('value');
       } else {
