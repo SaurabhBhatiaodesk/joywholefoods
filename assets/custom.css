@@ -3397,6 +3397,17 @@ a.jdgm-write-rev-link {
   opacity: 0.55;
   cursor: pointer;
 }
+
+/* Meal-count options keep the collection's dark green before and after selection. */
+.template-collection #product-grid .card-wrapper-os--meal-options .custom-add-to-cart-btn-os,
+.template-collection #product-grid .card-wrapper-os--meal-options .swap-product-btn-os {
+  background-color: #087840;
+  color: #ffffff;
+  opacity: 1;
+  --color-button: 8, 120, 64;
+  --color-button-text: 255, 255, 255;
+}
+
 .joy-card-quantity-help {
   display: block;
   width: 100%;

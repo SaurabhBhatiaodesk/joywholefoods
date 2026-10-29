@@ -325,7 +325,15 @@
     {%- endif -%}
   {%- endfor -%}
   
-  <div class="card-wrapper-os card-wrapper product-card-wrapper underline-links-hover{% if template.name == 'index' %} card-wrapper-os--homepage{% endif %}">
+  {%- assign joy_has_meal_option = false -%}
+  {%- for option in card_product.options_with_values -%}
+    {%- assign joy_option_name = option.name | downcase -%}
+    {%- if joy_option_name contains 'meal' -%}
+      {%- assign joy_has_meal_option = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  <div class="card-wrapper-os card-wrapper product-card-wrapper underline-links-hover{% if template.name == 'index' %} card-wrapper-os--homepage{% endif %}{% if joy_has_meal_option %} card-wrapper-os--meal-options{% endif %}">
   
     <div
       class="
