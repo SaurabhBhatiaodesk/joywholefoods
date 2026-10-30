@@ -1,0 +1,382 @@
+- status
+- status
+- link "Skip to content":
+  - /url: "#AppFrameMain"
+  - strong:
+    - generic: Skip to content
+- generic "Navigation":
+  - img "Shopify"
+  - button "Search":
+  - navigation:
+    - list:
+      - link "Home":
+        - /url: /store/sprayfreefarmacy
+        - generic: Home
+      - link "Orders":
+        - /url: /store/sprayfreefarmacy/orders
+        - generic: Orders
+        - generic: "111"
+      - link "Products":
+        - /url: /store/sprayfreefarmacy/products
+        - generic: Products
+      - link "Customers":
+        - /url: /store/sprayfreefarmacy/customers
+        - generic: Customers
+      - link "Growth":
+        - /url: /store/sprayfreefarmacy/growth
+        - generic: Growth
+      - link "Discounts":
+        - /url: /store/sprayfreefarmacy/discounts
+        - generic: Discounts
+      - link "Content":
+        - /url: /store/sprayfreefarmacy/content/metaobjects
+        - generic: Content
+      - link "Markets":
+        - /url: /store/sprayfreefarmacy/markets
+        - generic: Markets
+      - link "Finance":
+        - /url: /store/sprayfreefarmacy/finance/billpay
+        - generic: Finance
+      - link "Analytics":
+        - /url: /store/sprayfreefarmacy/analytics
+        - generic: Analytics
+    - list:
+      - separator
+      - list:
+        - button "Sales channels":
+          - generic: Sales channels
+      - separator
+      - list:
+        - button "Apps":
+          - generic: Apps
+    - list:
+      - link "Settings":
+        - /url: /store/sprayfreefarmacy/settings
+        - generic: Settings
+      - button "Alerts Feed - 1 unread alert":
+        - generic: "1"
+      - generic: Mark all as read
+      - generic: t:name by Joy Subscription App is not working properly. Contact the developer for additional support.
+      - generic: No more alerts
+      - button "saurabh bhatia":
+        - img "Joy Wholefoods":
+          - generic: JW
+  - button "Back from Settings":
+    - generic: Settings
+  - search "Shop settings menu":
+    - combobox "Search settings"
+  - navigation "Shop settings menu":
+    - heading "Joy Wholefoods" [level=3]:
+      - generic: Joy Wholefoods
+    - link "joywholefoods.com.au":
+      - /url: /store/sprayfreefarmacy/settings/domains
+      - generic: joywholefoods.com.au
+    - button "Update internal icon":
+      - img "Joy Wholefoods":
+        - generic: JW
+    - list:
+      - link "General":
+        - /url: /store/sprayfreefarmacy/settings/general
+        - generic: General
+      - generic: Plan
+      - generic: Billing
+      - link "Users":
+        - /url: /store/sprayfreefarmacy/settings/organization-account
+        - generic: Users
+      - link "Payments":
+        - /url: /store/sprayfreefarmacy/settings/payments
+        - generic: Payments
+      - link "Checkout":
+        - /url: /store/sprayfreefarmacy/settings/checkout
+        - generic: Checkout
+      - link "Customer accounts":
+        - /url: /store/sprayfreefarmacy/settings/customer_accounts
+        - generic: Customer accounts
+      - link "Shipping and delivery":
+        - /url: /store/sprayfreefarmacy/settings/shipping
+        - generic: Shipping and delivery
+      - link "Taxes and duties":
+        - /url: /store/sprayfreefarmacy/settings/taxes
+        - generic: Taxes and duties
+      - link "Locations":
+        - /url: /store/sprayfreefarmacy/settings/locations
+        - generic: Locations
+      - link "Markets":
+        - /url: /store/sprayfreefarmacy/settings/markets
+        - generic: Markets
+      - link "Apps":
+        - /url: /store/sprayfreefarmacy/settings/apps
+        - generic: Apps
+      - link "Sales channels":
+        - /url: /store/sprayfreefarmacy/settings/sales_channels
+        - generic: Sales channels
+      - link "Domains":
+        - /url: /store/sprayfreefarmacy/settings/domains
+        - generic: Domains
+      - generic: Customer events
+      - link "Notifications":
+        - /url: /store/sprayfreefarmacy/settings/notifications
+        - generic: Notifications
+      - link "Metafields and metaobjects":
+        - /url: /store/sprayfreefarmacy/settings/custom_data
+        - generic: Metafields and metaobjects
+      - link "Languages":
+        - /url: /store/sprayfreefarmacy/settings/languages
+        - generic: Languages
+      - link "Customer privacy":
+        - /url: /store/sprayfreefarmacy/settings/privacy
+        - generic: Customer privacy
+      - link "Policies":
+        - /url: /store/sprayfreefarmacy/settings/legal
+        - generic: Policies
+  - link "saurabh bhatia s.bhatiaodesk@gmail.com":
+    - /url: https://accounts.shopify.com/accounts/351249a6-f760-4c78-a8f9-f43ad2c2fb1d/redirect
+    - img "sb":
+      - generic: SB
+    - heading "saurabh bhatia" [level=6]:
+      - generic: saurabh bhatia
+    - generic: s.bhatiaodesk@gmail.com
+- main:
+  - navigation:
+    - link "Shipping and delivery":
+      - /url: /store/sprayfreefarmacy/settings/shipping
+    - link "Shipping and delivery":
+      - /url: /store/sprayfreefarmacy/settings/shipping
+      - generic: Shipping and delivery
+    - generic: /
+  - heading [level=1]: Manage shipping profile
+  - button "Actions":
+    - generic: Actions
+  - heading "Manage shipping profile" [level=1]
+  - heading "Profile name" [level=2]:
+    - generic: Profile name
+  - generic: Profile name
+  - textbox "Profile name":
+    - /placeholder: Fragile products
+    - text: Free shipping for subscription
+  - paragraph: Customers won’t see this
+  - heading "Products" [level=2]:
+    - generic: Products
+  - list:
+    - button "11 products"
+  - heading "Fulfillment location" [level=2]:
+    - generic: Fulfillment location
+  - list:
+    - link "Farmacy Office":
+      - /url: /store/sprayfreefarmacy/settings/locations/55222337703
+      - generic: Farmacy Office
+    - generic: 34 Reginald Street, Rocklea Queensland 4106, Australia
+    - button "More actions":
+  - heading "Shipping zones" [level=2]:
+    - generic: Shipping zones
+  - button "Add zone":
+    - generic: Zone
+  - heading "All countries Rest of World More actions" [level=2]:
+    - paragraph:
+      - generic: All countries
+    - generic: Rest of World
+    - button "More actions":
+  - separator
+  - list:
+    - generic: Subscription shipping
+    - generic: Free
+    - button "More actions":
+    - separator
+    - list:
+      - 'img "BirdChime: Order Delivery Date & Pickup logo"'
+      - 'button "BirdChime: Order Delivery Date & Pickup (via app)"':
+        - generic: "BirdChime: Order Delivery Date & Pickup (via app)"
+      - generic: 45 services · Calculated transit time
+      - generic: Calculated
+      - button "More actions":
+  - separator
+  - button "Add shipping option":
+    - paragraph: Add shipping option
+  - status: Unsaved changes
+  - generic: Unsaved changes
+  - button "Discard"
+  - button "Save"
+- status
+- region "Sidekick":
+  - status
+  - paragraph
+  - button "Close" [disabled]:
+  - generic: Work with Sidekick
+  - textbox "Work with Sidekick"
+  - button "Add files and more":
+  - button "Dictate":
+  - button "Open Sidekick":
+  - status
+- generic: General shortcuts
+- generic: Adding items to your store
+- generic: Navigating your admin panel
+- generic: Navigating settings
+- separator "Resize sidebar"
+- complementary "Sidekick"
+- status
+- alert
+- generic: "Before using UPS® rates you must confirm the following:"
+- generic: "If shipping pharmaceuticals, please confirm:"
+- generic: UPS® registration address
+- generic: UPS® registration address
+- generic: Address must be a physical address, not a P.O. box.
+- generic: Address must be in the continental U.S.
+- option "United States" [selected]
+- option "Select a state" [disabled] [selected]
+- option "Alabama"
+- option "Alaska"
+- option "American Samoa"
+- option "Arizona"
+- option "Arkansas"
+- option "California"
+- option "Colorado"
+- option "Connecticut"
+- option "Delaware"
+- option "Washington DC"
+- option "Micronesia"
+- option "Florida"
+- option "Georgia"
+- option "Guam"
+- option "Hawaii"
+- option "Idaho"
+- option "Illinois"
+- option "Indiana"
+- option "Iowa"
+- option "Kansas"
+- option "Kentucky"
+- option "Louisiana"
+- option "Maine"
+- option "Marshall Islands"
+- option "Maryland"
+- option "Massachusetts"
+- option "Michigan"
+- option "Minnesota"
+- option "Mississippi"
+- option "Missouri"
+- option "Montana"
+- option "Nebraska"
+- option "Nevada"
+- option "New Hampshire"
+- option "New Jersey"
+- option "New Mexico"
+- option "New York"
+- option "North Carolina"
+- option "North Dakota"
+- option "Northern Mariana Islands"
+- option "Ohio"
+- option "Oklahoma"
+- option "Oregon"
+- option "Palau"
+- option "Pennsylvania"
+- option "Puerto Rico"
+- option "Rhode Island"
+- option "South Carolina"
+- option "South Dakota"
+- option "Tennessee"
+- option "Texas"
+- option "Utah"
+- option "Vermont"
+- option "U.S. Virgin Islands"
+- option "Virginia"
+- option "Washington"
+- option "West Virginia"
+- option "Wisconsin"
+- option "Wyoming"
+- option "Armed Forces Americas"
+- option "Armed Forces Europe"
+- option "Armed Forces Pacific"
+- generic: Done
+- generic: Cancel
+- generic: Save
+- dialog "Manage products":
+  - heading "Manage products" [level=2]
+  - button "Close":
+  - generic: Search products
+  - textbox "Search products"
+  - generic: Search by
+  - combobox "Search by":
+    - option "All" [selected]
+    - option "Product title"
+    - option "Product ID"
+    - option "Barcode"
+    - option "SKU"
+    - option "Variant ID"
+    - option "Variant title"
+  - generic: Search by
+  - generic: All
+  - 'button "Types: Subscription"':
+    - generic: "Types: Subscription"
+  - button "Clear":
+  - button "Add filter":
+    - generic: Add filter
+  - button "Clear all":
+    - generic: Clear all
+  - list:
+    - checkbox "Product"
+    - generic: Product
+    - paragraph: Product
+    - paragraph: Profile
+    - 'generic "Deselect: Organic Lunchbox Legends Box"':
+      - checkbox "Organic Lunchbox Legends Box" [checked]
+      - generic: Organic Lunchbox Legends Box
+      - img "organic-food-grocery-brisbane-delivery-lunchbox-kids"
+      - generic: Organic Lunchbox Legends Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Organic Staples Box"':
+      - checkbox "Organic Staples Box" [checked]
+      - generic: Organic Staples Box
+      - img "Organic Staples Box milk eggs fruit veg delivered healthy, featured in the Joy Wholefoods online store."
+      - generic: Organic Staples Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Regen Meat Box"':
+      - checkbox "Regen Meat Box" [checked]
+      - generic: Regen Meat Box
+      - img "Regen Meat Box Spray Free Farmacy, featured in the Joy Wholefoods online store."
+      - generic: Regen Meat Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Salad Lovers Organic Box"':
+      - checkbox "Salad Lovers Organic Box" [checked]
+      - generic: Salad Lovers Organic Box
+      - img "a box of fresh organic produce for making delicious salads"
+      - generic: Salad Lovers Organic Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Small Organic Fruit & Veg Box"':
+      - checkbox "Small Organic Fruit & Veg Box" [checked]
+      - generic: Small Organic Fruit & Veg Box
+      - img "Organic Small Fruit Veg Box Home Delivery Brisbane Gold Coast, featured in the Joy Wholefoods online store."
+      - generic: Small Organic Fruit & Veg Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Ultimate Organic Farm Box"':
+      - checkbox "Ultimate Organic Farm Box" [checked]
+      - generic: Ultimate Organic Farm Box
+      - img "Ultimate Organic Farm Box Regenerative Meat Pastured Eggs Organic Fruit and Veg"
+      - generic: Ultimate Organic Farm Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Veg Only Organic Box"':
+      - checkbox "Veg Only Organic Box" [checked]
+      - generic: Veg Only Organic Box
+      - img "Fresh-local-organic-vegetables-box-seasonal-eating-healthy-living"
+      - generic: Veg Only Organic Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Wholesome Organic Brekky Box"':
+      - checkbox "Wholesome Organic Brekky Box" [checked]
+      - generic: Wholesome Organic Brekky Box
+      - img "organic-wholesome-brekky-farmer-box-produce-brisbane-gold-coast-delivery-queensland"
+      - generic: Wholesome Organic Brekky Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Wild Caught Salmon Box"':
+      - checkbox "Wild Caught Salmon Box" [checked]
+      - generic: Wild Caught Salmon Box
+      - img "a selection of wild caught salmon"
+      - generic: Wild Caught Salmon Box
+      - generic: Free shipping for subscription
+    - 'generic "Deselect: Wild Caught Seafood Box"':
+      - checkbox "Wild Caught Seafood Box" [checked]
+      - generic: Wild Caught Seafood Box
+      - img "a selection of wild caught seafood and salmon"
+      - generic: Wild Caught Seafood Box
+      - generic: Free shipping for subscription
+  - button "Cancel":
+    - generic: Cancel
+  - button "Done":
+    - generic: Done

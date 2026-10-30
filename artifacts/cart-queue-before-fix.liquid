@@ -1,0 +1,114 @@
+<script>
+  (function () {
+    if (window.__joyCartWriteQueue) return;
+    window.__joyCartWriteQueue = true;
+    var originalFetch = window.fetch;
+    var queue = Promise.resolve();
+    var storeDomain = {{ shop.permanent_domain | json }};
+
+    function isCartWrite(input, options) {
+      try {
+        var url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
+        if (url.origin !== location.origin && url.hostname !== storeDomain) return false;
+        var method = String((options && options.method) || input.method || 'GET').toUpperCase();
+        if (method === 'GET' || method === 'HEAD') return false;
+        if (/\/cart\/(?:add|change|update|clear)(?:\.js|\.json)?\/?$/.test(url.pathname)) return true;
+        if (!/\/api\/[^/]+\/graphql\.json$/.test(url.pathname)) return false;
+        var body = options && options.body;
+        var query = typeof body === 'string' ? JSON.parse(body).query : '';
+        return /\bmutation\b/.test(query || '') && /\bcart[A-Z]\w*\s*\(/.test(query || '');
+      } catch (_) { return false; }
+    }
+
+    function isStorefrontRequest(input) {
+      try {
+        var url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
+        return /\/api\/[^/]+\/graphql\.json$/.test(url.pathname);
+      } catch (_) { return false; }
+    }
+
+    function isAjaxCartWrite(input, options) {
+      try {
+        var url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);
+        var method = String((options && options.method) || input.method || 'GET').toUpperCase();
+        return method !== 'GET' && method !== 'HEAD' &&
+          /\/cart\/(?:add|change|update|clear)(?:\.js|\.json)?\/?$/.test(url.pathname);
+      } catch (_) { return false; }
+    }
+
+    /* Apps such as Bird read the cart through the Storefront API and then write it back
+       a few milliseconds later (getCart -> cartAttributesUpdate -> cartLinesUpdate). If a
+       theme cart/add.js lands in that gap, the app writes its older copy and the new item
+       disappears. Treat the app's burst of Storefront requests as one transaction: theme
+       cart writes wait until the app has been quiet for 1.5s (max 8s), and a new app
+       burst waits for theme writes already in flight. A running app burst is never
+       paused, so the two can't deadlock. */
+    var appInFlight = 0;
+    var appQuietAt = 0;
+    var ajaxWritesPending = 0;
+    var APP_QUIET_MS = 1500;
+    var MAX_WAIT_MS = 8000;
+
+    function appBusy() {
+      return appInFlight > 0 || Date.now() < appQuietAt;
+    }
+
+    function waitFor(isReady) {
+      var started = Date.now();
+      return new Promise(function (resolve) {
+        (function check() {
+          if (isReady() || Date.now() - started >= MAX_WAIT_MS) return resolve();
+          window.setTimeout(check, 100);
+        })();
+      });
+    }
+
+    function runAppRequest(receiver, args) {
+      appInFlight += 1;
+      return originalFetch.apply(receiver, args).then(function (response) {
+        appInFlight -= 1;
+        appQuietAt = Date.now() + APP_QUIET_MS;
+        return response;
+      }, function (error) {
+        appInFlight -= 1;
+        appQuietAt = Date.now() + APP_QUIET_MS;
+        throw error;
+      });
+    }
+
+    // Install before app scripts so their captured fetch also uses this queue.
+    // Preserve responses and errors; never retry an uncertain cart mutation.
+    window.fetch = function (input, options) {
+      var receiver = this;
+      var args = arguments;
+
+      if (isStorefrontRequest(input)) {
+        // Continuing an app burst: go straight through. Starting a new one: let any
+        // theme cart write already sent finish first, so the app reads the new cart.
+        var start = appBusy() || ajaxWritesPending === 0
+          ? Promise.resolve()
+          : waitFor(function () { return ajaxWritesPending === 0 || appBusy(); });
+        var appJob = start.then(function () {
+          if (!isCartWrite(input, options)) return runAppRequest(receiver, args);
+          var queued = queue.then(function () { return runAppRequest(receiver, args); });
+          queue = queued.then(function () {}, function () {});
+          return queued;
+        });
+        return appJob;
+      }
+
+      if (!isCartWrite(input, options)) return originalFetch.apply(this, arguments);
+
+      var ajax = isAjaxCartWrite(input, options);
+      if (ajax) ajaxWritesPending += 1;
+      var job = queue.then(function () {
+        return ajax ? waitFor(function () { return !appBusy(); }) : null;
+      }).then(function () { return originalFetch.apply(receiver, args); });
+      queue = job.then(function () {}, function () {});
+      if (ajax) {
+        job.then(function () { ajaxWritesPending -= 1; }, function () { ajaxWritesPending -= 1; });
+      }
+      return job;
+    };
+  })();
+</script>
